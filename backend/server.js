@@ -38,8 +38,6 @@ const contentTypes = {
   ".woff2": "font/woff2"
 };
 
-const { runScraperPipeline } = require("./src/services/scraper/runScraper");
-const { scrapePostingDetails } = require("./src/services/scraper/sarkariScraper");
 const {
   subscribeUser,
   unsubscribeUser,
@@ -154,6 +152,7 @@ const server = createServer(async (request, response) => {
     }
 
     try {
+      const { scrapePostingDetails } = require("./src/services/scraper/sarkariScraper");
       const details = await scrapePostingDetails(targetUrl);
       if (details) {
         detailsCache.set(targetUrl, details);
@@ -183,6 +182,7 @@ const server = createServer(async (request, response) => {
 
     isScrapingInProgress = true;
     try {
+      const { runScraperPipeline } = require("./src/services/scraper/runScraper");
       const summary = await runScraperPipeline();
       response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: true, message: "Successfully scraped and categorized all data", summary }));
@@ -591,7 +591,11 @@ process.on("SIGTERM", () => {
   process.exit(0);
 });
 
-server.listen(port, () => {
-  listenAttempts = 0;
-  console.log(`Sarkari Result is running at http://localhost:${port}`);
-});
+if (require.main === module) {
+  server.listen(port, () => {
+    listenAttempts = 0;
+    console.log(`Sarkari Result is running at http://localhost:${port}`);
+  });
+}
+
+module.exports = server;
