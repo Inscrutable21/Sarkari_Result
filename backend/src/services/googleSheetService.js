@@ -33,6 +33,34 @@ function isGoogleSheetEnabled() {
 }
 
 /**
+ * Neutralizes Formula / CSV injection in Google Sheets
+ * If a value begins with =, +, -, @, \t, or \r, prepend a single quote '
+ */
+function sanitizeSheetValue(val) {
+  if (typeof val !== 'string') return val;
+  const trimmed = val.trim();
+  if (/^[=+\-@\t\r]/.test(trimmed)) {
+    return `'${val}`;
+  }
+  return val;
+}
+
+function sanitizeObjectForSheet(obj) {
+  if (!obj || typeof obj !== 'object') return obj;
+  const sanitized = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (typeof v === 'string') {
+      sanitized[k] = sanitizeSheetValue(v);
+    } else if (Array.isArray(v)) {
+      sanitized[k] = v.map(item => typeof item === 'string' ? sanitizeSheetValue(item) : item);
+    } else {
+      sanitized[k] = v;
+    }
+  }
+  return sanitized;
+}
+
+/**
  * Executes a GET request against the Google Apps Script Web App
  */
 async function callSheetGet(action, params = {}) {
@@ -147,7 +175,8 @@ async function getJobsFromSheet() {
 async function appendSubscriberToSheet(subscriber) {
   if (!isGoogleSheetEnabled()) return null;
   try {
-    const res = await callSheetPost('addSubscriber', { subscriber });
+    const sanitizedSubscriber = sanitizeObjectForSheet(subscriber);
+    const res = await callSheetPost('addSubscriber', { subscriber: sanitizedSubscriber });
     console.log(`[Google Sheets] Subscriber recorded: ${subscriber.email}`);
     return res;
   } catch (err) {
@@ -175,7 +204,8 @@ async function getSubscribersFromSheet() {
 async function appendTrackedJobToSheet(track) {
   if (!isGoogleSheetEnabled()) return null;
   try {
-    const res = await callSheetPost('addTrackedJob', { track });
+    const sanitizedTrack = sanitizeObjectForSheet(track);
+    const res = await callSheetPost('addTrackedJob', { track: sanitizedTrack });
     console.log(`[Google Sheets] Tracked job recorded: ${track.email} -> ${track.jobTitle}`);
     return res;
   } catch (err) {

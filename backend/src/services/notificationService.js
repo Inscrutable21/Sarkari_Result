@@ -49,6 +49,41 @@ const {
 } = require('./googleSheetService');
 
 /**
+ * Defensive HTML Escaper to prevent XSS in emails and rendered HTML pages
+ */
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/**
+ * Validates and ensures URLs only use http/https protocols
+ */
+function safeHttpUrl(rawUrl, fallback = '') {
+  if (!rawUrl || typeof rawUrl !== 'string') return fallback;
+  try {
+    const parsed = new URL(rawUrl);
+    if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+      return parsed.toString();
+    }
+  } catch {}
+  return fallback;
+}
+
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+
+function isValidEmail(email) {
+  if (!email || typeof email !== 'string') return false;
+  if (email.length > 254) return false;
+  return EMAIL_REGEX.test(email.trim());
+}
+
+/**
  * Loads current list of subscribers (from Google Sheets if enabled, fallback to local file)
  */
 async function getSubscribers() {
@@ -185,7 +220,7 @@ async function logEmailDispatch(entry) {
  * Subscribes a user with their degree, qualification, and alert preferences
  */
 async function subscribeUser({ email, name, qualification, disciplines, state, sector, frequency = 'instant' }) {
-  if (!email || !email.includes('@')) {
+  if (!isValidEmail(email)) {
     throw new Error('Please provide a valid email address');
   }
 
@@ -900,7 +935,7 @@ async function sendTrackedJobEmail(track, daysLeft, isConfirmation = false) {
  * Tracks a specific job opening for a user and dispatches immediate confirmation email
  */
 async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, lastDateFormatted, link }) {
-  if (!email || !email.includes('@')) {
+  if (!isValidEmail(email)) {
     throw new Error('Please enter a valid email address');
   }
   if (!jobId && !jobTitle) {
@@ -923,7 +958,8 @@ async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, 
   const finalOrg = organization || resolvedJob?.organization || 'Government Department';
   const finalLastDate = lastDate || resolvedJob?.lastDate || null;
   const finalLastDateFormatted = lastDateFormatted || resolvedJob?.lastDateFormatted || finalLastDate || 'Check Notice';
-  const finalLink = link || resolvedJob?.link || 'https://www.sarkariresult.com';
+  const rawCandidateLink = link || resolvedJob?.link;
+  const finalLink = safeHttpUrl(rawCandidateLink, 'https://www.sarkariresult.com');
 
   const daysLeft = calculateDaysLeft(finalLastDate);
 
@@ -1236,7 +1272,7 @@ function renderStatusPageHtml(result, requestedStatus) {
       </div>
 
       <div class="job-title">
-        ${track.jobTitle || 'Government Recruitment Post'}
+        ${escapeHtml(track.jobTitle || 'Government Recruitment Post')}
       </div>
 
       ${isApplied ? `
@@ -1253,17 +1289,17 @@ function renderStatusPageHtml(result, requestedStatus) {
         </div>
         <p class="desc">
           Your reminder is active. We will send you tomorrow's daily update with the remaining days.<br><br>
-          Don't forget to submit your application before <strong>${track.lastDateFormatted || 'the closing deadline'}</strong>.
+          Don't forget to submit your application before <strong>${escapeHtml(track.lastDateFormatted || 'the closing deadline')}</strong>.
         </p>
       `}
 
       <div class="actions">
-        ${track.link ? `
-          <a href="${track.link}" target="_blank" rel="noopener" class="btn-apply-job">
+        ${safeHttpUrl(track.link) ? `
+          <a href="${escapeHtml(safeHttpUrl(track.link))}" target="_blank" rel="noopener noreferrer" class="btn-apply-job">
             Open Official Form Page &rarr;
           </a>
         ` : ''}
-        <a href="${portalUrl}" class="btn-portal">
+        <a href="${escapeHtml(safeHttpUrl(portalUrl, '/'))}" class="btn-portal">
           Return to Sarkari Hith Portal
         </a>
       </div>

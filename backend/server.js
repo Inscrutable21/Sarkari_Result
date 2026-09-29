@@ -92,10 +92,10 @@ function isRateLimited(ip, maxRequests = 10, windowMs = 60000) {
   return entry.count > maxRequests;
 }
 
-// Authenticates administrative requests using ADMIN_API_KEY
+// Authenticates administrative requests using ADMIN_API_KEY (Fail-Closed)
 function isAdminAuthorized(request, url) {
   const adminKey = process.env.ADMIN_API_KEY;
-  if (!adminKey) return true; // Fail-open in dev if not set
+  if (!adminKey || !adminKey.trim()) return false;
   const headerKey = request.headers["x-admin-key"] || request.headers["authorization"]?.replace(/^Bearer\s+/i, "");
   const queryKey = url.searchParams.get("adminKey");
   return (headerKey && headerKey === adminKey) || (queryKey && queryKey === adminKey);
@@ -136,12 +136,38 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // Fetch or scrape posting specs on demand
+  // Fetch or scrape posting specs on demand (SSRF Protected)
   if (url.pathname === "/api/details") {
     const targetUrl = url.searchParams.get("url");
     if (!targetUrl) {
       response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: false, error: "Missing url query parameter" }));
+      return;
+    }
+
+    // SSRF Validation: Only allow legitimate external Sarkari Result / official gov domains
+    let parsedTarget;
+    try {
+      parsedTarget = new URL(targetUrl);
+    } catch {
+      response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: "Invalid target URL format" }));
+      return;
+    }
+
+    const isHttp = parsedTarget.protocol === "http:" || parsedTarget.protocol === "https:";
+    const hostname = parsedTarget.hostname.toLowerCase();
+    const isAllowedDomain = hostname === "sarkariresult.com" ||
+                            hostname.endsWith(".sarkariresult.com") ||
+                            hostname.endsWith(".gov.in") ||
+                            hostname.endsWith(".nic.in");
+
+    // Block localhost and private IP addresses
+    const isPrivateIp = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.|169\.254\.|0\.0\.0\.0|::1)/i.test(hostname);
+
+    if (!isHttp || !isAllowedDomain || isPrivateIp) {
+      response.writeHead(403, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: "Access denied: Target URL domain is not permitted" }));
       return;
     }
 
@@ -319,8 +345,15 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // 7. Track specific job opening for daily deadline countdown reminders
+  // 7. Track specific job opening for daily deadline countdown reminders (Rate Limited)
   if (url.pathname === "/api/track-job" && request.method === "POST") {
+    const clientIp = request.headers["x-forwarded-for"]?.split(",")[0].trim() || request.socket.remoteAddress || "unknown";
+    if (isRateLimited(clientIp, 10)) {
+      response.writeHead(429, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: "Rate limit exceeded. Please wait a minute before tracking another job." }));
+      return;
+    }
+
     try {
       const body = await parseBody(request);
       const result = await trackJob(body);
