@@ -1,0 +1,15 @@
+node_modules/
+backend/node_modules/
+.env
+.env.*
+*.env
+backend/.env
+backend/.env.*
+*.log
+.DS_Store
+
+# Sensitive candidate data and email logs
+backend/src/data/subscribers.json
+backend/src/data/trackedJobs.json
+backend/src/data/emailLogs.json
+

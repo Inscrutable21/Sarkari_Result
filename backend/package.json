@@ -1,0 +1,19 @@
+{
+  "name": "sarkari-result-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Node.js backend and static frontend server for Sarkari Result",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch --watch-path=server.js --watch-path=src/services server.js",
+    "scrape": "node src/services/scraper/runScraper.js",
+    "notify": "node src/services/sendNotifications.js",
+    "sync:sheets": "node src/services/pushAllDataToSheet.js"
+  },
+  "dependencies": {
+    "axios": "^1.20.0",
+    "cheerio": "^1.2.0",
+    "nodemailer": "^10.0.12",
+    "puppeteer": "^25.12.0"
+  }
+}

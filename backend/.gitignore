@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.*
+*.env
+*.log
+.DS_Store
+
+# Sensitive candidate data and email logs (never commit PII to git)
+src/data/subscribers.json
+src/data/trackedJobs.json
+src/data/emailLogs.json
+

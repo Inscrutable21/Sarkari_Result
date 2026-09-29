@@ -1,0 +1,378 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": "upessc-up-primary-teacher-05-2026",
+      "title": "UP Primary Teacher 2026 Apply Online",
+      "link": "https://www.sarkariresult.com/2026/upessc-up-primary-teacher-05-2026/",
+      "tag": "Trending",
+      "section": "trending",
+      "sector": "Teaching & Education",
+      "sectorBadge": "teaching",
+      "sectorColor": "#7c3aed",
+      "state": "Uttar Pradesh (UP)",
+      "qualification": "Teaching Degree (B.Ed / D.El.Ed)",
+      "organization": "UPESSC",
+      "lastDate": null,
+      "lastDateFormatted": null,
+      "isExpired": false,
+      "isActive": true,
+      "status": "Apply Online",
+      "statusType": "primary",
+      "eligibleDisciplines": [
+        "education_teaching"
+      ],
+      "fieldDisciplines": [
+        "education_teaching"
+      ],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [
+        {
+          "id": "education_teaching",
+          "label": "Teaching Degree (B.Ed / D.El.Ed / TET)",
+          "shortLabel": "Teaching / B.Ed",
+          "matchType": "field",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match: Specifically requires Teaching / B.Ed"
+        }
+      ],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Teaching & Education",
+        "Uttar",
+        "UPESSC",
+        "Apply Online",
+        "Active",
+        "Teaching / B.Ed",
+        "Trending"
+      ]
+    },
+    {
+      "id": "bpsc-tre-4-2026",
+      "title": "Bihar School Teacher TRE 4 Apply Online",
+      "link": "https://www.sarkariresult.com/bihar/bpsc-tre-4-2026/",
+      "tag": "Trending",
+      "section": "trending",
+      "sector": "Teaching & Education",
+      "sectorBadge": "teaching",
+      "sectorColor": "#7c3aed",
+      "state": "Bihar",
+      "qualification": "Teaching Degree (B.Ed / D.El.Ed)",
+      "organization": "BPSC",
+      "lastDate": null,
+      "lastDateFormatted": null,
+      "isExpired": false,
+      "isActive": true,
+      "status": "Apply Online",
+      "statusType": "primary",
+      "eligibleDisciplines": [
+        "medical_healthcare",
+        "education_teaching"
+      ],
+      "fieldDisciplines": [
+        "medical_healthcare",
+        "education_teaching"
+      ],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [
+        {
+          "id": "medical_healthcare",
+          "label": "Medical, Nursing & Pharmacy (MBBS/GNM/B.Pharm)",
+          "shortLabel": "Medical / Nursing",
+          "matchType": "field",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match: Specifically requires Medical / Nursing"
+        },
+        {
+          "id": "education_teaching",
+          "label": "Teaching Degree (B.Ed / D.El.Ed / TET)",
+          "shortLabel": "Teaching / B.Ed",
+          "matchType": "field",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match: Specifically requires Teaching / B.Ed"
+        }
+      ],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Teaching & Education",
+        "Bihar",
+        "BPSC",
+        "Apply Online",
+        "Active",
+        "Medical / Nursing",
+        "Teaching / B.Ed",
+        "Trending"
+      ]
+    },
+    {
+      "id": "up-anganwadi-worker",
+      "title": "UP Anganwadi Worker Apply Online",
+      "link": "https://www.sarkariresult.com/2026/up-anganwadi-worker/",
+      "tag": "Trending",
+      "section": "trending",
+      "sector": "State Subordinate & Welfare",
+      "sectorBadge": "state-subordinate",
+      "sectorColor": "#d97706",
+      "state": "Uttar Pradesh (UP)",
+      "qualification": "10th / Matric Pass",
+      "organization": "Government of India",
+      "lastDate": null,
+      "lastDateFormatted": null,
+      "isExpired": false,
+      "isActive": true,
+      "status": "Apply Online",
+      "statusType": "primary",
+      "eligibleDisciplines": [],
+      "fieldDisciplines": [],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [],
+      "ineligibleWarnings": [],
+      "tags": [
+        "State Subordinate & Welfare",
+        "Uttar",
+        "Government of India",
+        "Apply Online",
+        "Active",
+        "Trending"
+      ]
+    },
+    {
+      "id": "ssc-chsl-2026-sep",
+      "title": "SSC 10+2 CHSL Apply Online",
+      "link": "https://www.sarkariresult.com/2026/ssc-chsl-2026-sep/",
+      "tag": "Trending",
+      "section": "trending",
+      "sector": "Staff Selection (SSC)",
+      "sectorBadge": "ssc",
+      "sectorColor": "#ea580c",
+      "state": "Central / All India",
+      "qualification": "10th / Matric Pass",
+      "organization": "SSC",
+      "lastDate": null,
+      "lastDateFormatted": null,
+      "isExpired": false,
+      "isActive": true,
+      "status": "Apply Online",
+      "statusType": "primary",
+      "eligibleDisciplines": [
+        "matric_inter_10_12"
+      ],
+      "fieldDisciplines": [
+        "matric_inter_10_12"
+      ],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [
+        {
+          "id": "matric_inter_10_12",
+          "label": "10th / 12th Pass / ITI",
+          "shortLabel": "10th / 12th Pass",
+          "matchType": "field",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match: Specifically requires 10th / 12th Pass"
+        }
+      ],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Staff Selection (SSC)",
+        "Central",
+        "SSC",
+        "Apply Online",
+        "Active",
+        "10th / 12th Pass",
+        "Trending"
+      ]
+    },
+    {
+      "id": "mpesb-mp-police-constable-gd-sep26",
+      "title": "MP Police Constable 2026 Apply Online",
+      "link": "https://www.sarkariresult.com/2026/mpesb-mp-police-constable-gd-sep26/",
+      "tag": "Trending",
+      "section": "trending",
+      "sector": "Police & Security",
+      "sectorBadge": "police",
+      "sectorColor": "#0f766e",
+      "state": "Madhya Pradesh (MP)",
+      "qualification": "12th / Intermediate",
+      "organization": "MPESB",
+      "lastDate": null,
+      "lastDateFormatted": null,
+      "isExpired": false,
+      "isActive": true,
+      "status": "Apply Online",
+      "statusType": "primary",
+      "eligibleDisciplines": [
+        "matric_inter_10_12"
+      ],
+      "fieldDisciplines": [
+        "matric_inter_10_12"
+      ],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [
+        {
+          "id": "matric_inter_10_12",
+          "label": "10th / 12th Pass / ITI",
+          "shortLabel": "10th / 12th Pass",
+          "matchType": "field",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match: Specifically requires 10th / 12th Pass"
+        }
+      ],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Police & Security",
+        "Madhya",
+        "MPESB",
+        "Apply Online",
+        "Active",
+        "10th / 12th Pass",
+        "Trending"
+      ]
+    },
+    {
+      "id": "up-scholarship-postmatric-jul26",
+      "title": "UP Scholarship 2026 Apply Online",
+      "link": "https://www.sarkariresult.com/2026/up-scholarship-postmatric-jul26/",
+      "tag": "Trending",
+      "section": "trending",
+      "sector": "State Subordinate & Welfare",
+      "sectorBadge": "state-subordinate",
+      "sectorColor": "#d97706",
+      "state": "Uttar Pradesh (UP)",
+      "qualification": "Graduate / Check Notice",
+      "organization": "Government of India",
+      "lastDate": null,
+      "lastDateFormatted": null,
+      "isExpired": false,
+      "isActive": true,
+      "status": "Apply Online",
+      "statusType": "primary",
+      "eligibleDisciplines": [
+        "medical_healthcare"
+      ],
+      "fieldDisciplines": [
+        "medical_healthcare"
+      ],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [
+        {
+          "id": "medical_healthcare",
+          "label": "Medical, Nursing & Pharmacy (MBBS/GNM/B.Pharm)",
+          "shortLabel": "Medical / Nursing",
+          "matchType": "field",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match: Specifically requires Medical / Nursing"
+        }
+      ],
+      "ineligibleWarnings": [],
+      "tags": [
+        "State Subordinate & Welfare",
+        "Uttar",
+        "Government of India",
+        "Apply Online",
+        "Active",
+        "Medical / Nursing",
+        "Trending"
+      ]
+    },
+    {
+      "id": "upessc-up-pgt-teacher-sept26",
+      "title": "UP PGT Teacher 2026 Apply Online",
+      "link": "https://www.sarkariresult.com/2026/upessc-up-pgt-teacher-sept26/",
+      "tag": "Trending",
+      "section": "trending",
+      "sector": "Teaching & Education",
+      "sectorBadge": "teaching",
+      "sectorColor": "#7c3aed",
+      "state": "Uttar Pradesh (UP)",
+      "qualification": "Teaching Degree (B.Ed / D.El.Ed)",
+      "organization": "UPESSC",
+      "lastDate": null,
+      "lastDateFormatted": null,
+      "isExpired": false,
+      "isActive": true,
+      "status": "Apply Online",
+      "statusType": "primary",
+      "eligibleDisciplines": [
+        "education_teaching"
+      ],
+      "fieldDisciplines": [
+        "education_teaching"
+      ],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [
+        {
+          "id": "education_teaching",
+          "label": "Teaching Degree (B.Ed / D.El.Ed / TET)",
+          "shortLabel": "Teaching / B.Ed",
+          "matchType": "field",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match: Specifically requires Teaching / B.Ed"
+        }
+      ],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Teaching & Education",
+        "Uttar",
+        "UPESSC",
+        "Apply Online",
+        "Active",
+        "Teaching / B.Ed",
+        "Trending"
+      ]
+    },
+    {
+      "id": "up-police-constable-jan26",
+      "title": "UP Police Constable PET Admit Card",
+      "link": "https://www.sarkariresult.com/2026/up-police-constable-jan26/",
+      "tag": "Trending",
+      "section": "trending",
+      "sector": "Police & Security",
+      "sectorBadge": "police",
+      "sectorColor": "#0f766e",
+      "state": "Uttar Pradesh (UP)",
+      "qualification": "12th / Intermediate",
+      "organization": "Government of India",
+      "lastDate": null,
+      "lastDateFormatted": null,
+      "isExpired": false,
+      "isActive": true,
+      "status": "Admit Card Out",
+      "statusType": "info",
+      "eligibleDisciplines": [
+        "matric_inter_10_12"
+      ],
+      "fieldDisciplines": [
+        "matric_inter_10_12"
+      ],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [
+        {
+          "id": "matric_inter_10_12",
+          "label": "10th / 12th Pass / ITI",
+          "shortLabel": "10th / 12th Pass",
+          "matchType": "field",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match: Specifically requires 10th / 12th Pass"
+        }
+      ],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Police & Security",
+        "Uttar",
+        "Government of India",
+        "Admit Card Out",
+        "Active",
+        "10th / 12th Pass",
+        "Trending"
+      ]
+    }
+  ]
+}

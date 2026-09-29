@@ -1,0 +1,140 @@
+:root {
+  /* ========================================================
+     CLAY-INSPIRED DESIGN SYSTEM TOKENS
+     Refined, minimal, enterprise-grade craft with micro-borders
+  ======================================================== */
+
+  /* Brand Accents (Preserved Sarkari Result Identity, Elevated Craft) */
+  --primary-red: #c01b22;
+  --primary-red-hover: #a1141b;
+  --primary-red-light: #fef2f2;
+  --primary-red-tint: rgba(192, 27, 34, 0.08);
+  --primary-navy: #0f172a;
+  --primary-navy-light: #1e293b;
+  --brand-gold: #f59e0b;
+  --brand-gold-light: #fef3c7;
+
+  /* Surfaces & Backgrounds (Clay Minimal Light Theme) */
+  --bg-page: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-surface-soft: #f1f5f9;
+  --bg-surface-alt: #e2e8f0;
+  --bg-input: #ffffff;
+  --border-color: rgba(15, 23, 42, 0.08);
+  --border-subtle: rgba(15, 23, 42, 0.14);
+  --border-focus: #0f172a;
+
+  /* Reference Design Surfaces & Matrix Header Gradients */
+  --hero-bg-gradient: linear-gradient(135deg, #eaf2ff 0%, #f4f8ff 50%, #edf4fe 100%);
+  --hero-border: rgba(190, 215, 250, 0.55);
+  --gradient-results: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  --gradient-admitcards: linear-gradient(135deg, #065f46 0%, #059669 100%);
+  --gradient-jobs: linear-gradient(135deg, #991b1b 0%, #dc2626 100%);
+
+  /* High-Contrast Typography Tokens */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-tertiary: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* Sector Badge Themes (Soft Tonal Aesthetic) */
+  --sector-teaching: #7c3aed;
+  --sector-teaching-bg: rgba(124, 58, 237, 0.08);
+  --sector-banking: #0284c7;
+  --sector-banking-bg: rgba(2, 132, 199, 0.08);
+  --sector-ssc: #ea580c;
+  --sector-ssc-bg: rgba(234, 88, 12, 0.08);
+  --sector-police: #0f766e;
+  --sector-police-bg: rgba(15, 118, 110, 0.08);
+  --sector-railway: #b91c1c;
+  --sector-railway-bg: rgba(185, 28, 28, 0.08);
+  --sector-defense: #15803d;
+  --sector-defense-bg: rgba(21, 128, 61, 0.08);
+  --sector-civil: #4338ca;
+  --sector-civil-bg: rgba(67, 56, 202, 0.08);
+  --sector-medical: #db2777;
+  --sector-medical-bg: rgba(219, 39, 119, 0.08);
+  --sector-engineering: #0891b2;
+  --sector-engineering-bg: rgba(8, 145, 178, 0.08);
+  --sector-state: #d97706;
+  --sector-state-bg: rgba(217, 119, 6, 0.08);
+  --sector-general: #475569;
+  --sector-general-bg: rgba(71, 85, 105, 0.08);
+
+  /* Status Colors */
+  --status-success: #16a34a;
+  --status-success-bg: rgba(22, 163, 74, 0.1);
+  --status-warning: #d97706;
+  --status-warning-bg: rgba(217, 119, 6, 0.1);
+  --status-info: #2563eb;
+  --status-info-bg: rgba(37, 99, 235, 0.1);
+
+  /* Modern Clay Typography Stack */
+  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  /* Clay Diffusion Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 14px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 10px 25px -4px rgba(0, 0, 0, 0.06), 0 4px 10px -2px rgba(0, 0, 0, 0.02);
+  --shadow-xl: 0 20px 40px -8px rgba(0, 0, 0, 0.08), 0 8px 16px -4px rgba(0, 0, 0, 0.03);
+  --shadow-card: inset 0 1px 0 0 rgba(255, 255, 255, 0.9), 0 1px 3px rgba(0, 0, 0, 0.03), 0 4px 14px -2px rgba(0, 0, 0, 0.03);
+  --shadow-command: 0 0 0 1px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.04), 0 12px 28px -4px rgba(15, 23, 42, 0.06);
+
+  /* Bento Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 120ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ========================================================
+   CLAY DARK THEME (Ultra-Clean Deep Slate)
+======================================================== */
+[data-theme="dark"] {
+  --bg-page: #0a0e17;
+  --bg-surface: #101623;
+  --bg-surface-elevated: #161e30;
+  --bg-surface-soft: #141c2c;
+  --bg-surface-alt: #1e293d;
+  --bg-input: #121927;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.14);
+  --border-focus: #ffffff;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-tertiary: #475569;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.8);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.9);
+  --shadow-card: inset 0 1px 0 0 rgba(255, 255, 255, 0.06), 0 2px 8px rgba(0, 0, 0, 0.6);
+  --shadow-command: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 4px 20px rgba(0, 0, 0, 0.7);
+
+  --sector-teaching-bg: rgba(124, 58, 237, 0.16);
+  --sector-banking-bg: rgba(2, 132, 199, 0.16);
+  --sector-ssc-bg: rgba(234, 88, 12, 0.16);
+  --sector-police-bg: rgba(15, 118, 110, 0.16);
+  --sector-railway-bg: rgba(185, 28, 28, 0.16);
+  --sector-defense-bg: rgba(21, 128, 61, 0.16);
+  --sector-civil-bg: rgba(67, 56, 202, 0.16);
+  --sector-medical-bg: rgba(219, 39, 119, 0.16);
+  --sector-engineering-bg: rgba(8, 145, 178, 0.16);
+  --sector-state-bg: rgba(217, 119, 6, 0.16);
+  --sector-general-bg: rgba(71, 85, 105, 0.16);
+}
