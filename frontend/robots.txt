@@ -1,0 +1,7 @@
+# Robots.txt for Sarkari Hith / Sarkari Result Portal
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://sarkarihith.com/sitemap.xml
