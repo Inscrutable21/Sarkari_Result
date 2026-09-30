@@ -16,7 +16,7 @@
     <priority>0.9</priority>
   </url>
 
-  <!-- Sarkari Results & Cutoff Lists -->
+  <!-- sarkari hiths & Cutoff Lists -->
   <url>
     <loc>https://sarkarihith.com/#matrix-col-results</loc>
     <lastmod>2026-09-30</lastmod>

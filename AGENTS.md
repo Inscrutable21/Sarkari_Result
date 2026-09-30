@@ -1,7 +1,7 @@
-# Agent Rules & Memory: Sarkari Result Project
+# Agent Rules & Memory: sarkari hith Project
 
 ## 1. Project Identity & Architecture
-- **Application**: Sarkari Result (National government examinations, recruitment, admit cards, and results portal).
+- **Application**: sarkari hith (National government examinations, recruitment, admit cards, and results portal).
 - **Master Blueprint**: Always adhere to [DEVELOPMENT_GUIDELINES.md](file:///e:/Sarkari_Result/DEVELOPMENT_GUIDELINES.md).
 
 ## 2. Directory & Structure Rules
@@ -16,5 +16,5 @@
 1. **Check File Placement**: Is the file being written in the correct directory (`frontend/` vs `backend/`) according to [DEVELOPMENT_GUIDELINES.md](file:///e:/Sarkari_Result/DEVELOPMENT_GUIDELINES.md)?
 2. **Check Modularity**: Are styles separated into logical sheets? Are JavaScript components and API layers isolated?
 3. **Data Contract Consistency**: Are API responses adhering to `{ success: boolean, data: ..., meta: ... }`?
-4. **Information Density & Speed**: Sarkari Result demands high visual clarity, instant filtering, and mobile-friendly usability.
+4. **Information Density & Speed**: sarkari hith demands high visual clarity, instant filtering, and mobile-friendly usability.
 5. **No Bloat**: Keep dependencies minimal, utilizing native Node.js and lightweight modern vanilla JS/CSS.

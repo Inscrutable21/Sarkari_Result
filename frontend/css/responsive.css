@@ -1,29 +1,42 @@
 /* ========================================================
-   SARKARI RESULT - ADVANCED RESPONSIVE DESIGN SYSTEM
+   sarkari hith - ADVANCED RESPONSIVE DESIGN SYSTEM
    Full Mobile, Tablet, Phablet & Ultra-Compact Support
    ======================================================== */
 
 /* ========================================================
    GLOBAL MOBILE-FIRST ANTI-OVERFLOW RULES
    ======================================================== */
-html, body {
+html,
+body {
   overflow-x: hidden;
   width: 100%;
   max-width: 100%;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-img, svg, video, canvas, audio, iframe, embed, object {
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
   max-width: 100%;
   height: auto;
 }
 
 /* Form input iOS zoom prevention (inputs < 16px trigger auto-zoom in Safari) */
 @media (max-width: 768px) {
-  input, select, textarea {
+
+  input,
+  select,
+  textarea {
     font-size: 16px !important;
   }
 }
@@ -87,6 +100,7 @@ img, svg, video, canvas, audio, iframe, embed, object {
       opacity: 0;
       transform: translateY(4px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -114,6 +128,7 @@ img, svg, video, canvas, audio, iframe, embed, object {
    2. TABLETS & SMARTPHONES (Max-Width: 768px)
    ======================================================== */
 @media (max-width: 768px) {
+
   /* Extra bottom padding on body for the fixed mobile bottom bar */
   body {
     padding-bottom: calc(58px + env(safe-area-inset-bottom, 0px));
@@ -192,7 +207,8 @@ img, svg, video, canvas, audio, iframe, embed, object {
   }
 
   .brand-subtitle {
-    display: none !important; /* Hide subtitle to keep 1-row header */
+    display: none !important;
+    /* Hide subtitle to keep 1-row header */
   }
 
   /* Hide duplicate header navigation on mobile:
@@ -210,7 +226,8 @@ img, svg, video, canvas, audio, iframe, embed, object {
   }
 
   .btn-job-alerts {
-    display: none !important; /* Job alerts accessible via bottom bar */
+    display: none !important;
+    /* Job alerts accessible via bottom bar */
   }
 
   .btn-tracked-nav {
@@ -477,11 +494,11 @@ img, svg, video, canvas, audio, iframe, embed, object {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
-  .mobile-active-toggle input:checked + .mobile-active-track {
+  .mobile-active-toggle input:checked+.mobile-active-track {
     background: #16a34a;
   }
 
-  .mobile-active-toggle input:checked + .mobile-active-track .mobile-active-thumb {
+  .mobile-active-toggle input:checked+.mobile-active-track .mobile-active-thumb {
     transform: translateX(10px);
   }
 
@@ -947,11 +964,13 @@ img, svg, video, canvas, audio, iframe, embed, object {
    ======================================================== */
 @media (max-width: 640px) {
   .header-actions .btn-job-alerts span:not(.alerts-badge) {
-    display: none; /* Icon-only compact alerts button */
+    display: none;
+    /* Icon-only compact alerts button */
   }
 
   .header-actions .btn-job-alerts.btn-tracked-nav span {
-    display: none; /* Icon-only compact tracked button */
+    display: none;
+    /* Icon-only compact tracked button */
   }
 
   .header-actions .btn-job-alerts {

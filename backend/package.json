@@ -2,7 +2,7 @@
   "name": "sarkari-result-backend",
   "version": "1.0.0",
   "private": true,
-  "description": "Node.js backend and static frontend server for Sarkari Result",
+  "description": "Node.js backend and static frontend server for sarkari hith",
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch --watch-path=server.js --watch-path=src/services server.js",

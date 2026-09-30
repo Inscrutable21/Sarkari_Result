@@ -1,5 +1,5 @@
 /**
- * API Service for Sarkari Result Frontend
+ * API Service for sarkari hith Frontend
  * Communicates with the Node.js backend endpoints with automatic cross-origin and offline fallback
  */
 

@@ -1,5 +1,5 @@
 /**
- * Reactive Client State Management for Sarkari Result
+ * Reactive Client State Management for sarkari hith
  */
 
 export const state = {
@@ -132,7 +132,7 @@ export function filterItems(items) {
     // 2. Sector Filter
     if (sector !== 'all') {
       const matchSector = item.sectorBadge === sector ||
-                          item.sector?.toLowerCase() === sector.toLowerCase();
+        item.sector?.toLowerCase() === sector.toLowerCase();
       if (!matchSector) return false;
     }
 

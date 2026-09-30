@@ -173,7 +173,7 @@ async function scrapeCategoryArchive(categoryUrl, targetKey, maxItems = 150) {
       const isRelevantTitle = title.length > 5 &&
         !title.toLowerCase().includes('click here') &&
         !title.toLowerCase().includes('view more') &&
-        !title.toLowerCase().includes('sarkari result');
+        !title.toLowerCase().includes('sarkari hith');
 
       if (isPostUrl && isRelevantTitle && !seenLinks.has(fullUrl)) {
         seenLinks.add(fullUrl);

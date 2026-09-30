@@ -1,4 +1,4 @@
-# 🏛️ Sarkari Hith (Sarkari Result 2026)
+# 🏛️ Sarkari Hith (sarkari hith 2026)
 
 [![Vercel Deployment](https://img.shields.io/badge/Deployed%20with-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com)
 [![Node.js](https://img.shields.io/badge/Node.js-v20+-339933?style=for-the-badge&logo=nodedotjs)](https://nodejs.org)

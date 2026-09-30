@@ -18,7 +18,7 @@ function loadEnv() {
           }
         }
       });
-    } catch {}
+    } catch { }
   }
 }
 loadEnv();
@@ -145,7 +145,7 @@ const server = createServer(async (request, response) => {
       return;
     }
 
-    // SSRF Validation: Only allow legitimate external Sarkari Result / official gov domains
+    // SSRF Validation: Only allow legitimate external sarkari hith / official gov domains
     let parsedTarget;
     try {
       parsedTarget = new URL(targetUrl);
@@ -158,9 +158,9 @@ const server = createServer(async (request, response) => {
     const isHttp = parsedTarget.protocol === "http:" || parsedTarget.protocol === "https:";
     const hostname = parsedTarget.hostname.toLowerCase();
     const isAllowedDomain = hostname === "sarkariresult.com" ||
-                            hostname.endsWith(".sarkariresult.com") ||
-                            hostname.endsWith(".gov.in") ||
-                            hostname.endsWith(".nic.in");
+      hostname.endsWith(".sarkariresult.com") ||
+      hostname.endsWith(".gov.in") ||
+      hostname.endsWith(".nic.in");
 
     // Block localhost and private IP addresses
     const isPrivateIp = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.|169\.254\.|0\.0\.0\.0|::1)/i.test(hostname);
@@ -238,11 +238,11 @@ const server = createServer(async (request, response) => {
       response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
       const confirmMsg = result.isNew
         ? (result.emailDispatched
-            ? `Subscribed successfully! Dispatched ${result.matchedCount || 0} matching jobs directly to ${result.subscriber.email}.`
-            : "Subscribed successfully! You will receive email alerts when new jobs match your degree and qualification.")
+          ? `Subscribed successfully! Dispatched ${result.matchedCount || 0} matching jobs directly to ${result.subscriber.email}.`
+          : "Subscribed successfully! You will receive email alerts when new jobs match your degree and qualification.")
         : (result.emailDispatched
-            ? `Alert preferences updated! Dispatched ${result.matchedCount || 0} matching jobs to ${result.subscriber.email}.`
-            : "Subscription preferences updated successfully!");
+          ? `Alert preferences updated! Dispatched ${result.matchedCount || 0} matching jobs to ${result.subscriber.email}.`
+          : "Subscription preferences updated successfully!");
 
       response.end(JSON.stringify({
         success: true,
@@ -601,7 +601,7 @@ server.on("error", (err) => {
       listenAttempts++;
       console.warn(`[Port ${port} busy, waiting for release (retry ${listenAttempts}/${MAX_ATTEMPTS})...]`);
       setTimeout(() => {
-        try { server.close(); } catch {}
+        try { server.close(); } catch { }
         server.listen(port);
       }, 700);
     } else {
@@ -615,19 +615,19 @@ server.on("error", (err) => {
 });
 
 process.on("SIGINT", () => {
-  try { server.close(); } catch {}
+  try { server.close(); } catch { }
   process.exit(0);
 });
 
 process.on("SIGTERM", () => {
-  try { server.close(); } catch {}
+  try { server.close(); } catch { }
   process.exit(0);
 });
 
 if (require.main === module) {
   server.listen(port, () => {
     listenAttempts = 0;
-    console.log(`Sarkari Result is running at http://localhost:${port}`);
+    console.log(`sarkari hith is running at http://localhost:${port}`);
   });
 }
 

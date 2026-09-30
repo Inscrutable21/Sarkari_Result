@@ -1,5 +1,5 @@
 /**
- * UI Components & DOM Renderers for Sarkari Result
+ * UI Components & DOM Renderers for sarkari hith
  */
 
 import { state, filterItems, setSelectedItem } from './state.js';
@@ -290,7 +290,7 @@ function createMatrixItemHtml(item) {
 }
 
 /**
- * Renders the 3-column Sarkari Result Matrix
+ * Renders the 3-column sarkari hith Matrix
  */
 export function renderMatrix(resultsContainer, admitCardsContainer, jobsContainer, data) {
   const filteredResults = filterItems(data.results);
@@ -423,9 +423,9 @@ function renderModalContent(item) {
             <div class="eligibility-banner-content">
               <strong>Direct Branch Requirement: ${escapeHtml(meta?.label || activeStream)}</strong>
               <p>${postCount > 0
-                ? `This notification specifically demands your specialization! You qualify for <strong>${postCount}</strong> specific post(s) (highlighted below).`
-                : `Your qualification branch directly matches the required discipline for this post.`
-              }</p>
+            ? `This notification specifically demands your specialization! You qualify for <strong>${postCount}</strong> specific post(s) (highlighted below).`
+            : `Your qualification branch directly matches the required discipline for this post.`
+          }</p>
             </div>
           </div>
         `;
@@ -444,9 +444,9 @@ function renderModalContent(item) {
             <div class="eligibility-banner-content">
               <strong>Eligible For Your Degree: ${escapeHtml(meta?.label || activeStream)}</strong>
               <p>${postCount > 0
-                ? `You can apply for <strong>${postCount}</strong> post(s) in this notification.`
-                : `General eligibility criteria matches your qualification.`
-              }</p>
+            ? `You can apply for <strong>${postCount}</strong> post(s) in this notification.`
+            : `General eligibility criteria matches your qualification.`
+          }</p>
             </div>
           </div>
         `;
@@ -632,14 +632,14 @@ function renderModalContent(item) {
         const bg = rowMatch.type === 'field'
           ? 'rgba(8, 145, 178, 0.08)'
           : rowMatch.type === 'general'
-          ? 'rgba(22, 163, 74, 0.08)'
-          : (idx % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)');
+            ? 'rgba(22, 163, 74, 0.08)'
+            : (idx % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)');
 
         const badgeClass = rowMatch.type === 'field'
           ? 'badge-row-field'
           : rowMatch.type === 'general'
-          ? 'badge-row-general'
-          : 'badge-row-other';
+            ? 'badge-row-general'
+            : 'badge-row-other';
 
         tableHtml += `
           <tr style="background: ${bg}; border-bottom: 1px solid var(--border-color, #e2e8f0);">
@@ -909,11 +909,11 @@ export function showToast(message, type = 'info') {
   toast.innerHTML = `
     <span class="toast-icon">
       ${type === 'success'
-        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>'
-        : type === 'error'
+      ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+      : type === 'error'
         ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'
         : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>'
-      }
+    }
     </span>
     <span>${escapeHtml(message)}</span>
   `;

@@ -1,5 +1,5 @@
 /**
- * Enhanced Classification & Categorization Engine for Sarkari Result
+ * Enhanced Classification & Categorization Engine for sarkari hith
  * Extracts sector, conducting organization, jurisdiction/state,
  * qualification tier, status, and theme badge colors.
  */

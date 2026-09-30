@@ -1,5 +1,5 @@
 /**
- * Application Entry Point for Sarkari Result Portal
+ * Application Entry Point for sarkari hith Portal
  */
 
 import {
@@ -850,7 +850,7 @@ function setupEventListeners() {
   });
 
   // Global trigger helper for Remind Me buttons
-  window.triggerJobTracking = function(jobId) {
+  window.triggerJobTracking = function (jobId) {
     const item = findItemById(jobId);
     if (item) {
       openTrackJobModal(item);

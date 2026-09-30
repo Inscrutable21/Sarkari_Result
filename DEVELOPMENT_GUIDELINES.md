@@ -1,4 +1,4 @@
-# Sarkari Result — Project Specification & Development Blueprint
+# sarkari hith — Project Specification & Development Blueprint
 
 > **CRITICAL REFERENCE**: Read and adhere strictly to this document before writing, refactoring, or extending any frontend or backend code in this repository.
 
@@ -6,7 +6,7 @@
 
 ## 1. What This Application Is
 
-**Sarkari Result** is India's most popular format for government recruitment, examinations, and official notifications portal. The goal of this platform is to provide rapid, high-density, accurate, and categorized updates for job seekers and aspirants across India.
+**sarkari hith** is India's most popular format for government recruitment, examinations, and official notifications portal. The goal of this platform is to provide rapid, high-density, accurate, and categorized updates for job seekers and aspirants across India.
 
 ### Core Modules & Features:
 1. **Live Notification Ticker**: Breaking alerts, urgent application deadline warnings, and newly released admit cards.

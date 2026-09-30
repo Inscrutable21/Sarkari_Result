@@ -26,7 +26,7 @@ function loadEnv() {
           }
         });
         break;
-      } catch {}
+      } catch { }
     }
   }
 }
@@ -71,7 +71,7 @@ function safeHttpUrl(rawUrl, fallback = '') {
     if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
       return parsed.toString();
     }
-  } catch {}
+  } catch { }
   return fallback;
 }
 
@@ -227,8 +227,8 @@ async function subscribeUser({ email, name, qualification, disciplines, state, s
   const subscribers = await getSubscribers();
   const cleanEmail = email.trim().toLowerCase();
 
-  const disciplineList = Array.isArray(disciplines) 
-    ? disciplines 
+  const disciplineList = Array.isArray(disciplines)
+    ? disciplines
     : (disciplines ? [disciplines] : ['all']);
 
   const index = subscribers.findIndex(s => s.email.toLowerCase() === cleanEmail);
@@ -345,8 +345,8 @@ function matchJobsForSubscriber(subscriber, allJobs) {
       const target = subQual.toLowerCase();
 
       // Check direct inclusion or broad eligibility
-      const isQualMatch = jobQual.includes(target) || 
-        target.includes(jobQual) || 
+      const isQualMatch = jobQual.includes(target) ||
+        target.includes(jobQual) ||
         jobQual.includes('check notice') ||
         (target.includes('graduate') && jobQual.includes('graduate')) ||
         (target.includes('10th') && jobQual.includes('10th')) ||
@@ -492,14 +492,14 @@ function buildJobAlertEmailHtml({ subscriber, jobs, isTest = false, isConfirmati
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sarkari Result Job Alert</title>
+  <title>sarkari hith Job Alert</title>
 </head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 20px; color: #1e293b;">
   <div style="max-width: 640px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
     
     <!-- Header Banner -->
     <div style="background: linear-gradient(135deg, #b30000 0%, #7f1d1d 100%); padding: 24px; text-align: center; color: #ffffff;">
-      <h1 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">SARKARI RESULT &bull; JOB NOTIFICATIONS</h1>
+      <h1 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">sarkari hith &bull; JOB NOTIFICATIONS</h1>
       <p style="margin: 6px 0 0; font-size: 13px; opacity: 0.9;">Tailored Recruitment Notifications Based on Your Qualifications</p>
     </div>
 
@@ -524,7 +524,7 @@ function buildJobAlertEmailHtml({ subscriber, jobs, isTest = false, isConfirmati
     <!-- Footer -->
     <div style="background: #ffffff; padding: 20px 24px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 12px; color: #64748b; line-height: 1.5;">
       <p style="margin: 0 0 8px 0;">
-        You received this email because you subscribed to custom job alerts on <a href="${portalUrl}" style="color: #b30000; text-decoration: none; font-weight: 600;">Sarkari Result</a>.
+        You received this email because you subscribed to custom job alerts on <a href="${portalUrl}" style="color: #b30000; text-decoration: none; font-weight: 600;">sarkari hith</a>.
       </p>
       <p style="margin: 0;">
         Always verify exam fees, eligibility, and age limit from the official advertisement before applying.
@@ -549,8 +549,8 @@ async function sendJobAlertEmail(subscriber, jobs, isTest = false, isConfirmatio
   const html = buildJobAlertEmailHtml({ subscriber, jobs, isTest, isConfirmation });
   const emailUser = process.env.EMAIL_USER || process.env.SMTP_USER;
   const defaultFrom = emailUser
-    ? `"Sarkari Result Job Alerts" <${emailUser}>`
-    : '"Sarkari Result Job Alerts" <alerts@sarkariresult.com>';
+    ? `"sarkari hith Job Alerts" <${emailUser}>`
+    : '"sarkari hith Job Alerts" <alerts@sarkariresult.com>';
   const fromEmail = process.env.NOTIFICATION_FROM_EMAIL || defaultFrom;
 
   let subject = '';
@@ -567,7 +567,7 @@ async function sendJobAlertEmail(subscriber, jobs, isTest = false, isConfirmatio
     to: subscriber.email,
     subject,
     html,
-    text: `Sarkari Result Job Alert\n\nFound ${jobs.length} jobs matching your profile:\n\n` +
+    text: `sarkari hith Job Alert\n\nFound ${jobs.length} jobs matching your profile:\n\n` +
       jobs.map(j => `- ${j.title} (Last Date: ${j.lastDateFormatted || 'Check Notice'})\n  Link: ${j.link}\n`).join('\n')
   };
 
@@ -685,7 +685,7 @@ async function dispatchAllNotifications() {
 
   for (const subscriber of activeSubscribers) {
     const matchingJobs = matchJobsForSubscriber(subscriber, allJobs);
-    
+
     // Filter out jobs that this subscriber was already notified for
     const notifiedIds = new Set(subscriber.notifiedJobIds || []);
     const newJobs = matchingJobs.filter(job => !notifiedIds.has(job.id));
@@ -887,8 +887,8 @@ async function sendTrackedJobEmail(track, daysLeft, isConfirmation = false) {
   const html = buildJobReminderEmailHtml({ track, daysLeft, isConfirmation });
   const emailUser = process.env.EMAIL_USER || process.env.SMTP_USER;
   const defaultFrom = emailUser
-    ? `"Sarkari Result Job Alerts" <${emailUser}>`
-    : '"Sarkari Result Job Alerts" <alerts@sarkariresult.com>';
+    ? `"sarkari hith Job Alerts" <${emailUser}>`
+    : '"sarkari hith Job Alerts" <alerts@sarkariresult.com>';
   const fromEmail = process.env.NOTIFICATION_FROM_EMAIL || defaultFrom;
 
   let subject = '';
@@ -952,7 +952,7 @@ async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, 
     const parsedJobs = JSON.parse(rawJobs);
     const jobs = Array.isArray(parsedJobs) ? parsedJobs : (parsedJobs.data || []);
     resolvedJob = jobs.find(j => j.id === jobId || j.title === jobTitle);
-  } catch {}
+  } catch { }
 
   const finalTitle = jobTitle || resolvedJob?.title || 'Government Recruitment';
   const finalOrg = organization || resolvedJob?.organization || 'Government Department';
@@ -964,7 +964,7 @@ async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, 
   const daysLeft = calculateDaysLeft(finalLastDate);
 
   // Check if candidate is already tracking this specific job
-  const existingIdx = trackedList.findIndex(t => 
+  const existingIdx = trackedList.findIndex(t =>
     t.email.toLowerCase() === cleanEmail && (t.jobId === jobId || t.jobTitle === finalTitle)
   );
 
@@ -1266,9 +1266,9 @@ function renderStatusPageHtml(result, requestedStatus) {
     <div class="content">
       <div class="icon-circle ${isApplied ? 'icon-applied' : 'icon-pending'}">
         ${isApplied
-          ? '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>'
-          : '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>'
-        }
+      ? '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+      : '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>'
+    }
       </div>
 
       <div class="job-title">
