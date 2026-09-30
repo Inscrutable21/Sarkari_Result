@@ -9,7 +9,8 @@ import {
   sendTestJobAlert,
   trackJobOpening,
   fetchTrackedJobs,
-  updateTrackedJobStatus
+  updateTrackedJobStatus,
+  trackAnalyticsEvent
 } from './api.js';
 import {
   state,
@@ -319,7 +320,11 @@ function setupEventListeners() {
   searchInput?.addEventListener('input', (e) => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
-      setFilters({ searchQuery: e.target.value });
+      const query = e.target.value;
+      setFilters({ searchQuery: query });
+      if (query && query.trim().length > 2) {
+        trackAnalyticsEvent('search', { query: query.trim() });
+      }
     }, 200);
   });
 
@@ -536,6 +541,7 @@ function setupEventListeners() {
       }
 
       showToast('Successfully subscribed to job alerts!', 'success');
+      trackAnalyticsEvent('job_alerts_subscribed', { qualification, sector: sectorVal, state: stateVal });
     } catch (err) {
       console.error('Subscription error:', err);
       if (alertsStatusMsg) {

@@ -211,3 +211,19 @@ export async function triggerDailyReminders() {
   }
   return result;
 }
+
+/**
+ * Sends custom events to Vercel Web Analytics if available
+ * @param {string} eventName - Name of the event (e.g. 'search', 'subscribe_alerts')
+ * @param {Record<string, string|number|boolean>} [data] - Event metadata properties
+ */
+export function trackAnalyticsEvent(eventName, data = {}) {
+  try {
+    if (typeof window !== 'undefined' && typeof window.va === 'function') {
+      window.va('event', { name: eventName, data });
+    }
+  } catch (err) {
+    console.debug('[Vercel Analytics] Track event error:', err);
+  }
+}
+
