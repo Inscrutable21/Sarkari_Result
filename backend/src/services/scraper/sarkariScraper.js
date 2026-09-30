@@ -283,8 +283,8 @@ async function scrapePostingDetails(url) {
           const eligibility = cleanText($(tds[2]).text());
 
           if (postName && totalPost && eligibility &&
-              !postName.toLowerCase().includes('post name') &&
-              !postName.toLowerCase().includes('candidate can read')) {
+            !postName.toLowerCase().includes('post name') &&
+            !postName.toLowerCase().includes('candidate can read')) {
             vacancyDetails.push({ postName, totalPost, eligibility });
           }
         }
@@ -302,11 +302,11 @@ async function scrapePostingDetails(url) {
 
               // Ignore spam / app stores / internal redundant redirects
               if (!finalUrl ||
-                  finalUrl.includes('play.google.com') ||
-                  finalUrl.includes('itunes.apple.com') ||
-                  finalUrl.includes('sarkariresultportal.com') ||
-                  finalUrl.includes('whatsapp.com') ||
-                  finalUrl.includes('t.me')) {
+                finalUrl.includes('play.google.com') ||
+                finalUrl.includes('itunes.apple.com') ||
+                finalUrl.includes('sarkariresultportal.com') ||
+                finalUrl.includes('whatsapp.com') ||
+                finalUrl.includes('t.me')) {
                 return;
               }
 

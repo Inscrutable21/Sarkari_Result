@@ -253,6 +253,20 @@ async function batchUploadAllDataToSheet() {
   const raw = await fs.readFile(ALL_DATA_FILE, 'utf-8');
   const all = JSON.parse(raw);
 
+  const DISCIPLINE_LABELS = {
+    cs_it: 'Computer Science & IT',
+    civil_eng: 'Civil Engineering',
+    mech_eng: 'Mechanical Engineering',
+    elec_eng: 'Electrical & Electronics',
+    any_bachelor: 'Any Bachelor Degree',
+    commerce_finance: 'Commerce & Accounts',
+    law_legal: 'Law & Legal (LLB)',
+    science_agriculture: 'Science & Agriculture',
+    medical_healthcare: 'Medical & Nursing',
+    education_teaching: 'Teaching Degree (B.Ed)',
+    matric_inter_10_12: '10th / 12th Pass / ITI'
+  };
+
   const payload = {
     latestJobs: (all.latestJobs || []).map(j => ({
       id: j.id || '',
@@ -261,10 +275,12 @@ async function batchUploadAllDataToSheet() {
       sector: j.sector || '',
       state: j.state || '',
       qualification: j.qualification || '',
-      disciplines: Array.isArray(j.eligibleDisciplines) ? j.eligibleDisciplines.join(', ') : '',
+      disciplines: Array.isArray(j.eligibleDisciplines)
+        ? j.eligibleDisciplines.map(d => DISCIPLINE_LABELS[d] || d).join(', ')
+        : '',
       lastDate: j.lastDateFormatted || j.lastDate || '',
       link: j.link || '',
-      totalVacancies: j.details?.totalVacancies || '',
+      totalVacancies: j.details?.totalVacancies || (j.title.match(/(\d+[\d,]*\s*posts?)/i)?.[1]) || '',
       active: j.isActive !== false ? 'true' : 'false'
     })),
     admitCards: (all.admitCards || []).map(a => ({

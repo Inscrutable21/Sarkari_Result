@@ -4,11 +4,11 @@
     "sectors": [
       {
         "name": "Teaching & Education",
-        "count": 55
+        "count": 52
       },
       {
         "name": "State Subordinate & Welfare",
-        "count": 26
+        "count": 25
       },
       {
         "name": "Staff Selection (SSC)",
@@ -19,24 +19,24 @@
         "count": 16
       },
       {
-        "name": "Defense & Armed Forces",
-        "count": 8
+        "name": "General & Others",
+        "count": 92
       },
       {
-        "name": "General & Others",
-        "count": 93
+        "name": "Engineering & Technical",
+        "count": 14
+      },
+      {
+        "name": "Defense & Armed Forces",
+        "count": 7
       },
       {
         "name": "Banking & Financial",
-        "count": 25
+        "count": 26
       },
       {
         "name": "Medical & Healthcare",
         "count": 18
-      },
-      {
-        "name": "Engineering & Technical",
-        "count": 13
       },
       {
         "name": "Railway (RRB)",
@@ -48,13 +48,13 @@
       },
       {
         "name": "Civil Services & State PSC",
-        "count": 27
+        "count": 26
       }
     ],
     "states": [
       {
         "name": "Uttar Pradesh (UP)",
-        "count": 91
+        "count": 86
       },
       {
         "name": "Bihar",
@@ -69,20 +69,20 @@
         "count": 20
       },
       {
-        "name": "Uttarakhand",
-        "count": 5
+        "name": "Rajasthan",
+        "count": 18
       },
       {
         "name": "Jharkhand",
         "count": 2
       },
       {
-        "name": "Delhi",
-        "count": 6
+        "name": "Uttarakhand",
+        "count": 4
       },
       {
-        "name": "Rajasthan",
-        "count": 17
+        "name": "Delhi",
+        "count": 6
       },
       {
         "name": "Haryana",
@@ -96,7 +96,7 @@
     "qualifications": [
       {
         "name": "Teaching Degree (B.Ed / D.El.Ed)",
-        "count": 29
+        "count": 30
       },
       {
         "name": "10th / Matric Pass",
@@ -104,19 +104,19 @@
       },
       {
         "name": "12th / Intermediate",
-        "count": 15
+        "count": 14
       },
       {
         "name": "Graduate / Check Notice",
-        "count": 174
-      },
-      {
-        "name": "Graduate / Degree",
-        "count": 31
+        "count": 172
       },
       {
         "name": "Engineering / Diploma / ITI",
         "count": 16
+      },
+      {
+        "name": "Graduate / Degree",
+        "count": 28
       },
       {
         "name": "Medical / Nursing Degree",
@@ -132,91 +132,91 @@
         "id": "cs_it",
         "label": "Computer Science & IT (B.Tech/BE/BCA/MCA/B.Sc CS)",
         "shortLabel": "CS & IT",
-        "count": 41,
-        "fieldCount": 6,
-        "generalCount": 39
+        "count": 38,
+        "fieldCount": 5,
+        "generalCount": 37
       },
       {
         "id": "civil_eng",
         "label": "Civil Engineering (B.Tech/Diploma)",
         "shortLabel": "Civil Engg",
-        "count": 42,
+        "count": 41,
         "fieldCount": 6,
-        "generalCount": 39
+        "generalCount": 37
       },
       {
         "id": "mech_eng",
         "label": "Mechanical Engineering (B.Tech/Diploma)",
         "shortLabel": "Mechanical Engg",
         "count": 43,
-        "fieldCount": 5,
-        "generalCount": 39
+        "fieldCount": 7,
+        "generalCount": 37
       },
       {
         "id": "elec_eng",
         "label": "Electrical & Electronics (B.Tech/Diploma/ECE)",
         "shortLabel": "Electrical / ECE",
-        "count": 45,
-        "fieldCount": 7,
-        "generalCount": 39
+        "count": 44,
+        "fieldCount": 8,
+        "generalCount": 37
       },
       {
         "id": "any_bachelor",
         "label": "Any Bachelor Degree (BA/B.Sc/B.Com/Any Graduate)",
         "shortLabel": "Any Bachelor Degree",
         "count": 42,
-        "fieldCount": 9,
-        "generalCount": 39
+        "fieldCount": 8,
+        "generalCount": 37
       },
       {
         "id": "commerce_finance",
         "label": "Commerce, Accounts & CA (B.Com/M.Com/MBA)",
         "shortLabel": "Commerce / Accounts",
-        "count": 39,
-        "fieldCount": 3,
-        "generalCount": 39
+        "count": 38,
+        "fieldCount": 4,
+        "generalCount": 37
       },
       {
         "id": "law_legal",
         "label": "Law & Legal (LLB / LLM)",
         "shortLabel": "Law (LLB)",
-        "count": 43,
+        "count": 41,
         "fieldCount": 7,
-        "generalCount": 39
+        "generalCount": 37
       },
       {
         "id": "science_agriculture",
         "label": "Science & Agriculture (B.Sc / M.Sc)",
         "shortLabel": "Science / Agri",
         "count": 54,
-        "fieldCount": 17,
-        "generalCount": 39
+        "fieldCount": 18,
+        "generalCount": 37
       },
       {
         "id": "medical_healthcare",
         "label": "Medical, Nursing & Pharmacy (MBBS/GNM/B.Pharm)",
         "shortLabel": "Medical / Nursing",
-        "count": 62,
+        "count": 60,
         "fieldCount": 23,
-        "generalCount": 39
+        "generalCount": 37
       },
       {
         "id": "education_teaching",
         "label": "Teaching Degree (B.Ed / D.El.Ed / TET)",
         "shortLabel": "Teaching / B.Ed",
-        "count": 81,
-        "fieldCount": 44,
-        "generalCount": 39
+        "count": 80,
+        "fieldCount": 45,
+        "generalCount": 37
       },
       {
         "id": "matric_inter_10_12",
         "label": "10th / 12th Pass / ITI",
         "shortLabel": "10th / 12th Pass",
-        "count": 33,
-        "fieldCount": 33,
+        "count": 34,
+        "fieldCount": 34,
         "generalCount": 0
       }
     ],
-    "totalItems": 306
+    "totalItems": 301
   }
 }

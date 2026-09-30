@@ -238,9 +238,9 @@ const STANDARD_EXAM_PATTERNS = [
   },
   // UPSC Engineering Services (ESE/IES) - Strictly Civil, Mech, Electrical, Electronics (Excludes CS)
   {
-    regex: /\b(?:engineering service|ese|ies)\b/i,
+    regex: /\b(?:engineering\s*services?|ese|ies|upsc\s*engineering)\b/i,
     directFields: ['civil_eng', 'mech_eng', 'elec_eng'],
-    excludeFields: [{ id: 'cs_it', message: 'UPSC ESE strictly excludes Computer Science (Only Civil, Mechanical, Electrical, Electronics allowed).' }],
+    excludeFields: [{ id: 'cs_it', message: 'Computer Science & IT graduates are NOT eligible for UPSC ESE (Only Civil, Mechanical, Electrical, Electronics allowed).' }],
     anyGraduate: false
   },
   // SSC CGL (Any Graduate)
@@ -426,19 +426,37 @@ function evaluateDegreeEligibility(item) {
   const eligibleMeta = [];
   const ineligibleWarnings = [];
 
-  // Check explicit exclusion: UPSC Engineering Services
-  if (fullText.toLowerCase().includes('upsc') && (fullText.toLowerCase().includes('engineering service') || fullText.toLowerCase().includes('ese') || fullText.toLowerCase().includes('ies'))) {
+  const matchedDirectFields = new Set();
+
+  // Check explicit exclusion & targeting: UPSC Engineering Services (ESE / IES)
+  const lowerFull = fullText.toLowerCase();
+  const isUpscEse = lowerFull.includes('upsc') && (
+    lowerFull.includes('engineering service') ||
+    lowerFull.includes('engineering services') ||
+    lowerFull.includes('upsc engineering') ||
+    lowerFull.includes('esep') ||
+    lowerFull.includes('ese') ||
+    lowerFull.includes('ies')
+  );
+  if (isUpscEse) {
     ineligibleWarnings.push({
       disciplineId: 'cs_it',
       message: 'Computer Science & IT graduates are NOT eligible for UPSC ESE (Only Civil, Mech, Electrical, Electronics allowed).'
     });
+    // Explicitly qualify Civil, Mechanical, and Electrical / Electronics
+    matchedDirectFields.add('civil_eng');
+    matchedDirectFields.add('mech_eng');
+    matchedDirectFields.add('elec_eng');
   }
 
   // Check against standard examination dictionary
-  let matchedExamRule = null;
+  let hasOverallGeneralGraduate = isGeneralGraduateMatch(fullText);
   for (const rule of STANDARD_EXAM_PATTERNS) {
     if (rule.regex.test(fullText)) {
-      matchedExamRule = rule;
+      if (Array.isArray(rule.directFields)) {
+        for (const df of rule.directFields) matchedDirectFields.add(df);
+      }
+      if (rule.anyGraduate) hasOverallGeneralGraduate = true;
       if (rule.excludeFields) {
         for (const ef of rule.excludeFields) {
           if (!ineligibleWarnings.some(w => w.disciplineId === ef.id)) {
@@ -446,12 +464,8 @@ function evaluateDegreeEligibility(item) {
           }
         }
       }
-      break;
     }
   }
-
-  // Overall check for general graduation open stream
-  const hasOverallGeneralGraduate = isGeneralGraduateMatch(fullText) || Boolean(matchedExamRule?.anyGraduate);
 
   for (const disc of DEGREE_DISCIPLINES) {
     // Skip if explicitly disqualified
@@ -484,7 +498,7 @@ function evaluateDegreeEligibility(item) {
     }
 
     // Direct field match check from text/dictionary
-    const hasFieldOverall = isDirectFieldMatch(disc.id, fullText) || Boolean(matchedExamRule?.directFields?.includes(disc.id));
+    const hasFieldOverall = isDirectFieldMatch(disc.id, fullText) || matchedDirectFields.has(disc.id);
     const isDirectMatch = hasFieldMatchInVacancies || hasFieldOverall;
 
     // General graduate match check
@@ -499,8 +513,8 @@ function evaluateDegreeEligibility(item) {
       const description = matchType === 'field'
         ? `Direct Field Match: Specifically requires ${disc.shortLabel}`
         : matchType === 'both'
-        ? `Direct Field Match (${matchedPosts.filter(p => p.matchType === 'field').length} posts) + Open to Any Graduate`
-        : `Eligible via Any Bachelor Degree (Open to all streams)`;
+          ? `Direct Field Match (${matchedPosts.filter(p => p.matchType === 'field').length} posts) + Open to Any Graduate`
+          : `Eligible via Any Bachelor Degree (Open to all streams)`;
 
       eligibleMeta.push({
         id: disc.id,

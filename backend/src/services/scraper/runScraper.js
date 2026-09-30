@@ -104,25 +104,46 @@ async function run() {
     const data = await scrapeHomepage();
 
     // Step 2: Fetch Dedicated Archive Pages for Comprehensive Datasets
-    console.log('[Scraper] Fetching dedicated archive listings for Latest Jobs, Results, Admit Cards...');
-    const [archiveJobs, archiveResults, archiveAdmit] = await Promise.all([
+    console.log('[Scraper] Fetching dedicated archive listings for Latest Jobs, Results, Admit Cards, and UPSC...');
+    const [archiveJobs, archiveResults, archiveAdmit, archiveUpsc] = await Promise.all([
       scrapeCategoryArchive('https://www.sarkariresult.com/latestjob/', 'latestJobs', 120),
       scrapeCategoryArchive('https://www.sarkariresult.com/result/', 'results', 100),
-      scrapeCategoryArchive('https://www.sarkariresult.com/admitcard/', 'admitCards', 100)
+      scrapeCategoryArchive('https://www.sarkariresult.com/admitcard/', 'admitCards', 100),
+      scrapeCategoryArchive('https://www.sarkariresult.com/upsc/', 'latestJobs', 50)
     ]);
 
-    data.latestJobs = mergeListings(data.latestJobs, archiveJobs);
-    data.results = mergeListings(data.results, archiveResults);
-    data.admitCards = mergeListings(data.admitCards, archiveAdmit);
+    // Separate UPSC archive items into appropriate categories
+    const upscJobs = [];
+    const upscResults = [];
+    const upscAdmit = [];
+    for (const item of (archiveUpsc || [])) {
+      const lower = (item.title || '').toLowerCase();
+      if (lower.includes('result') || lower.includes('marks') || lower.includes('cutoff')) {
+        upscResults.push({ ...item, category: 'results' });
+      } else if (lower.includes('admit card') || lower.includes('call letter') || lower.includes('hall ticket')) {
+        upscAdmit.push({ ...item, category: 'admitCards' });
+      } else {
+        upscJobs.push({ ...item, category: 'latestJobs' });
+      }
+    }
+
+    data.latestJobs = mergeListings(data.latestJobs, [...archiveJobs, ...upscJobs]);
+    data.results = mergeListings(data.results, [...archiveResults, ...upscResults]);
+    data.admitCards = mergeListings(data.admitCards, [...archiveAdmit, ...upscAdmit]);
 
     console.log(`   Merged datasets -> Jobs: ${data.latestJobs.length}, Results: ${data.results.length}, Admit Cards: ${data.admitCards.length}`);
 
     // Step 3: Enrich priority and recent jobs with deep specs
-    console.log('\n[Scraper] Enriching priority jobs with deep specs (IIT BHU, BOB, and top recent)...');
+    console.log('\n[Scraper] Enriching priority jobs with deep specs (UPSC Engineering, IIT BHU, BOB, and top recent)...');
     const enrichedMap = new Map();
 
-    // Find IIT BHU and BOB postings
+    // Prioritize UPSC Engineering Services, key national exams, and featured institutions
     const priorityItems = data.latestJobs.filter(j =>
+      j.link.includes('upsc-engineering') ||
+      j.link.includes('engineering') ||
+      j.title.toLowerCase().includes('upsc engineering') ||
+      j.title.toLowerCase().includes('engineering service') ||
+      j.title.toLowerCase().includes('ese') ||
       j.link.includes('iit-bhu') ||
       j.link.includes('bank-of-baroda') ||
       j.link.includes('bob-sep26') ||

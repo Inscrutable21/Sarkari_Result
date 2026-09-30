@@ -2,11 +2,897 @@
   "success": true,
   "data": [
     {
+      "id": "up-anganwadi-helper-june26",
+      "title": "UP Anganwadi Helper Online Form 2026 | Last Date : District Wise",
+      "link": "https://www.sarkariresult.com/2026/up-anganwadi-helper-june26/",
+      "category": "latestJobs",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
+      "details": {
+        "title": "UP Uttar Pradesh Anganwadi Helper Bharti Recruitment 2026 Apply Online District Wise Vacancy Details Fatehpur, Balrampur, Gautam buddha Nagar, Kannauj, Bareilly, Jalaun, Gorakhpur, Shahjahanpur, Hathras, Siddharth Nagar , Hamirpur",
+        "url": "https://www.sarkariresult.com/2026/up-anganwadi-helper-june26/",
+        "postDate": "30 September 2026 | 12:58 PM",
+        "shortInfo": "Uttar Pradesh District Program Officer has released the advertisement of UP Anganwadi Helper Bharti Recruitment Notification 2026. Those Candidates Are Interested with Uttar Pradesh Anganwadi Helper Bharti Can Apply Online District Wise. For other information related to Uttar Pradesh Anganwadi Bharti recruitment like age limit, qualification, pay scale, District Wise Vacancy, and all other information read the advertisement and then apply.",
+        "importantDates": {
+          "Application Begin": "District Wise",
+          "Last Date for Apply Online": "District Wise",
+          "Complete Form Last Date": "District Wise"
+        },
+        "applicationFee": {
+          "General / OBC/EWS": "0/-",
+          "SC / ST /": "0/-"
+        },
+        "ageLimit": {
+          "Minimum Age": "18 Years",
+          "Maximum Age": "35 Male",
+          "Notice": "Age Relaxation Extra as per UP Govt. Anganwadi Bharti Helper Recruitment Rules."
+        },
+        "totalVacancies": "",
+        "vacancyDetails": [],
+        "importantLinks": [
+          {
+            "label": "Apply Online (Registration)",
+            "url": "https://upanganwadibharti.in/helper-v2/users/registration.php"
+          },
+          {
+            "label": "How to Fill Form (Video Hindi)",
+            "url": "https://www.youtube.com/watch?v=0BF9Umf9faM"
+          },
+          {
+            "label": "For UP Anganwadi Worker Vacancy",
+            "url": "https://www.sarkariresult.com/2026/up-anganwadi-worker/"
+          },
+          {
+            "label": "Download Notification",
+            "url": "https://upanganwadibharti.in/"
+          }
+        ],
+        "scrapedAt": "2026-09-30T12:37:51.118Z"
+      },
+      "section": "latestJobs",
+      "sector": "State Subordinate & Welfare",
+      "sectorBadge": "state-subordinate",
+      "sectorColor": "#d97706",
+      "state": "Uttar Pradesh (UP)",
+      "qualification": "10th / Matric Pass",
+      "organization": "Government of India",
+      "lastDate": null,
+      "lastDateFormatted": null,
+      "isExpired": false,
+      "isActive": true,
+      "status": "Apply Online",
+      "statusType": "primary",
+      "eligibleDisciplines": [],
+      "fieldDisciplines": [],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [],
+      "ineligibleWarnings": [],
+      "tags": [
+        "State Subordinate & Welfare",
+        "Uttar",
+        "Government of India",
+        "Apply Online",
+        "Active"
+      ]
+    },
+    {
+      "id": "rajasthan-sanitation-worker-jul26",
+      "title": "Rajasthan Safai Karamchari Online Form 2026 | Last Date : 13/10/2026",
+      "link": "https://www.sarkariresult.com/2026/rajasthan-sanitation-worker-jul26/",
+      "category": "latestJobs",
+      "scrapedAt": "2026-09-30T12:37:48.863Z",
+      "details": {
+        "title": "LSG Rajasthan Safai Karamchari Recruitment 2026 Apply Online for",
+        "url": "https://www.sarkariresult.com/2026/rajasthan-sanitation-worker-jul26/",
+        "postDate": "30 September 2026 | 11:04 AM",
+        "shortInfo": "Local Self Government Department, Rajasthan has released Safai Karamchari Contractual Recruitment Notification 2026. Those candidates who are Interested in this Rajasthan Safai Karamchari Contractual Recruitment 2026 can Apply Online from 15/08/2026 to 13/10/2026. Read the notification for recruitment eligibility, post information, selection procedure, Practice Test, pay scale and all other information.",
+        "importantDates": {
+          "Application Begin": "15/08/2026",
+          "Last Date for Apply Online": "13/10/2026",
+          "Last Date Pay Exam Fee": "13/10/2026",
+          "Merit List / Exam Date": "As per Schedule"
+        },
+        "applicationFee": {
+          "General": "600/-",
+          "OBC / SC / ST / PH": "400/-",
+          "Pay the Examination Fee Through Debit Card / Credit Card / Net Banking / Online Only": ""
+        },
+        "ageLimit": {
+          "Minimum Age": "40 years",
+          "Notice": "Age Relaxation Extra as per Rajasthan Contractual Hiring to Civil Posts Rules, 2022."
+        },
+        "totalVacancies": "24752 Post",
+        "vacancyDetails": [
+          {
+            "postName": "Safai Karamchari (Sanitation Worker) Non TSP",
+            "totalPost": "24277",
+            "eligibility": "The applicant must be a domicile of the State of Rajasthan. No educational qualification has been prescribed for the contractual post of Safai Karamchari. More Eligibility Details Read the Notification"
+          }
+        ],
+        "importantLinks": [
+          {
+            "label": "Apply Online",
+            "url": "https://sso.rajasthan.gov.in/signin"
+          },
+          {
+            "label": "Download Date Extended Notice",
+            "url": "https://doc.sarkariresults.org.in/LSG_Safai_karam_Chari_Date_Extended.pdf"
+          },
+          {
+            "label": "Download Notification",
+            "url": "https://www.sarkariresult.com/wp-content/uploads/2026/07/SarkariResult.Com_LSG_Rajasthan_Safai_Karamchari_01_2026.pdf"
+          },
+          {
+            "label": "Official Website (LSG Rajasthan Website Official)",
+            "url": "https://lsg.rajasthan.gov.in/home"
+          }
+        ],
+        "scrapedAt": "2026-09-30T12:37:51.280Z"
+      },
+      "section": "latestJobs",
+      "sector": "General & Others",
+      "sectorBadge": "general",
+      "sectorColor": "#475569",
+      "state": "Rajasthan",
+      "qualification": "Graduate / Check Notice",
+      "organization": "Government of India",
+      "lastDate": "2026-10-13",
+      "lastDateFormatted": "13/10/2026",
+      "isExpired": false,
+      "isActive": true,
+      "status": "Till 13/10/2026",
+      "statusType": "success",
+      "eligibleDisciplines": [],
+      "fieldDisciplines": [],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [],
+      "ineligibleWarnings": [],
+      "tags": [
+        "General & Others",
+        "Rajasthan",
+        "Government of India",
+        "Till 13/10/2026",
+        "Active"
+      ]
+    },
+    {
+      "id": "jharkhand-jssc-para-teacher-july26",
+      "title": "Jharkhand JSSC Para Teacher Online Form 2026 | Last Date : 18/10/2026",
+      "link": "https://www.sarkariresult.com/2026/jharkhand-jssc-para-teacher-july26/",
+      "category": "latestJobs",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
+      "details": {
+        "title": "Jharkhand JSSC Jharkhand JSSC Para Teacher Recruitment 2026 Apply Online for 6101 Post",
+        "url": "https://www.sarkariresult.com/2026/jharkhand-jssc-para-teacher-july26/",
+        "postDate": "24 July 2026 | 05:42 PM",
+        "shortInfo": "Jharkhand Staff Selection Commission (JSSC) has released the JSSC Para Teacher Notification for the recruitment of 2026. Those Candidates Are Interested to the Following JSSC Assistant Teacher (Para Teacher) Exam 2026 Vacancy Can Apply Online from 29/09/2026 to 18/10/2026. See the advertisement for information related to age limit, syllabus, Department wise post, selection procedure, pay scale in JSSC Assistant Teacher (Para Teacher) Recruitment 2026.",
+        "importantDates": {
+          "Application Begin": "29/09/2026",
+          "Last Date for Apply Online": "18/10/2026",
+          "Pay Exam Fee Last Date": "18/10/2026",
+          "Photo / Signature Upload Last Date": "22/10/2026",
+          "Correction Date": "23-24 October 2026",
+          "JSSC Para Teacher Exam Date": "As per Schedule",
+          "Admit Card Available": "Before Exam"
+        },
+        "applicationFee": {
+          "General / OBC / Other State": "100/-",
+          "SC / ST": "50/-",
+          "Pay the Exam Fee Through Online / Offline Fee Mode Only": ""
+        },
+        "ageLimit": {
+          "Minimum Age": "18 Years",
+          "Maximum Age": "35 Years",
+          "Notice": "Age Relaxation Extra as per JSSC Assistant Teacher (Para Teacher) Examination Rules Advt. No. 04/2026."
+        },
+        "totalVacancies": "6101 Post",
+        "vacancyDetails": [
+          {
+            "postName": "Intermediate Trained Assistant Acharya (Class 1-5)",
+            "totalPost": "1909",
+            "eligibility": "10+2 (Intermediate) with required marks and 2 Year D.El.Ed / Diploma in Elementary Education / B.El.Ed / Diploma in Special Education / Graduation + D.El.Ed. Must have JTET / CTET (Primary Level) qualification."
+          },
+          {
+            "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Language",
+            "totalPost": "1868",
+            "eligibility": "Bachelor’s Degree in the relevant Language subject with B.Ed / B.A. B.Ed / B.Sc. B.Ed / B.Ed (Special Education) / Integrated B.Ed-M.Ed. Must have JTET / CTET (Upper Primary Level) qualification."
+          },
+          {
+            "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Social Science",
+            "totalPost": "660",
+            "eligibility": "Bachelor’s Degree in Arts / Humanities / Social Science / Commerce / Management with B.Ed or equivalent qualification. Must have JTET / CTET (Upper Primary Level) qualification."
+          },
+          {
+            "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Mathematics & Science",
+            "totalPost": "1664",
+            "eligibility": "Bachelor’s Degree in Mathematics / Science with B.Ed / B.Sc. B.Ed / B.A. B.Ed / Integrated B.Ed or equivalent qualification. Must have JTET / CTET (Upper Primary Level) qualification."
+          },
+          {
+            "postName": "Intermediate Trained Assistant Acharya (Class 1-5)",
+            "totalPost": "1909",
+            "eligibility": "10+2 (Intermediate) with required marks and 2 Year D.El.Ed / Diploma in Elementary Education / B.El.Ed / Diploma in Special Education / Graduation + D.El.Ed. Must have JTET / CTET (Primary Level) qualification."
+          },
+          {
+            "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Language",
+            "totalPost": "1868",
+            "eligibility": "Bachelor’s Degree in the relevant Language subject with B.Ed / B.A. B.Ed / B.Sc. B.Ed / B.Ed (Special Education) / Integrated B.Ed-M.Ed. Must have JTET / CTET (Upper Primary Level) qualification."
+          },
+          {
+            "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Social Science",
+            "totalPost": "660",
+            "eligibility": "Bachelor’s Degree in Arts / Humanities / Social Science / Commerce / Management with B.Ed or equivalent qualification. Must have JTET / CTET (Upper Primary Level) qualification."
+          },
+          {
+            "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Mathematics & Science",
+            "totalPost": "1664",
+            "eligibility": "Bachelor’s Degree in Mathematics / Science with B.Ed / B.Sc. B.Ed / B.A. B.Ed / Integrated B.Ed or equivalent qualification. Must have JTET / CTET (Upper Primary Level) qualification."
+          }
+        ],
+        "importantLinks": [
+          {
+            "label": "Apply Online",
+            "url": "https://jsscjtaacce.ibtexamination.com/"
+          },
+          {
+            "label": "Download Notification",
+            "url": "https://jssc.jharkhand.gov.in/sites/default/files/Brochure%20Regular%20Vacancy%20JTAACCE-2026%20(Para%20Teacher).pdf"
+          },
+          {
+            "label": "Download Form Opening Notice",
+            "url": "https://jssc.jharkhand.gov.in/sites/default/files/Notice%20No.%202%20dated%2029.09.2026%20-%20Notice%20regarding%20online%20application%20of%20JTAACCE-2026%20(Para%20Teacher).pdf"
+          },
+          {
+            "label": "Signature Resizer, PDF Compress, Age Calculator and More Tools (Sarkari Result Tools)",
+            "url": "https://sarkariresult.tools/"
+          },
+          {
+            "label": "Official Website (JSSC Official Website)",
+            "url": "https://jssc.jharkhand.gov.in/"
+          }
+        ],
+        "scrapedAt": "2026-09-30T12:37:51.405Z"
+      },
+      "section": "latestJobs",
+      "sector": "Teaching & Education",
+      "sectorBadge": "teaching",
+      "sectorColor": "#7c3aed",
+      "state": "Jharkhand",
+      "qualification": "Teaching Degree (B.Ed / D.El.Ed)",
+      "organization": "Government of India",
+      "lastDate": "2026-10-18",
+      "lastDateFormatted": "18/10/2026",
+      "isExpired": false,
+      "isActive": true,
+      "status": "Till 18/10/2026",
+      "statusType": "success",
+      "eligibleDisciplines": [
+        "any_bachelor",
+        "commerce_finance",
+        "science_agriculture",
+        "education_teaching",
+        "matric_inter_10_12"
+      ],
+      "fieldDisciplines": [
+        "any_bachelor",
+        "commerce_finance",
+        "science_agriculture",
+        "education_teaching",
+        "matric_inter_10_12"
+      ],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [
+        {
+          "id": "any_bachelor",
+          "label": "Any Bachelor Degree (BA/B.Sc/B.Com/Any Graduate)",
+          "shortLabel": "Any Bachelor Degree",
+          "matchType": "field",
+          "matchedPostsCount": 6,
+          "matchingPosts": [
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Language",
+              "totalPost": "1868",
+              "matchType": "field",
+              "reason": "Direct field requirement for Any Bachelor Degree"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Social Science",
+              "totalPost": "660",
+              "matchType": "field",
+              "reason": "Direct field requirement for Any Bachelor Degree"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Mathematics & Science",
+              "totalPost": "1664",
+              "matchType": "field",
+              "reason": "Direct field requirement for Any Bachelor Degree"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Language",
+              "totalPost": "1868",
+              "matchType": "field",
+              "reason": "Direct field requirement for Any Bachelor Degree"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Social Science",
+              "totalPost": "660",
+              "matchType": "field",
+              "reason": "Direct field requirement for Any Bachelor Degree"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Mathematics & Science",
+              "totalPost": "1664",
+              "matchType": "field",
+              "reason": "Direct field requirement for Any Bachelor Degree"
+            }
+          ],
+          "description": "Direct Field Match: Specifically requires Any Bachelor Degree"
+        },
+        {
+          "id": "commerce_finance",
+          "label": "Commerce, Accounts & CA (B.Com/M.Com/MBA)",
+          "shortLabel": "Commerce / Accounts",
+          "matchType": "field",
+          "matchedPostsCount": 2,
+          "matchingPosts": [
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Social Science",
+              "totalPost": "660",
+              "matchType": "field",
+              "reason": "Direct field requirement for Commerce / Accounts"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Social Science",
+              "totalPost": "660",
+              "matchType": "field",
+              "reason": "Direct field requirement for Commerce / Accounts"
+            }
+          ],
+          "description": "Direct Field Match: Specifically requires Commerce / Accounts"
+        },
+        {
+          "id": "science_agriculture",
+          "label": "Science & Agriculture (B.Sc / M.Sc)",
+          "shortLabel": "Science / Agri",
+          "matchType": "field",
+          "matchedPostsCount": 6,
+          "matchingPosts": [
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Language",
+              "totalPost": "1868",
+              "matchType": "field",
+              "reason": "Direct field requirement for Science / Agri"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Social Science",
+              "totalPost": "660",
+              "matchType": "field",
+              "reason": "Direct field requirement for Science / Agri"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Mathematics & Science",
+              "totalPost": "1664",
+              "matchType": "field",
+              "reason": "Direct field requirement for Science / Agri"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Language",
+              "totalPost": "1868",
+              "matchType": "field",
+              "reason": "Direct field requirement for Science / Agri"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Social Science",
+              "totalPost": "660",
+              "matchType": "field",
+              "reason": "Direct field requirement for Science / Agri"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Mathematics & Science",
+              "totalPost": "1664",
+              "matchType": "field",
+              "reason": "Direct field requirement for Science / Agri"
+            }
+          ],
+          "description": "Direct Field Match: Specifically requires Science / Agri"
+        },
+        {
+          "id": "education_teaching",
+          "label": "Teaching Degree (B.Ed / D.El.Ed / TET)",
+          "shortLabel": "Teaching / B.Ed",
+          "matchType": "field",
+          "matchedPostsCount": 8,
+          "matchingPosts": [
+            {
+              "postName": "Intermediate Trained Assistant Acharya (Class 1-5)",
+              "totalPost": "1909",
+              "matchType": "field",
+              "reason": "Direct field requirement for Teaching / B.Ed"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Language",
+              "totalPost": "1868",
+              "matchType": "field",
+              "reason": "Direct field requirement for Teaching / B.Ed"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Social Science",
+              "totalPost": "660",
+              "matchType": "field",
+              "reason": "Direct field requirement for Teaching / B.Ed"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Mathematics & Science",
+              "totalPost": "1664",
+              "matchType": "field",
+              "reason": "Direct field requirement for Teaching / B.Ed"
+            },
+            {
+              "postName": "Intermediate Trained Assistant Acharya (Class 1-5)",
+              "totalPost": "1909",
+              "matchType": "field",
+              "reason": "Direct field requirement for Teaching / B.Ed"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Language",
+              "totalPost": "1868",
+              "matchType": "field",
+              "reason": "Direct field requirement for Teaching / B.Ed"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Social Science",
+              "totalPost": "660",
+              "matchType": "field",
+              "reason": "Direct field requirement for Teaching / B.Ed"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Mathematics & Science",
+              "totalPost": "1664",
+              "matchType": "field",
+              "reason": "Direct field requirement for Teaching / B.Ed"
+            }
+          ],
+          "description": "Direct Field Match: Specifically requires Teaching / B.Ed"
+        },
+        {
+          "id": "matric_inter_10_12",
+          "label": "10th / 12th Pass / ITI",
+          "shortLabel": "10th / 12th Pass",
+          "matchType": "field",
+          "matchedPostsCount": 4,
+          "matchingPosts": [
+            {
+              "postName": "Intermediate Trained Assistant Acharya (Class 1-5)",
+              "totalPost": "1909",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Social Science",
+              "totalPost": "660",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Intermediate Trained Assistant Acharya (Class 1-5)",
+              "totalPost": "1909",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Graduate Trained Assistant Acharya (Class 6-8) – Social Science",
+              "totalPost": "660",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            }
+          ],
+          "description": "Direct Field Match: Specifically requires 10th / 12th Pass"
+        }
+      ],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Teaching & Education",
+        "Jharkhand",
+        "Government of India",
+        "Till 18/10/2026",
+        "Active",
+        "Any Bachelor Degree",
+        "Commerce / Accounts",
+        "Science / Agri",
+        "Teaching / B.Ed",
+        "10th / 12th Pass"
+      ]
+    },
+    {
+      "id": "assam-rifles-rally-sep26",
+      "title": "Assam Rifles Rally Recruitment Online Form 2026 | Last Date : 28/10/2026",
+      "link": "https://www.sarkariresult.com/2026/assam-rifles-rally-sep26/",
+      "category": "latestJobs",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
+      "details": {
+        "title": "Assam Rifles Technical and Tradesman Rally Recruitment 2026 for 354 Post",
+        "url": "https://www.sarkariresult.com/2026/assam-rifles-rally-sep26/",
+        "postDate": "29 September 2026 | 07:25 PM",
+        "shortInfo": "Assam Rifles AR has released the notification for the recruitment of Technical and Tradesman Rally Exam 2026. Those Candidates Are Interested to the Following Assam Rifles Technical and Tradesman Rally Exam 2026 Vacancy Can Apply Online from 28/09/2026 to 28/10/2026. See the advertisement for information related to age limit, syllabus, Department wise post, selection procedure, pay scale in Assam Rifles Technical and Tradesman Rally Recruitment 2026.",
+        "importantDates": {
+          "Application Begin": "28/09/2026",
+          "Last Date for Apply Online": "28/10/2026",
+          "Pay Exam Fee Last Date": "28/10/2026",
+          "Rally Schedule": "11/06/2026",
+          "Admit Card Available": "04/06/2026"
+        },
+        "applicationFee": {
+          "General / OBC / EWS": "100/-",
+          "SC / ST / PH": "100/-",
+          "Pay the Exam Fee Through Online / Offline Fee Mode Only": ""
+        },
+        "ageLimit": {
+          "Minimum Age": "18-21 Years (Post Wise)",
+          "Maximum Age": "23-25 Years (Post Wise)",
+          "Notice": "Age Relaxation Extra as per Assam Rifles Technical and Tradesman Rally Examination Rules."
+        },
+        "totalVacancies": "354 Post",
+        "vacancyDetails": [
+          {
+            "postName": "Warrant Officer (Cipher)",
+            "totalPost": "124",
+            "eligibility": "Only for Men 10+2 Intermediate with Physics, Chemistry and English Exam from Any Recognized Board in India. 10th Matric Exam with ITI Certificate in Related Trade. OR Bachelor Degree in Electronics or Information & Communication Technology. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Rifleman (Electrical Fitter Signal)",
+            "totalPost": "32",
+            "eligibility": "Only for Men 10th/Matriculation pass from a recognized board AND Minimum 2 years Technical Training from ITI. OR Diploma in relevant fields such as Electrician, Electronics, Electronics & Communication, Electrical Engineering, Instrumentation/Instrument Technician, Technician Power Electronic System, or Technician Electronic System Design & Repair. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Rifleman (Lineman Field)",
+            "totalPost": "21",
+            "eligibility": "Only for Men 10th/Matriculation pass AND minimum 2 years ITI Technical Training. OR Diploma in Electronics Engineering, Electronics Mechanic, Electrical Engineering, Electrician Power Distribution, Electrician, Instrumentation Technology, Instrument Mechanic, Technician Power Electronic System, Technician Electronic System Design & Repair, Fibre to Home Technology or OFC Technology. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Rifleman (Armourer)",
+            "totalPost": "29",
+            "eligibility": "Only for Men 10th pass from a recognized board AND ITI certificate in Welding trade from a recognized institute in India. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Rifleman (Engineer Equipment Mechanic)",
+            "totalPost": "10",
+            "eligibility": "Only for Men 10th/Matriculation pass AND minimum 2 years Technical Training from ITI. OR Diploma in Engineer Equipment Mechanic, Power Electric Systems or Mechanic Diesel. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Rifleman (Recovery Vehicle Mechanic)",
+            "totalPost": "13",
+            "eligibility": "Only for Men 10th/Matriculation pass + 2-year ITI certificate in Recovery Vehicle Mechanic (or prescribed Motor Vehicle Mechanic route) AND valid Heavy Motor Vehicle/Transport Vehicle Driving License. The notification also provides a route based on 10th + valid HMV Driving License. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Rifleman (Electrician Motor Vehicle)",
+            "totalPost": "22",
+            "eligibility": "Only for Men 10th/Matriculation pass + Minimum 2 years ITI Technical Training in relevant electrical/technical fields. OR Diploma in Electrical/Electrical Engineering, Technical, Power Electronics or Communication System. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Havildar (Instrument Mechanic)",
+            "totalPost": "06",
+            "eligibility": "Only for Men 10th/Matriculation pass + Minimum 2 years ITI in Instrument Mechanic or Electronic Mechanic. OR Diploma in Instrument Mechanic/Technology or Electronic Mechanic/Technology. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Rifleman (Metalsmith)",
+            "totalPost": "19",
+            "eligibility": "Only for Men 10th / Matriculation Pass + Minimum 2 years ITI Technical Training in Metalsmith. OR Diploma in Metalsmith/Metallurgy. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Rifleman (Upholster)",
+            "totalPost": "03",
+            "eligibility": "Only for Men 10th / Matriculation pass + minimum 2 years ITI in Upholster trade. OR Diploma in Upholster. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Rifleman Store Keeper Technical",
+            "totalPost": "16",
+            "eligibility": "Only for Men 10th / Matriculation pass from a recognized board. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Rifleman (Vehicle Mechanic)",
+            "totalPost": "23",
+            "eligibility": "Only for Men 10th/Matriculation pass + minimum 2 years ITI Technical Training in the relevant mechanical field. OR Diploma in Mechanic Motor Vehicle, Mechanic, Mechanic Diesel, Fitter, Mechanic Engineering, Technical, Automobile Engineering or Technical Automobile Engineering. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Rifleman (Welder)",
+            "totalPost": "02",
+            "eligibility": "Only for Men 10th/Matriculation pass + minimum 2 years ITI Technical Training in Welding/Metallurgy. OR Diploma in Welding/Metallurgy. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Rifleman (Draughtsman)",
+            "totalPost": "02",
+            "eligibility": "Only for Men 10+2/12th pass or equivalent from a Recognized Board in India. Diploma in Architectural Assistantship from a recognized Polytechnic/Institution. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Warrant Officer (Operation Theatre Technician)",
+            "totalPost": "01",
+            "eligibility": "Only for Men 10+2/12th pass or equivalent AND minimum 2-year Diploma in Operation Theatre Technician from a recognized institute/hospital AND minimum 1 year work experience as an OT Technician in a recognized hospital having at least 50 beds. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Warrant Officer (Physiotherapist)",
+            "totalPost": "02",
+            "eligibility": "Only for Men 10+2/12th pass or equivalent AND minimum 2-year Diploma in Physiotherapy from a recognized institute/hospital AND prescribed work experience as a Physiotherapist in a recognized hospital/physiotherapy centre of at least 50 beds. More Eligibility Details Read the Notification."
+          },
+          {
+            "postName": "Rifleman (Mason)",
+            "totalPost": "29",
+            "eligibility": "Only for Men 10th pass from a recognized board. Candidate must qualify the Mason Trade Test and must provide an undertaking/self-certification regarding 1 year of work experience in the respective trade. More Eligibility Details Read the Notification."
+          }
+        ],
+        "importantLinks": [
+          {
+            "label": "Apply Online",
+            "url": "https://www.assamrifles.gov.in/onlineapp/Default.aspx"
+          },
+          {
+            "label": "Re Print Form",
+            "url": "https://www.assamrifles.gov.in/onlineapp/frmReprint.aspx"
+          },
+          {
+            "label": "Download Notification",
+            "url": "https://www.sarkariresult.com/wp-content/uploads/2026/09/df021abc-bee8-4cb5-b6d7-f727db99bd43.pdf"
+          },
+          {
+            "label": "Official Website (Official Website)",
+            "url": "https://www.assamrifles.gov.in/"
+          }
+        ],
+        "scrapedAt": "2026-09-30T12:37:51.547Z"
+      },
+      "section": "latestJobs",
+      "sector": "Engineering & Technical",
+      "sectorBadge": "engineering",
+      "sectorColor": "#0891b2",
+      "state": "Central / All India",
+      "qualification": "Graduate / Check Notice",
+      "organization": "Government of India",
+      "lastDate": "2026-10-28",
+      "lastDateFormatted": "28/10/2026",
+      "isExpired": false,
+      "isActive": true,
+      "status": "Till 28/10/2026",
+      "statusType": "success",
+      "eligibleDisciplines": [
+        "mech_eng",
+        "elec_eng",
+        "any_bachelor",
+        "science_agriculture",
+        "matric_inter_10_12"
+      ],
+      "fieldDisciplines": [
+        "mech_eng",
+        "elec_eng",
+        "any_bachelor",
+        "science_agriculture",
+        "matric_inter_10_12"
+      ],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [
+        {
+          "id": "mech_eng",
+          "label": "Mechanical Engineering (B.Tech/Diploma)",
+          "shortLabel": "Mechanical Engg",
+          "matchType": "field",
+          "matchedPostsCount": 3,
+          "matchingPosts": [
+            {
+              "postName": "Rifleman (Metalsmith)",
+              "totalPost": "19",
+              "matchType": "field",
+              "reason": "Direct field requirement for Mechanical Engg"
+            },
+            {
+              "postName": "Rifleman (Vehicle Mechanic)",
+              "totalPost": "23",
+              "matchType": "field",
+              "reason": "Direct field requirement for Mechanical Engg"
+            },
+            {
+              "postName": "Rifleman (Welder)",
+              "totalPost": "02",
+              "matchType": "field",
+              "reason": "Direct field requirement for Mechanical Engg"
+            }
+          ],
+          "description": "Direct Field Match: Specifically requires Mechanical Engg"
+        },
+        {
+          "id": "elec_eng",
+          "label": "Electrical & Electronics (B.Tech/Diploma/ECE)",
+          "shortLabel": "Electrical / ECE",
+          "matchType": "field",
+          "matchedPostsCount": 4,
+          "matchingPosts": [
+            {
+              "postName": "Warrant Officer (Cipher)",
+              "totalPost": "124",
+              "matchType": "field",
+              "reason": "Direct field requirement for Electrical / ECE"
+            },
+            {
+              "postName": "Rifleman (Electrical Fitter Signal)",
+              "totalPost": "32",
+              "matchType": "field",
+              "reason": "Direct field requirement for Electrical / ECE"
+            },
+            {
+              "postName": "Rifleman (Lineman Field)",
+              "totalPost": "21",
+              "matchType": "field",
+              "reason": "Direct field requirement for Electrical / ECE"
+            },
+            {
+              "postName": "Rifleman (Electrician Motor Vehicle)",
+              "totalPost": "22",
+              "matchType": "field",
+              "reason": "Direct field requirement for Electrical / ECE"
+            }
+          ],
+          "description": "Direct Field Match: Specifically requires Electrical / ECE"
+        },
+        {
+          "id": "any_bachelor",
+          "label": "Any Bachelor Degree (BA/B.Sc/B.Com/Any Graduate)",
+          "shortLabel": "Any Bachelor Degree",
+          "matchType": "field",
+          "matchedPostsCount": 1,
+          "matchingPosts": [
+            {
+              "postName": "Warrant Officer (Cipher)",
+              "totalPost": "124",
+              "matchType": "field",
+              "reason": "Direct field requirement for Any Bachelor Degree"
+            }
+          ],
+          "description": "Direct Field Match: Specifically requires Any Bachelor Degree"
+        },
+        {
+          "id": "science_agriculture",
+          "label": "Science & Agriculture (B.Sc / M.Sc)",
+          "shortLabel": "Science / Agri",
+          "matchType": "field",
+          "matchedPostsCount": 1,
+          "matchingPosts": [
+            {
+              "postName": "Warrant Officer (Cipher)",
+              "totalPost": "124",
+              "matchType": "field",
+              "reason": "Direct field requirement for Science / Agri"
+            }
+          ],
+          "description": "Direct Field Match: Specifically requires Science / Agri"
+        },
+        {
+          "id": "matric_inter_10_12",
+          "label": "10th / 12th Pass / ITI",
+          "shortLabel": "10th / 12th Pass",
+          "matchType": "field",
+          "matchedPostsCount": 17,
+          "matchingPosts": [
+            {
+              "postName": "Warrant Officer (Cipher)",
+              "totalPost": "124",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Rifleman (Electrical Fitter Signal)",
+              "totalPost": "32",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Rifleman (Lineman Field)",
+              "totalPost": "21",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Rifleman (Armourer)",
+              "totalPost": "29",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Rifleman (Engineer Equipment Mechanic)",
+              "totalPost": "10",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Rifleman (Recovery Vehicle Mechanic)",
+              "totalPost": "13",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Rifleman (Electrician Motor Vehicle)",
+              "totalPost": "22",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Havildar (Instrument Mechanic)",
+              "totalPost": "06",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Rifleman (Metalsmith)",
+              "totalPost": "19",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Rifleman (Upholster)",
+              "totalPost": "03",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Rifleman Store Keeper Technical",
+              "totalPost": "16",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Rifleman (Vehicle Mechanic)",
+              "totalPost": "23",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Rifleman (Welder)",
+              "totalPost": "02",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Rifleman (Draughtsman)",
+              "totalPost": "02",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Warrant Officer (Operation Theatre Technician)",
+              "totalPost": "01",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Warrant Officer (Physiotherapist)",
+              "totalPost": "02",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            },
+            {
+              "postName": "Rifleman (Mason)",
+              "totalPost": "29",
+              "matchType": "field",
+              "reason": "Direct field requirement for 10th / 12th Pass"
+            }
+          ],
+          "description": "Direct Field Match: Specifically requires 10th / 12th Pass"
+        }
+      ],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Engineering & Technical",
+        "Central",
+        "Government of India",
+        "Till 28/10/2026",
+        "Active",
+        "Mechanical Engg",
+        "Electrical / ECE",
+        "Any Bachelor Degree",
+        "Science / Agri",
+        "10th / 12th Pass"
+      ]
+    },
+    {
       "id": "itbp-head-constable-motor-mechanic",
       "title": "ITBP Head Constable Online Form 2026 for 37 Post | Last Date : 27/10/2026",
       "link": "https://www.sarkariresult.com/2026/itbp-head-constable-motor-mechanic/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "details": {
         "title": "ITBP Head Constable Motor Mechanic & Education & Stress Counsellor Recruitment 2026 Apply Online Form for 37 Post",
         "url": "https://www.sarkariresult.com/2026/itbp-head-constable-motor-mechanic/",
@@ -51,6 +937,10 @@
             "url": "https://recruitment.itbpolice.nic.in/applicant-profile-details/applicant-login"
           },
           {
+            "label": "How To Fill Form (Hindi Video) (Watch Video)",
+            "url": "https://youtu.be/e-LDqw2kkCw"
+          },
+          {
             "label": "Download Notification (Education Stress Counsellor)",
             "url": "https://doc.sarkariresults.org.in/359.pdf"
           },
@@ -63,7 +953,7 @@
             "url": "https://recruitment.itbpolice.nic.in/"
           }
         ],
-        "scrapedAt": "2026-09-29T07:28:30.536Z"
+        "scrapedAt": "2026-09-30T12:37:51.687Z"
       },
       "section": "latestJobs",
       "sector": "Defense & Armed Forces",
@@ -177,298 +1067,11 @@
       ]
     },
     {
-      "id": "uiic-ao-sep26",
-      "title": "United India Insurance UIIC AO Online Form 2026 for 225 Post | Last Date : 01/10/2026",
-      "link": "https://www.sarkariresult.com/2026/uiic-ao-sep26/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
-      "details": {
-        "title": "United India Insurance UIIC Administrative Officer Scale I Recruitment 2026 Apply Online for 225 Post",
-        "url": "https://www.sarkariresult.com/2026/uiic-ao-sep26/",
-        "postDate": "28 September 2026 | 07:08 PM",
-        "shortInfo": "United India Insurance Company Limited (UIIC) has released the Administrative Officer recruitment advertisement 2026 for 225 posts. Those candidates Are Interested with UIIC AO Recruitment Test Can Apply Online Form 08 September 2026 to 28 September 2026. Read the notification for recruitment eligibility, post information, selection procedure, age limit, pay scale and all other information.",
-        "importantDates": {
-          "Application Begin": "08/09/2026",
-          "Last Date for Apply Online": "01/10/2026",
-          "Pay Exam Fee Last Date": "01/10/2026",
-          "UIIC AO Tier I Exam Date": "22/10/2026",
-          "UIIC AO Tier II Main Exam Date": "30/11/2026",
-          "Admit Card Available": "Before Exam"
-        },
-        "applicationFee": {
-          "General / OBC / EWS": "1000/- + GST",
-          "SC / ST / PH": "250/- + GST",
-          "Pay the Exam Fee Through Online Debit Card / Credit Card/ Net Banking / UPI / Offline Mode.": ""
-        },
-        "ageLimit": {
-          "Minimum Age": "21 Years.",
-          "Maximum Age": "30 Years.",
-          "Notice": "Age Relaxation Extra as per United India Insurance Administrative Officer 2026 Recruitment Rules."
-        },
-        "totalVacancies": "225 Post",
-        "vacancyDetails": [
-          {
-            "postName": "Administrative Officer (Generalists)",
-            "totalPost": "200",
-            "eligibility": "Bachelor / Master in Any Discipline with minimum 60% marks (55% for SC/ST/PwBD) from a recognized University. More Eligibility Details Read the Notification"
-          },
-          {
-            "postName": "Administrative Officer (Hindi Officers)",
-            "totalPost": "25",
-            "eligibility": "Master Degree in Hindi with English as a Subject at Degree Level OR Master Degree in English with Hindi as a Subject at Degree Level Master Degree in Any Subject with Hindi Medium and English as a Subject at Degree Level OR Master Degree in Any Subject with English Medium and Hindi as a Subject at Degree Level Minimum 60% Marks For SC /ST / PH 55% Marks.) More Eligibility Details Read the Notification."
-          }
-        ],
-        "importantLinks": [
-          {
-            "label": "Apply Online",
-            "url": "https://ibpsreg.ibps.in/uiicljul26/"
-          },
-          {
-            "label": "How To Fill Form (Hindi Video) (Watch Video)",
-            "url": "https://youtu.be/i3mVAN3h3S4"
-          },
-          {
-            "label": "Download Syllabus",
-            "url": "https://tinyurl.com/3rw7n7jy"
-          },
-          {
-            "label": "Download Notification",
-            "url": "https://uiic.co.in/web/sites/default/files/Recruitment_UiiC/UIIC-AO-notification-2026%20final.pdf"
-          },
-          {
-            "label": "Official Website (UIIC Official Website)",
-            "url": "https://uiic.co.in/"
-          }
-        ],
-        "scrapedAt": "2026-09-29T07:28:30.629Z"
-      },
-      "section": "latestJobs",
-      "sector": "General & Others",
-      "sectorBadge": "general",
-      "sectorColor": "#475569",
-      "state": "Central / All India",
-      "qualification": "Graduate / Degree",
-      "organization": "UIIC",
-      "lastDate": "2026-10-01",
-      "lastDateFormatted": "01/10/2026",
-      "isExpired": false,
-      "isActive": true,
-      "status": "Till 01/10/2026",
-      "statusType": "success",
-      "eligibleDisciplines": [
-        "cs_it",
-        "civil_eng",
-        "mech_eng",
-        "elec_eng",
-        "any_bachelor",
-        "commerce_finance",
-        "law_legal",
-        "science_agriculture",
-        "medical_healthcare",
-        "education_teaching"
-      ],
-      "fieldDisciplines": [
-        "any_bachelor"
-      ],
-      "generalDisciplines": [
-        "cs_it",
-        "civil_eng",
-        "mech_eng",
-        "elec_eng",
-        "any_bachelor",
-        "commerce_finance",
-        "law_legal",
-        "science_agriculture",
-        "medical_healthcare",
-        "education_teaching"
-      ],
-      "eligibleDisciplinesMeta": [
-        {
-          "id": "cs_it",
-          "label": "Computer Science & IT (B.Tech/BE/BCA/MCA/B.Sc CS)",
-          "shortLabel": "CS & IT",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Administrative Officer (Generalists)",
-              "totalPost": "200",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "civil_eng",
-          "label": "Civil Engineering (B.Tech/Diploma)",
-          "shortLabel": "Civil Engg",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Administrative Officer (Generalists)",
-              "totalPost": "200",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "mech_eng",
-          "label": "Mechanical Engineering (B.Tech/Diploma)",
-          "shortLabel": "Mechanical Engg",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Administrative Officer (Generalists)",
-              "totalPost": "200",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "elec_eng",
-          "label": "Electrical & Electronics (B.Tech/Diploma/ECE)",
-          "shortLabel": "Electrical / ECE",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Administrative Officer (Generalists)",
-              "totalPost": "200",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "any_bachelor",
-          "label": "Any Bachelor Degree (BA/B.Sc/B.Com/Any Graduate)",
-          "shortLabel": "Any Bachelor Degree",
-          "matchType": "both",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Administrative Officer (Generalists)",
-              "totalPost": "200",
-              "matchType": "field",
-              "reason": "Direct field requirement for Any Bachelor Degree"
-            }
-          ],
-          "description": "Direct Field Match (1 posts) + Open to Any Graduate"
-        },
-        {
-          "id": "commerce_finance",
-          "label": "Commerce, Accounts & CA (B.Com/M.Com/MBA)",
-          "shortLabel": "Commerce / Accounts",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Administrative Officer (Generalists)",
-              "totalPost": "200",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "law_legal",
-          "label": "Law & Legal (LLB / LLM)",
-          "shortLabel": "Law (LLB)",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Administrative Officer (Generalists)",
-              "totalPost": "200",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "science_agriculture",
-          "label": "Science & Agriculture (B.Sc / M.Sc)",
-          "shortLabel": "Science / Agri",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Administrative Officer (Generalists)",
-              "totalPost": "200",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "medical_healthcare",
-          "label": "Medical, Nursing & Pharmacy (MBBS/GNM/B.Pharm)",
-          "shortLabel": "Medical / Nursing",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Administrative Officer (Generalists)",
-              "totalPost": "200",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "education_teaching",
-          "label": "Teaching Degree (B.Ed / D.El.Ed / TET)",
-          "shortLabel": "Teaching / B.Ed",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Administrative Officer (Generalists)",
-              "totalPost": "200",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        }
-      ],
-      "ineligibleWarnings": [],
-      "tags": [
-        "General & Others",
-        "Central",
-        "UIIC",
-        "Till 01/10/2026",
-        "Active",
-        "CS & IT",
-        "Civil Engg",
-        "Mechanical Engg",
-        "Electrical / ECE",
-        "Any Bachelor Degree",
-        "Commerce / Accounts",
-        "Law (LLB)",
-        "Science / Agri",
-        "Medical / Nursing",
-        "Teaching / B.Ed"
-      ]
-    },
-    {
       "id": "canara-bank-apprentices-sep26",
       "title": "Canara Bank Apprentices Online Form 2026 | Last Date : 17/10/2026",
       "link": "https://www.sarkariresult.com/2026/canara-bank-apprentices-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "details": {
         "title": "Canara Bank Apprentice Recruitment 2026 Apply Online for 3500 Post",
         "url": "https://www.sarkariresult.com/2026/canara-bank-apprentices-sep26/",
@@ -523,7 +1126,7 @@
             "url": "https://www.canarabank.bank.in/pages/career"
           }
         ],
-        "scrapedAt": "2026-09-29T07:28:30.706Z"
+        "scrapedAt": "2026-09-30T12:37:51.814Z"
       },
       "section": "latestJobs",
       "sector": "Banking & Financial",
@@ -751,57 +1354,7 @@
       "title": "Bank of India BOI Specialist Officers SO Online Form 2026 | Date Extended",
       "link": "https://www.sarkariresult.com/2026/bank-of-india-so-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
-      "details": {
-        "title": "Bank of India BOI Specialist Officers SO Recruitment 2026 Apply Online for 205 Post",
-        "url": "https://www.sarkariresult.com/2026/bank-of-india-so-sep26/",
-        "postDate": "25 September 2026 | 07:55 PM",
-        "shortInfo": "Bank of India BOI Specialist Officers SO Recruitment 2026. Those candidates who are interested in this Bank of India BOI Specialist Officers SO Recruitment can apply online from 10 September 2026 to 05 October 2026. Read the Bank of India 205 Post Recruitment notification 2026 for recruitment eligibility, post information, selection procedure, age limit, pay scale and all other information.",
-        "importantDates": {
-          "Application Begin": "10/09/2026",
-          "Last Date for Apply Online": "05/10/2026",
-          "Complete Form Last Date": "05/10/2026",
-          "BOI Exam Date": "As per Schedule",
-          "Admit Card Available": "Before Exam"
-        },
-        "applicationFee": {
-          "General / OBC / EWS": "1180/-",
-          "SC / ST / PH": "175/-",
-          "Pay the Exam Fees Through Debit Card / Credit Card / Net Banking Only.": ""
-        },
-        "ageLimit": {
-          "Minimum Age": "25 Years. Post wise",
-          "Maximum Age": "42 Years. Post wise",
-          "Notice": "Age Relaxation Extra as per Bank of India BOI Specialist Officer SO Recruitment Rules"
-        },
-        "totalVacancies": "205 Post",
-        "vacancyDetails": [
-          {
-            "postName": "Bank of India SO Various Post",
-            "totalPost": "205",
-            "eligibility": "Graduation / Post Graduation / Engineering in Any Recognized University. for Post Wise Eligibility Details More Details Read the Notification."
-          }
-        ],
-        "importantLinks": [
-          {
-            "label": "Apply Online",
-            "url": "https://ibpsreg.ibps.in/boiaug26/"
-          },
-          {
-            "label": "Download Notification",
-            "url": "https://bankofindia.bank.in/documents/20121/28761619/FINAL_NOTICE_SPECIALIST_OFFICER-01082026.pdf"
-          },
-          {
-            "label": "Download Post Wise Eligibility",
-            "url": "https://bankofindia.bank.in/documents/20121/28761619/FINAL_ANNEXURE_I.pdf"
-          },
-          {
-            "label": "Official Website (BOI Official Website)",
-            "url": "https://sbi.bank.in/web/careers/current-openings"
-          }
-        ],
-        "scrapedAt": "2026-09-29T07:28:30.790Z"
-      },
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Banking & Financial",
       "sectorBadge": "banking",
@@ -809,218 +1362,23 @@
       "state": "Central / All India",
       "qualification": "Graduate / Degree",
       "organization": "Bank of India",
-      "lastDate": "2026-10-05",
-      "lastDateFormatted": "05/10/2026",
+      "lastDate": null,
+      "lastDateFormatted": null,
       "isExpired": false,
       "isActive": true,
-      "status": "Extended till 05/10/2026",
+      "status": "Date Extended",
       "statusType": "warning",
-      "eligibleDisciplines": [
-        "cs_it",
-        "civil_eng",
-        "mech_eng",
-        "elec_eng",
-        "any_bachelor",
-        "commerce_finance",
-        "law_legal",
-        "science_agriculture",
-        "medical_healthcare",
-        "education_teaching"
-      ],
-      "fieldDisciplines": [
-        "any_bachelor"
-      ],
-      "generalDisciplines": [
-        "cs_it",
-        "civil_eng",
-        "mech_eng",
-        "elec_eng",
-        "any_bachelor",
-        "commerce_finance",
-        "law_legal",
-        "science_agriculture",
-        "medical_healthcare",
-        "education_teaching"
-      ],
-      "eligibleDisciplinesMeta": [
-        {
-          "id": "cs_it",
-          "label": "Computer Science & IT (B.Tech/BE/BCA/MCA/B.Sc CS)",
-          "shortLabel": "CS & IT",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Bank of India SO Various Post",
-              "totalPost": "205",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "civil_eng",
-          "label": "Civil Engineering (B.Tech/Diploma)",
-          "shortLabel": "Civil Engg",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Bank of India SO Various Post",
-              "totalPost": "205",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "mech_eng",
-          "label": "Mechanical Engineering (B.Tech/Diploma)",
-          "shortLabel": "Mechanical Engg",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Bank of India SO Various Post",
-              "totalPost": "205",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "elec_eng",
-          "label": "Electrical & Electronics (B.Tech/Diploma/ECE)",
-          "shortLabel": "Electrical / ECE",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Bank of India SO Various Post",
-              "totalPost": "205",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "any_bachelor",
-          "label": "Any Bachelor Degree (BA/B.Sc/B.Com/Any Graduate)",
-          "shortLabel": "Any Bachelor Degree",
-          "matchType": "both",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Bank of India SO Various Post",
-              "totalPost": "205",
-              "matchType": "field",
-              "reason": "Direct field requirement for Any Bachelor Degree"
-            }
-          ],
-          "description": "Direct Field Match (1 posts) + Open to Any Graduate"
-        },
-        {
-          "id": "commerce_finance",
-          "label": "Commerce, Accounts & CA (B.Com/M.Com/MBA)",
-          "shortLabel": "Commerce / Accounts",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Bank of India SO Various Post",
-              "totalPost": "205",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "law_legal",
-          "label": "Law & Legal (LLB / LLM)",
-          "shortLabel": "Law (LLB)",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Bank of India SO Various Post",
-              "totalPost": "205",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "science_agriculture",
-          "label": "Science & Agriculture (B.Sc / M.Sc)",
-          "shortLabel": "Science / Agri",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Bank of India SO Various Post",
-              "totalPost": "205",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "medical_healthcare",
-          "label": "Medical, Nursing & Pharmacy (MBBS/GNM/B.Pharm)",
-          "shortLabel": "Medical / Nursing",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Bank of India SO Various Post",
-              "totalPost": "205",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        },
-        {
-          "id": "education_teaching",
-          "label": "Teaching Degree (B.Ed / D.El.Ed / TET)",
-          "shortLabel": "Teaching / B.Ed",
-          "matchType": "general",
-          "matchedPostsCount": 1,
-          "matchingPosts": [
-            {
-              "postName": "Bank of India SO Various Post",
-              "totalPost": "205",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
-        }
-      ],
+      "eligibleDisciplines": [],
+      "fieldDisciplines": [],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [],
       "ineligibleWarnings": [],
       "tags": [
         "Banking & Financial",
         "Central",
         "Bank of India",
-        "Extended till 05/10/2026",
-        "Active",
-        "CS & IT",
-        "Civil Engg",
-        "Mechanical Engg",
-        "Electrical / ECE",
-        "Any Bachelor Degree",
-        "Commerce / Accounts",
-        "Law (LLB)",
-        "Science / Agri",
-        "Medical / Nursing",
-        "Teaching / B.Ed"
+        "Date Extended",
+        "Active"
       ]
     },
     {
@@ -1028,108 +1386,19 @@
       "title": "SBI SCO Wealth & Other Post Online Form 2026 | Date Extended",
       "link": "https://www.sarkariresult.com/2026/sbi-sco-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
-      "details": {
-        "title": "State Bank of India SBI Specialist Cadre Officer SCO Recruitment 2026 Apply Online for 207 Post",
-        "url": "https://www.sarkariresult.com/2026/sbi-sco-sep26/",
-        "postDate": "25 September 2026 | 07:40 PM",
-        "shortInfo": "State Bank of India SBI has released Specialist Cadre Officer SCO Recruitment 2026 Notification. Those candidates Are Enrolled to the Following SBI Specialist Cadre Officer SCO Recruitment 2026 Can Apply Online from 04/09/2026 to 05/10/2026. Read the notification for recruitment eligibility, post information, selection procedure, age limit, pay scale and all other information.",
-        "importantDates": {
-          "Application Begin": "04/09/2026",
-          "Last Date for Apply Online": "05/10/2026",
-          "Pay Exam Fee Last Date": "05/10/2026",
-          "SBI SCO Exam Date": "As per Schedule",
-          "Admit Card Available": "Before Exam"
-        },
-        "applicationFee": {
-          "General / OBC / EWS": "750/-",
-          "SC / ST / PH": "0/-",
-          "Pay the Exam Fee Through Debit Card / Credit Card / Net Banking / UPI Fee Mode Only.": ""
-        },
-        "ageLimit": {
-          "SBI SCO Minimum Age Limit": "Post wise.",
-          "SBI SCO Maximum Age Limit": "Post wise",
-          "Notice": "3 Year Experience.",
-          "Age Limit": "23-35 Years"
-        },
-        "totalVacancies": "207 Post",
-        "vacancyDetails": [
-          {
-            "postName": "Zonal Head Retails",
-            "totalPost": "01",
-            "eligibility": "MBA with 60% Marks CFP / CFA / NISM V-A / NISM / NISM 21-A 15 year Experience. Age Limit : 35-50 Years"
-          },
-          {
-            "postName": "Regional Head RH",
-            "totalPost": "05",
-            "eligibility": "MBA Banking / Finance / Marketing with 60% Marks. CFP / CFA / NISM V-A /NISM Investment Advisor / NISM 21-A 12 Year Experience. Age Limit : 35-50 Years"
-          },
-          {
-            "postName": "Relationship Manager Team Lead",
-            "totalPost": "24",
-            "eligibility": "Bachelor Degree in Any Stream from Any Recognized University in India. 8 Year Experience. Age Limit : 28-42 Years"
-          },
-          {
-            "postName": "Investment Specialist IS",
-            "totalPost": "09",
-            "eligibility": "Master Degree / PG Diploma in Finance / Accountancy / Business Management / Commerce / Economics / Capital Markets / Banking / Insurance / Actuarial Science. / CFA / CA. 6 Year Experience. Age Limit : 28-42 Years"
-          },
-          {
-            "postName": "Investment Officer IO",
-            "totalPost": "4",
-            "eligibility": "Master Degree / PG Diploma in Finance / Accountancy / Business Management / Commerce / Economics / Capital Markets / Banking / Insurance / Actuarial Science. / CFA / CA. 4 Year Experience. Age Limit : 28-40 Years"
-          },
-          {
-            "postName": "VP Wealth",
-            "totalPost": "91",
-            "eligibility": "Bachelor Degree in Any Stream from Any Recognized University in India. 6 Year Experience. Age Limit : 26 -42 Years"
-          },
-          {
-            "postName": "AVP Wealth",
-            "totalPost": "73",
-            "eligibility": "Bachelor Degree in Any Stream from Any Recognized University in India. 3 Year Experience. Age Limit : 23-35 Years"
-          }
-        ],
-        "importantLinks": [
-          {
-            "label": "Short Information (State Bank of India)",
-            "url": "https://www.sarkariresult.com/bank/sbi-apprentices-2026/"
-          },
-          {
-            "label": "Apply Online",
-            "url": "https://recruitment.sbi.bank.in/crpd-sco-2026-27-23/apply"
-          },
-          {
-            "label": "How To Fill Form (Hindi Video) (Watch Video)",
-            "url": "https://youtu.be/nwSYO0EU0PQ"
-          },
-          {
-            "label": "Download Full Notification",
-            "url": "https://sbi.bank.in/documents/77530/57941334/03092026_1_Advt+_Wealth+MGMT_04.09.2026.pdf/d2fd7bab-0791-b62b-61d3-8f46c2cb3ec6?t=1788439145915"
-          },
-          {
-            "label": "Signature Resizer, PDF Compress, Age Calculator and More Tools (Sarkari Result Tools)",
-            "url": "https://sarkariresult.tools/"
-          },
-          {
-            "label": "Official Website (SBI Official Website)",
-            "url": "https://sbi.bank.in/"
-          }
-        ],
-        "scrapedAt": "2026-09-29T07:28:30.884Z"
-      },
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Banking & Financial",
       "sectorBadge": "banking",
       "sectorColor": "#0284c7",
       "state": "Central / All India",
-      "qualification": "Graduate / Degree",
+      "qualification": "Graduate / Check Notice",
       "organization": "SBI",
-      "lastDate": "2026-10-05",
-      "lastDateFormatted": "05/10/2026",
+      "lastDate": null,
+      "lastDateFormatted": null,
       "isExpired": false,
       "isActive": true,
-      "status": "Extended till 05/10/2026",
+      "status": "Date Extended",
       "statusType": "warning",
       "eligibleDisciplines": [
         "cs_it",
@@ -1145,10 +1414,8 @@
       ],
       "fieldDisciplines": [
         "cs_it",
-        "any_bachelor",
         "commerce_finance",
-        "law_legal",
-        "science_agriculture"
+        "law_legal"
       ],
       "generalDisciplines": [
         "cs_it",
@@ -1168,27 +1435,8 @@
           "label": "Computer Science & IT (B.Tech/BE/BCA/MCA/B.Sc CS)",
           "shortLabel": "CS & IT",
           "matchType": "both",
-          "matchedPostsCount": 3,
-          "matchingPosts": [
-            {
-              "postName": "Relationship Manager Team Lead",
-              "totalPost": "24",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "VP Wealth",
-              "totalPost": "91",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "AVP Wealth",
-              "totalPost": "73",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
           "description": "Direct Field Match (0 posts) + Open to Any Graduate"
         },
         {
@@ -1196,27 +1444,8 @@
           "label": "Civil Engineering (B.Tech/Diploma)",
           "shortLabel": "Civil Engg",
           "matchType": "general",
-          "matchedPostsCount": 3,
-          "matchingPosts": [
-            {
-              "postName": "Relationship Manager Team Lead",
-              "totalPost": "24",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "VP Wealth",
-              "totalPost": "91",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "AVP Wealth",
-              "totalPost": "73",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
           "description": "Eligible via Any Bachelor Degree (Open to all streams)"
         },
         {
@@ -1224,27 +1453,8 @@
           "label": "Mechanical Engineering (B.Tech/Diploma)",
           "shortLabel": "Mechanical Engg",
           "matchType": "general",
-          "matchedPostsCount": 3,
-          "matchingPosts": [
-            {
-              "postName": "Relationship Manager Team Lead",
-              "totalPost": "24",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "VP Wealth",
-              "totalPost": "91",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "AVP Wealth",
-              "totalPost": "73",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
           "description": "Eligible via Any Bachelor Degree (Open to all streams)"
         },
         {
@@ -1252,197 +1462,53 @@
           "label": "Electrical & Electronics (B.Tech/Diploma/ECE)",
           "shortLabel": "Electrical / ECE",
           "matchType": "general",
-          "matchedPostsCount": 3,
-          "matchingPosts": [
-            {
-              "postName": "Relationship Manager Team Lead",
-              "totalPost": "24",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "VP Wealth",
-              "totalPost": "91",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "AVP Wealth",
-              "totalPost": "73",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
           "description": "Eligible via Any Bachelor Degree (Open to all streams)"
         },
         {
           "id": "any_bachelor",
           "label": "Any Bachelor Degree (BA/B.Sc/B.Com/Any Graduate)",
           "shortLabel": "Any Bachelor Degree",
-          "matchType": "both",
-          "matchedPostsCount": 3,
-          "matchingPosts": [
-            {
-              "postName": "Relationship Manager Team Lead",
-              "totalPost": "24",
-              "matchType": "field",
-              "reason": "Direct field requirement for Any Bachelor Degree"
-            },
-            {
-              "postName": "VP Wealth",
-              "totalPost": "91",
-              "matchType": "field",
-              "reason": "Direct field requirement for Any Bachelor Degree"
-            },
-            {
-              "postName": "AVP Wealth",
-              "totalPost": "73",
-              "matchType": "field",
-              "reason": "Direct field requirement for Any Bachelor Degree"
-            }
-          ],
-          "description": "Direct Field Match (3 posts) + Open to Any Graduate"
+          "matchType": "general",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
         },
         {
           "id": "commerce_finance",
           "label": "Commerce, Accounts & CA (B.Com/M.Com/MBA)",
           "shortLabel": "Commerce / Accounts",
           "matchType": "both",
-          "matchedPostsCount": 6,
-          "matchingPosts": [
-            {
-              "postName": "Regional Head RH",
-              "totalPost": "05",
-              "matchType": "field",
-              "reason": "Direct field requirement for Commerce / Accounts"
-            },
-            {
-              "postName": "Relationship Manager Team Lead",
-              "totalPost": "24",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "Investment Specialist IS",
-              "totalPost": "09",
-              "matchType": "field",
-              "reason": "Direct field requirement for Commerce / Accounts"
-            },
-            {
-              "postName": "Investment Officer IO",
-              "totalPost": "4",
-              "matchType": "field",
-              "reason": "Direct field requirement for Commerce / Accounts"
-            },
-            {
-              "postName": "VP Wealth",
-              "totalPost": "91",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "AVP Wealth",
-              "totalPost": "73",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Direct Field Match (3 posts) + Open to Any Graduate"
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match (0 posts) + Open to Any Graduate"
         },
         {
           "id": "law_legal",
           "label": "Law & Legal (LLB / LLM)",
           "shortLabel": "Law (LLB)",
           "matchType": "both",
-          "matchedPostsCount": 3,
-          "matchingPosts": [
-            {
-              "postName": "Relationship Manager Team Lead",
-              "totalPost": "24",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "VP Wealth",
-              "totalPost": "91",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "AVP Wealth",
-              "totalPost": "73",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
           "description": "Direct Field Match (0 posts) + Open to Any Graduate"
         },
         {
           "id": "science_agriculture",
           "label": "Science & Agriculture (B.Sc / M.Sc)",
           "shortLabel": "Science / Agri",
-          "matchType": "both",
-          "matchedPostsCount": 5,
-          "matchingPosts": [
-            {
-              "postName": "Relationship Manager Team Lead",
-              "totalPost": "24",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "Investment Specialist IS",
-              "totalPost": "09",
-              "matchType": "field",
-              "reason": "Direct field requirement for Science / Agri"
-            },
-            {
-              "postName": "Investment Officer IO",
-              "totalPost": "4",
-              "matchType": "field",
-              "reason": "Direct field requirement for Science / Agri"
-            },
-            {
-              "postName": "VP Wealth",
-              "totalPost": "91",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "AVP Wealth",
-              "totalPost": "73",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
-          "description": "Direct Field Match (2 posts) + Open to Any Graduate"
+          "matchType": "general",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
         },
         {
           "id": "medical_healthcare",
           "label": "Medical, Nursing & Pharmacy (MBBS/GNM/B.Pharm)",
           "shortLabel": "Medical / Nursing",
           "matchType": "general",
-          "matchedPostsCount": 3,
-          "matchingPosts": [
-            {
-              "postName": "Relationship Manager Team Lead",
-              "totalPost": "24",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "VP Wealth",
-              "totalPost": "91",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "AVP Wealth",
-              "totalPost": "73",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
           "description": "Eligible via Any Bachelor Degree (Open to all streams)"
         },
         {
@@ -1450,27 +1516,8 @@
           "label": "Teaching Degree (B.Ed / D.El.Ed / TET)",
           "shortLabel": "Teaching / B.Ed",
           "matchType": "general",
-          "matchedPostsCount": 3,
-          "matchingPosts": [
-            {
-              "postName": "Relationship Manager Team Lead",
-              "totalPost": "24",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "VP Wealth",
-              "totalPost": "91",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            },
-            {
-              "postName": "AVP Wealth",
-              "totalPost": "73",
-              "matchType": "general",
-              "reason": "Open to Any Bachelor Degree stream"
-            }
-          ],
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
           "description": "Eligible via Any Bachelor Degree (Open to all streams)"
         }
       ],
@@ -1479,7 +1526,7 @@
         "Banking & Financial",
         "Central",
         "SBI",
-        "Extended till 05/10/2026",
+        "Date Extended",
         "Active",
         "CS & IT",
         "Civil Engg",
@@ -1494,11 +1541,43 @@
       ]
     },
     {
+      "id": "ibps-rrb-15th-august26",
+      "title": "IBPS RRB 15th Online Form 2026 | Date Extended",
+      "link": "https://www.sarkariresult.com/2026/ibps-rrb-15th-august26/",
+      "category": "latestJobs",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
+      "section": "latestJobs",
+      "sector": "Banking & Financial",
+      "sectorBadge": "banking",
+      "sectorColor": "#0284c7",
+      "state": "Central / All India",
+      "qualification": "Graduate / Check Notice",
+      "organization": "IBPS",
+      "lastDate": null,
+      "lastDateFormatted": null,
+      "isExpired": false,
+      "isActive": true,
+      "status": "Date Extended",
+      "statusType": "warning",
+      "eligibleDisciplines": [],
+      "fieldDisciplines": [],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Banking & Financial",
+        "Central",
+        "IBPS",
+        "Date Extended",
+        "Active"
+      ]
+    },
+    {
       "id": "btsc-touring-veterinary-sep26",
       "title": "Bihar BTSC Touring Veterinary Officer Online form 2026 | Last Date : 23/10/2026",
       "link": "https://www.sarkariresult.com/2026/btsc-touring-veterinary-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Medical & Healthcare",
       "sectorBadge": "medical",
@@ -1557,7 +1636,7 @@
       "title": "Bihar BTSC Food Safety Extension Officer Online form 2026 | Last Date : 24/10/2026",
       "link": "https://www.sarkariresult.com/2026/bihar-btsc-food-safety-officer-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
@@ -1616,7 +1695,7 @@
       "title": "BPSC School Teacher TRE 4.0 Online Form 2026",
       "link": "https://www.sarkariresult.com/bihar/bpsc-tre-4-2026/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Teaching & Education",
       "sectorBadge": "teaching",
@@ -1675,7 +1754,7 @@
       "title": "IIT BHU Non Teaching Post Online Form 2026 | Date Extended",
       "link": "https://www.sarkariresult.com/2026/iit-bhu-non-teaching-august26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "details": {
         "title": "IIT BHU Recruitment 2026 Apply Online for Non Teaching Post 55 Post",
         "url": "https://www.sarkariresult.com/2026/iit-bhu-non-teaching-august26/",
@@ -1776,7 +1855,7 @@
             "url": "https://iitbhu.ac.in/recruitment_nf"
           }
         ],
-        "scrapedAt": "2026-09-29T07:28:30.219Z"
+        "scrapedAt": "2026-09-30T12:37:50.404Z"
       },
       "section": "latestJobs",
       "sector": "Engineering & Technical",
@@ -2159,7 +2238,7 @@
       "title": "BOB Wealth Management Services and Corporate IC Online Form 2026 | Date Extended",
       "link": "https://www.sarkariresult.com/2026/bank-of-baroda-bob-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "details": {
         "title": "Bank of Baroda Wealth Management Services & Corporate and Institutional Credit Recruitment 2026 Apply Online for 1100 Post",
         "url": "https://www.sarkariresult.com/2026/bank-of-baroda-bob-sep26/",
@@ -2221,7 +2300,7 @@
             "url": "https://bankofbaroda.bank.in/career/current-opportunities"
           }
         ],
-        "scrapedAt": "2026-09-29T07:28:30.324Z"
+        "scrapedAt": "2026-09-30T12:37:50.604Z"
       },
       "section": "latestJobs",
       "sector": "Banking & Financial",
@@ -2512,7 +2591,7 @@
       "title": "Bihar BTSC Fishery Extension Officer Online form 2026 | Last Date : 23/10/2026",
       "link": "https://www.sarkariresult.com/2026/btsc-fishery-extension-officer-sept26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
@@ -2559,39 +2638,7 @@
       "title": "UP Anganwadi Worker Bharti Hathras Online Form 2026",
       "link": "https://www.sarkariresult.com/2026/up-anganwadi-worker/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
-      "section": "latestJobs",
-      "sector": "State Subordinate & Welfare",
-      "sectorBadge": "state-subordinate",
-      "sectorColor": "#d97706",
-      "state": "Uttar Pradesh (UP)",
-      "qualification": "10th / Matric Pass",
-      "organization": "Government of India",
-      "lastDate": null,
-      "lastDateFormatted": null,
-      "isExpired": false,
-      "isActive": true,
-      "status": "Apply Online",
-      "statusType": "primary",
-      "eligibleDisciplines": [],
-      "fieldDisciplines": [],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [],
-      "ineligibleWarnings": [],
-      "tags": [
-        "State Subordinate & Welfare",
-        "Uttar",
-        "Government of India",
-        "Apply Online",
-        "Active"
-      ]
-    },
-    {
-      "id": "up-anganwadi-helper-june26",
-      "title": "UP Anganwadi Helper Online Form 2026 | Last Date : District Wise",
-      "link": "https://www.sarkariresult.com/2026/up-anganwadi-helper-june26/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "State Subordinate & Welfare",
       "sectorBadge": "state-subordinate",
@@ -2623,7 +2670,7 @@
       "title": "IBPS Hindi Officer HO Online Form 2026",
       "link": "https://www.sarkariresult.com/2026/ibps-hindi-officer-ho-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Banking & Financial",
       "sectorBadge": "banking",
@@ -2655,7 +2702,7 @@
       "title": "MPESB MP Police Constable GD Online Form 2026 | Last Date : 11/10/2026",
       "link": "https://www.sarkariresult.com/2026/mpesb-mp-police-constable-gd-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Police & Security",
       "sectorBadge": "police",
@@ -2702,7 +2749,7 @@
       "title": "Railway RRB NTPC 10+2 Under Graduate Online Form 2026",
       "link": "https://www.sarkariresult.com/railway/railway-rrb-ntpc-ug-level-07-2026/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Railway (RRB)",
       "sectorBadge": "railway",
@@ -2761,7 +2808,7 @@
       "title": "UPESSC UP PGT Teacher Online Form 2026 for 2607 Post | Last Date : 17/10/2026",
       "link": "https://www.sarkariresult.com/2026/upessc-up-pgt-teacher-sept26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.753Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Teaching & Education",
       "sectorBadge": "teaching",
@@ -2808,7 +2855,7 @@
       "title": "UPESSC UP Assistant Professor Online Form 2026 | Last Date : 07/10/2026",
       "link": "https://www.sarkariresult.com/2026/upessc-assistant-professor-04-2026/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Teaching & Education",
       "sectorBadge": "teaching",
@@ -2855,7 +2902,7 @@
       "title": "UPESSC UP Primary Teacher Online Form 2026 for 12405 Post | Last Date : 15/10/2026",
       "link": "https://www.sarkariresult.com/2026/upessc-up-primary-teacher-05-2026/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Teaching & Education",
       "sectorBadge": "teaching",
@@ -2902,7 +2949,7 @@
       "title": "SSC CPO SI CAPF Online Form 2026 | Last Date : 30/09/2026",
       "link": "https://www.sarkariresult.com/2026/ssc-cpo-si-capf-2026/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Staff Selection (SSC)",
       "sectorBadge": "ssc",
@@ -3057,7 +3104,7 @@
       "title": "SSC 10+2 CHSL Online Form 2026 | Last Date : 07/10/2026",
       "link": "https://www.sarkariresult.com/2026/ssc-chsl-2026-sep/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Staff Selection (SSC)",
       "sectorBadge": "ssc",
@@ -3104,7 +3151,7 @@
       "title": "UKSSSC Group C Scaler Online Form 2026 | Last Date : 22/10/2026",
       "link": "https://www.sarkariresult.com/2026/uksssc-group-c-scaler-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
+      "scrapedAt": "2026-09-30T12:37:48.861Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
@@ -3151,7 +3198,7 @@
       "title": "MECL Non Executive Online Form 2026 | Last Date : 11/10/2026",
       "link": "https://www.sarkariresult.com/2026/mecl-non-executive-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
@@ -3179,58 +3226,11 @@
       ]
     },
     {
-      "id": "jssc-jilcce-inter-level-july26",
-      "title": "JSSC JILCCE Inter Level Online Form 2026 Re Open | Last Date : 29/09/2026",
-      "link": "https://www.sarkariresult.com/2026/jssc-jilcce-inter-level-july26/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
-      "section": "latestJobs",
-      "sector": "General & Others",
-      "sectorBadge": "general",
-      "sectorColor": "#475569",
-      "state": "Jharkhand",
-      "qualification": "12th / Intermediate",
-      "organization": "Government of India",
-      "lastDate": "2026-09-29",
-      "lastDateFormatted": "29/09/2026",
-      "isExpired": false,
-      "isActive": true,
-      "status": "Till 29/09/2026",
-      "statusType": "success",
-      "eligibleDisciplines": [
-        "matric_inter_10_12"
-      ],
-      "fieldDisciplines": [
-        "matric_inter_10_12"
-      ],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [
-        {
-          "id": "matric_inter_10_12",
-          "label": "10th / 12th Pass / ITI",
-          "shortLabel": "10th / 12th Pass",
-          "matchType": "field",
-          "matchedPostsCount": 0,
-          "matchingPosts": [],
-          "description": "Direct Field Match: Specifically requires 10th / 12th Pass"
-        }
-      ],
-      "ineligibleWarnings": [],
-      "tags": [
-        "General & Others",
-        "Jharkhand",
-        "Government of India",
-        "Till 29/09/2026",
-        "Active",
-        "10th / 12th Pass"
-      ]
-    },
-    {
       "id": "mpesb-mspstet-2026",
       "title": "MPESB Primary and Middle School Teachers MSPSTET Online Form 2026 Date Extended | Last Date : 05/10/2026",
       "link": "https://www.sarkariresult.com/2026/mpesb-mspstet-2026/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "State Subordinate & Welfare",
       "sectorBadge": "state-subordinate",
@@ -3289,7 +3289,7 @@
       "title": "UPSSSC Junior Engineer Agriculture Online Form 2026 | Last Date : 07/10/2026",
       "link": "https://www.sarkariresult.com/2026/upsssc-j-e-agriculture-august26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Engineering & Technical",
       "sectorBadge": "engineering",
@@ -3372,7 +3372,7 @@
       "title": "MPESB MP Police ASI, Subedar Steno Online Form 2026 for 655 Post | Last Date : 08/10/2026",
       "link": "https://www.sarkariresult.com/2026/mpesb-mp-police-asi-subedar-sept2026/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
+      "scrapedAt": "2026-09-30T12:37:48.860Z",
       "section": "latestJobs",
       "sector": "Staff Selection (SSC)",
       "sectorBadge": "ssc",
@@ -3404,7 +3404,55 @@
       "title": "UPSC Engineering Services Pre Online Form 2027 | Last Date : 06/10/2026",
       "link": "https://www.sarkariresult.com/2027/upsc-engineering-02-2027/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
+      "scrapedAt": "2026-09-30T12:37:48.861Z",
+      "details": {
+        "title": "UPSC Engineering Service Examination 2027 ESEP Apply Online",
+        "url": "https://www.sarkariresult.com/2027/upsc-engineering-02-2027/",
+        "postDate": "16 September 2026 | 08:56 PM",
+        "shortInfo": "Union Public Service Commission (UPSC) has released the notification for the recruitment of UPSC Engineering Service Examination ESEP Recruitment 2027. Those Candidates Are Interested to the Following UPSC Engineering Service Examination Recruitment 2027Vacancy Can Apply Online from 19/09/2026 to 06/10/2026. See the Advertisement for information related to age limit, syllabus, Department wise post, selection procedure, pay scale in UPSC Engineering Service Examination ESEP Recruitment 2027.",
+        "importantDates": {
+          "Application Begin": "16/09/2026",
+          "Last Date for Apply Online": "06/10/2026 upto 06 PM",
+          "Pay Exam Fee Last Date": "06/10/2026",
+          "UPSC Engineering Services Pre Exam Date": "31/01/2027",
+          "UPSC Engineering Services Mains Exam Date": "18/06/2027",
+          "Admit Card Available": "Before Exam"
+        },
+        "applicationFee": {
+          "General / OBC / EWS": "200/-",
+          "SC / ST / PH": "0/-",
+          "All Category Female": "0/-",
+          "Pay the Exam Fee Through Debit Card, Credit Card, Net Banking, UPI Fee Mode Only": ""
+        },
+        "ageLimit": {
+          "Minimum Age": "21 Years",
+          "Maximum Age": "30 Years",
+          "Notice": "Age Relaxation Extra as per UPSC Specialist, Assistant Public Prosecutor & Law Officer Examination Rules Advt. No 11/2026."
+        },
+        "totalVacancies": "480 Post",
+        "vacancyDetails": [
+          {
+            "postName": "Civil Engineering / Mechanical Engineering / Electrical Engineering / Electronics & Telecommunication Engineering",
+            "totalPost": "480",
+            "eligibility": "Passed / Appearing Engineering Degree in Related Trade / Stream For More Details Must Read the Full Notification"
+          }
+        ],
+        "importantLinks": [
+          {
+            "label": "Apply Online",
+            "url": "https://upsconline.nic.in/ora/"
+          },
+          {
+            "label": "Download Notification",
+            "url": "https://www.upsc.gov.in/sites/default/files/Notif-ESEP-2027-Engl-160926.pdf"
+          },
+          {
+            "label": "Official Website (UPSC Official Website)",
+            "url": "https://www.upsc.gov.in/"
+          }
+        ],
+        "scrapedAt": "2026-09-30T12:37:50.741Z"
+      },
       "section": "latestJobs",
       "sector": "Engineering & Technical",
       "sectorBadge": "engineering",
@@ -3418,10 +3466,67 @@
       "isActive": true,
       "status": "Till 06/10/2026",
       "statusType": "success",
-      "eligibleDisciplines": [],
-      "fieldDisciplines": [],
+      "eligibleDisciplines": [
+        "civil_eng",
+        "mech_eng",
+        "elec_eng"
+      ],
+      "fieldDisciplines": [
+        "civil_eng",
+        "mech_eng",
+        "elec_eng"
+      ],
       "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [],
+      "eligibleDisciplinesMeta": [
+        {
+          "id": "civil_eng",
+          "label": "Civil Engineering (B.Tech/Diploma)",
+          "shortLabel": "Civil Engg",
+          "matchType": "field",
+          "matchedPostsCount": 1,
+          "matchingPosts": [
+            {
+              "postName": "Civil Engineering / Mechanical Engineering / Electrical Engineering / Electronics & Telecommunication Engineering",
+              "totalPost": "480",
+              "matchType": "field",
+              "reason": "Direct field requirement for Civil Engg"
+            }
+          ],
+          "description": "Direct Field Match: Specifically requires Civil Engg"
+        },
+        {
+          "id": "mech_eng",
+          "label": "Mechanical Engineering (B.Tech/Diploma)",
+          "shortLabel": "Mechanical Engg",
+          "matchType": "field",
+          "matchedPostsCount": 1,
+          "matchingPosts": [
+            {
+              "postName": "Civil Engineering / Mechanical Engineering / Electrical Engineering / Electronics & Telecommunication Engineering",
+              "totalPost": "480",
+              "matchType": "field",
+              "reason": "Direct field requirement for Mechanical Engg"
+            }
+          ],
+          "description": "Direct Field Match: Specifically requires Mechanical Engg"
+        },
+        {
+          "id": "elec_eng",
+          "label": "Electrical & Electronics (B.Tech/Diploma/ECE)",
+          "shortLabel": "Electrical / ECE",
+          "matchType": "field",
+          "matchedPostsCount": 1,
+          "matchingPosts": [
+            {
+              "postName": "Civil Engineering / Mechanical Engineering / Electrical Engineering / Electronics & Telecommunication Engineering",
+              "totalPost": "480",
+              "matchType": "field",
+              "reason": "Direct field requirement for Electrical / ECE"
+            }
+          ],
+          "description": "Direct Field Match: Specifically requires Electrical / ECE"
+        }
+      ],
       "ineligibleWarnings": [
         {
           "disciplineId": "cs_it",
@@ -3433,7 +3538,10 @@
         "Central",
         "UPSC",
         "Till 06/10/2026",
-        "Active"
+        "Active",
+        "Civil Engg",
+        "Mechanical Engg",
+        "Electrical / ECE"
       ]
     },
     {
@@ -3441,7 +3549,7 @@
       "title": "UP Special TET Online Form 2026 | Last Date : 04/10/2026",
       "link": "https://www.sarkariresult.com/2026/up-special-tet-exam/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
+      "scrapedAt": "2026-09-30T12:37:48.861Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
@@ -3488,7 +3596,7 @@
       "title": "RUHS Medical Officer Online Form 2026 for 600 Post | Last Date : 13/10/2026",
       "link": "https://www.sarkariresult.com/2026/ruhs-medical-officer-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
+      "scrapedAt": "2026-09-30T12:37:48.861Z",
       "section": "latestJobs",
       "sector": "Medical & Healthcare",
       "sectorBadge": "medical",
@@ -3547,7 +3655,7 @@
       "title": "UPSSSC UP Lekhpal Mains Document Upload 2026 Advt. No. 02-Exam/2025",
       "link": "https://www.sarkariresult.com/upsssc/upsssc-lekhpal-02-exam-2025/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.754Z",
+      "scrapedAt": "2026-09-30T12:37:48.861Z",
       "section": "latestJobs",
       "sector": "State Subordinate & Welfare",
       "sectorBadge": "state-subordinate",
@@ -3578,7 +3686,7 @@
       "title": "UP Bareilly ECCE Educator Online Form 2026 | Last Date : 01/10/2026",
       "link": "https://www.sarkariresult.com/2026/up-bareilly-ecce-educator-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.760Z",
+      "scrapedAt": "2026-09-30T12:37:48.863Z",
       "section": "latestJobs",
       "sector": "Teaching & Education",
       "sectorBadge": "teaching",
@@ -3610,7 +3718,7 @@
       "title": "UP ECCE Educator Rampur Online Form 2026",
       "link": "https://www.sarkariresult.com/2026/up-ecce-educator-rampur-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.760Z",
+      "scrapedAt": "2026-09-30T12:37:48.863Z",
       "section": "latestJobs",
       "sector": "Teaching & Education",
       "sectorBadge": "teaching",
@@ -3642,7 +3750,7 @@
       "title": "KGBV Kasturba Gandhi Balika Vidyalaya Pilibhit Recruitment 2026",
       "link": "https://www.sarkariresult.com/2026/kgbv-pilibhit-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.761Z",
+      "scrapedAt": "2026-09-30T12:37:48.863Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
@@ -3673,7 +3781,7 @@
       "title": "UP Kaushal Vikas Mission Block Program Manager Online Form 2026 Re-Open",
       "link": "https://www.sarkariresult.com/2026/up-kvm-block-program-manager-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.761Z",
+      "scrapedAt": "2026-09-30T12:37:48.863Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
@@ -3694,70 +3802,6 @@
       "ineligibleWarnings": [],
       "tags": [
         "General & Others",
-        "Uttar",
-        "Government of India",
-        "Apply Online",
-        "Active"
-      ]
-    },
-    {
-      "id": "up-special-educator-sep26",
-      "title": "UP Special Educator Agra, Mathura, Firozabad, Mainpuri Online Form 2026",
-      "link": "https://www.sarkariresult.com/2026/up-special-educator-sep26/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.761Z",
-      "section": "latestJobs",
-      "sector": "Teaching & Education",
-      "sectorBadge": "teaching",
-      "sectorColor": "#7c3aed",
-      "state": "Uttar Pradesh (UP)",
-      "qualification": "Graduate / Check Notice",
-      "organization": "Government of India",
-      "lastDate": null,
-      "lastDateFormatted": null,
-      "isExpired": false,
-      "isActive": true,
-      "status": "Apply Online",
-      "statusType": "primary",
-      "eligibleDisciplines": [],
-      "fieldDisciplines": [],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [],
-      "ineligibleWarnings": [],
-      "tags": [
-        "Teaching & Education",
-        "Uttar",
-        "Government of India",
-        "Apply Online",
-        "Active"
-      ]
-    },
-    {
-      "id": "up-ecce-educator-agra-sep26",
-      "title": "UP ECCE Educator Agra Online Form 2026",
-      "link": "https://www.sarkariresult.com/2026/up-ecce-educator-agra-sep26/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.761Z",
-      "section": "latestJobs",
-      "sector": "Teaching & Education",
-      "sectorBadge": "teaching",
-      "sectorColor": "#7c3aed",
-      "state": "Uttar Pradesh (UP)",
-      "qualification": "Graduate / Check Notice",
-      "organization": "Government of India",
-      "lastDate": null,
-      "lastDateFormatted": null,
-      "isExpired": false,
-      "isActive": true,
-      "status": "Apply Online",
-      "statusType": "primary",
-      "eligibleDisciplines": [],
-      "fieldDisciplines": [],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [],
-      "ineligibleWarnings": [],
-      "tags": [
-        "Teaching & Education",
         "Uttar",
         "Government of India",
         "Apply Online",
@@ -3769,130 +3813,7 @@
       "title": "UP ECCE Educator Mainpuri Online Form 2026",
       "link": "https://www.sarkariresult.com/2026/up-ecce-educator-mainpuri-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.761Z",
-      "section": "latestJobs",
-      "sector": "Teaching & Education",
-      "sectorBadge": "teaching",
-      "sectorColor": "#7c3aed",
-      "state": "Uttar Pradesh (UP)",
-      "qualification": "Graduate / Check Notice",
-      "organization": "Government of India",
-      "lastDate": null,
-      "lastDateFormatted": null,
-      "isExpired": false,
-      "isActive": true,
-      "status": "Apply Online",
-      "statusType": "primary",
-      "eligibleDisciplines": [],
-      "fieldDisciplines": [],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [],
-      "ineligibleWarnings": [],
-      "tags": [
-        "Teaching & Education",
-        "Uttar",
-        "Government of India",
-        "Apply Online",
-        "Active"
-      ]
-    },
-    {
-      "id": "uttar-pradesh-ecce-educator-sep26",
-      "title": "UP ECCE Educator Siddharth Nagar Online Form 2026",
-      "link": "https://www.sarkariresult.com/2026/uttar-pradesh-ecce-educator-sep26/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.761Z",
-      "section": "latestJobs",
-      "sector": "Teaching & Education",
-      "sectorBadge": "teaching",
-      "sectorColor": "#7c3aed",
-      "state": "Uttar Pradesh (UP)",
-      "qualification": "Graduate / Check Notice",
-      "organization": "Government of India",
-      "lastDate": null,
-      "lastDateFormatted": null,
-      "isExpired": false,
-      "isActive": true,
-      "status": "Apply Online",
-      "statusType": "primary",
-      "eligibleDisciplines": [],
-      "fieldDisciplines": [],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [],
-      "ineligibleWarnings": [],
-      "tags": [
-        "Teaching & Education",
-        "Uttar",
-        "Government of India",
-        "Apply Online",
-        "Active"
-      ]
-    },
-    {
-      "id": "upbocw-computer-operator-aug26",
-      "title": "UPBOCW Computer Operator Online Form 2026",
-      "link": "https://www.sarkariresult.com/2026/upbocw-computer-operator-aug26/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.761Z",
-      "section": "latestJobs",
-      "sector": "General & Others",
-      "sectorBadge": "general",
-      "sectorColor": "#475569",
-      "state": "Central / All India",
-      "qualification": "Graduate / Check Notice",
-      "organization": "Government of India",
-      "lastDate": null,
-      "lastDateFormatted": null,
-      "isExpired": false,
-      "isActive": true,
-      "status": "Apply Online",
-      "statusType": "primary",
-      "eligibleDisciplines": [
-        "cs_it",
-        "elec_eng"
-      ],
-      "fieldDisciplines": [
-        "cs_it",
-        "elec_eng"
-      ],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [
-        {
-          "id": "cs_it",
-          "label": "Computer Science & IT (B.Tech/BE/BCA/MCA/B.Sc CS)",
-          "shortLabel": "CS & IT",
-          "matchType": "field",
-          "matchedPostsCount": 0,
-          "matchingPosts": [],
-          "description": "Direct Field Match: Specifically requires CS & IT"
-        },
-        {
-          "id": "elec_eng",
-          "label": "Electrical & Electronics (B.Tech/Diploma/ECE)",
-          "shortLabel": "Electrical / ECE",
-          "matchType": "field",
-          "matchedPostsCount": 0,
-          "matchingPosts": [],
-          "description": "Direct Field Match: Specifically requires Electrical / ECE"
-        }
-      ],
-      "ineligibleWarnings": [],
-      "tags": [
-        "General & Others",
-        "Central",
-        "Government of India",
-        "Apply Online",
-        "Active",
-        "CS & IT",
-        "Electrical / ECE"
-      ]
-    },
-    {
-      "id": "up-azamgarh-ecce-educator-sep26",
-      "title": "UP Azamgarh ECCE Educator Online Form 2026 for 83 Post",
-      "link": "https://www.sarkariresult.com/2026/up-azamgarh-ecce-educator-sep26/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.761Z",
+      "scrapedAt": "2026-09-30T12:37:48.863Z",
       "section": "latestJobs",
       "sector": "Teaching & Education",
       "sectorBadge": "teaching",
@@ -3924,7 +3845,7 @@
       "title": "Atal Awasiya Vidyalaya Kanpur TGT, PGT Teacher Online Form 2026",
       "link": "https://www.sarkariresult.com/2026/atal-awasiya-vid-kanpur-august26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.761Z",
+      "scrapedAt": "2026-09-30T12:37:48.863Z",
       "section": "latestJobs",
       "sector": "Teaching & Education",
       "sectorBadge": "teaching",
@@ -3971,7 +3892,7 @@
       "title": "KGBV Kasturba Gandhi Balika Vidyalaya Shamli Online Form 2026",
       "link": "https://www.sarkariresult.com/2026/kgbv-shamli-augut26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.761Z",
+      "scrapedAt": "2026-09-30T12:37:48.863Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
@@ -4003,7 +3924,7 @@
       "title": "Atal Awasiya Vidyalaya Basti TGT, PGT Teacher Recruitment 2026",
       "link": "https://www.sarkariresult.com/2026/atal-awasiya-basti-aug26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:27.761Z",
+      "scrapedAt": "2026-09-30T12:37:48.863Z",
       "section": "latestJobs",
       "sector": "Teaching & Education",
       "sectorBadge": "teaching",
@@ -4045,348 +3966,23 @@
       ]
     },
     {
-      "id": "csir-neeri-sep26",
-      "title": "CSIR NEERI Technical Officer Online Form 2026 | Last Date : 15/10/2026",
-      "link": "https://www.sarkariresult.com/2026/csir-neeri-sep26/",
+      "id": "uiic-ao-sep26",
+      "title": "United India Insurance UIIC AO Online Form 2026 for 225 Post | Last Date : 01/10/2026",
+      "link": "https://www.sarkariresult.com/2026/uiic-ao-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.174Z",
-      "section": "latestJobs",
-      "sector": "Engineering & Technical",
-      "sectorBadge": "engineering",
-      "sectorColor": "#0891b2",
-      "state": "Central / All India",
-      "qualification": "Graduate / Degree",
-      "organization": "CSIR",
-      "lastDate": "2026-10-15",
-      "lastDateFormatted": "15/10/2026",
-      "isExpired": false,
-      "isActive": true,
-      "status": "Till 15/10/2026",
-      "statusType": "success",
-      "eligibleDisciplines": [],
-      "fieldDisciplines": [],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [],
-      "ineligibleWarnings": [],
-      "tags": [
-        "Engineering & Technical",
-        "Central",
-        "CSIR",
-        "Till 15/10/2026",
-        "Active"
-      ]
-    },
-    {
-      "id": "mphc-assistant-grade-3rd-august26",
-      "title": "MP High Court Assistant Grade III Online Form 2026 | Last Date : 30/09/2026 | Date Extended",
-      "link": "https://www.sarkariresult.com/2026/mphc-assistant-grade-3rd-august26/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
-      "section": "latestJobs",
-      "sector": "Judiciary & Law",
-      "sectorBadge": "judiciary",
-      "sectorColor": "#9333ea",
-      "state": "Madhya Pradesh (MP)",
-      "qualification": "Graduate / Check Notice",
-      "organization": "Government of India",
-      "lastDate": "2026-09-30",
-      "lastDateFormatted": "30/09/2026",
-      "isExpired": false,
-      "isActive": true,
-      "status": "Extended till 30/09/2026",
-      "statusType": "warning",
-      "eligibleDisciplines": [],
-      "fieldDisciplines": [],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [],
-      "ineligibleWarnings": [],
-      "tags": [
-        "Judiciary & Law",
-        "Madhya",
-        "Government of India",
-        "Extended till 30/09/2026",
-        "Active"
-      ]
-    },
-    {
-      "id": "dhc-pa-spa-sep26",
-      "title": "DHC Delhi High Court PA and SPA Online Form 2026 for 150 Post | Last Date : 05/10/2026",
-      "link": "https://www.sarkariresult.com/2026/dhc-pa-spa-sep26/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
-      "section": "latestJobs",
-      "sector": "Judiciary & Law",
-      "sectorBadge": "judiciary",
-      "sectorColor": "#9333ea",
-      "state": "Delhi",
-      "qualification": "Graduate / Check Notice",
-      "organization": "Government of India",
-      "lastDate": "2026-10-05",
-      "lastDateFormatted": "05/10/2026",
-      "isExpired": false,
-      "isActive": true,
-      "status": "Till 05/10/2026",
-      "statusType": "success",
-      "eligibleDisciplines": [],
-      "fieldDisciplines": [],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [],
-      "ineligibleWarnings": [],
-      "tags": [
-        "Judiciary & Law",
-        "Delhi",
-        "Government of India",
-        "Till 05/10/2026",
-        "Active"
-      ]
-    },
-    {
-      "id": "railway-rrb-paramedical-cen-05-2026",
-      "title": "Railway RRB Paramedical Online Form 2026 CEN 05/2026 | Last Date : 14/10/2026",
-      "link": "https://www.sarkariresult.com/2026/railway-rrb-paramedical-cen-05-2026/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
-      "section": "latestJobs",
-      "sector": "Railway (RRB)",
-      "sectorBadge": "railway",
-      "sectorColor": "#b91c1c",
-      "state": "Central / All India",
-      "qualification": "Graduate / Check Notice",
-      "organization": "RRB",
-      "lastDate": "2026-10-14",
-      "lastDateFormatted": "14/10/2026",
-      "isExpired": false,
-      "isActive": true,
-      "status": "Till 14/10/2026",
-      "statusType": "success",
-      "eligibleDisciplines": [
-        "science_agriculture",
-        "medical_healthcare"
-      ],
-      "fieldDisciplines": [
-        "science_agriculture",
-        "medical_healthcare"
-      ],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [
-        {
-          "id": "science_agriculture",
-          "label": "Science & Agriculture (B.Sc / M.Sc)",
-          "shortLabel": "Science / Agri",
-          "matchType": "field",
-          "matchedPostsCount": 0,
-          "matchingPosts": [],
-          "description": "Direct Field Match: Specifically requires Science / Agri"
-        },
-        {
-          "id": "medical_healthcare",
-          "label": "Medical, Nursing & Pharmacy (MBBS/GNM/B.Pharm)",
-          "shortLabel": "Medical / Nursing",
-          "matchType": "field",
-          "matchedPostsCount": 0,
-          "matchingPosts": [],
-          "description": "Direct Field Match: Specifically requires Medical / Nursing"
-        }
-      ],
-      "ineligibleWarnings": [],
-      "tags": [
-        "Railway (RRB)",
-        "Central",
-        "RRB",
-        "Till 14/10/2026",
-        "Active",
-        "Science / Agri",
-        "Medical / Nursing"
-      ]
-    },
-    {
-      "id": "upsssc-veterinary-18-exam-2026",
-      "title": "UPSSSC Veterinary Pharmacist Online Form 2026 | Last Date : 05/10/2026",
-      "link": "https://www.sarkariresult.com/2026/upsssc-veterinary-18-exam-2026/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
-      "section": "latestJobs",
-      "sector": "Medical & Healthcare",
-      "sectorBadge": "medical",
-      "sectorColor": "#db2777",
-      "state": "Uttar Pradesh (UP)",
-      "qualification": "Medical / Nursing Degree",
-      "organization": "UPSSSC",
-      "lastDate": "2026-10-05",
-      "lastDateFormatted": "05/10/2026",
-      "isExpired": false,
-      "isActive": true,
-      "status": "Till 05/10/2026",
-      "statusType": "success",
-      "eligibleDisciplines": [
-        "science_agriculture",
-        "medical_healthcare"
-      ],
-      "fieldDisciplines": [
-        "science_agriculture",
-        "medical_healthcare"
-      ],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [
-        {
-          "id": "science_agriculture",
-          "label": "Science & Agriculture (B.Sc / M.Sc)",
-          "shortLabel": "Science / Agri",
-          "matchType": "field",
-          "matchedPostsCount": 0,
-          "matchingPosts": [],
-          "description": "Direct Field Match: Specifically requires Science / Agri"
-        },
-        {
-          "id": "medical_healthcare",
-          "label": "Medical, Nursing & Pharmacy (MBBS/GNM/B.Pharm)",
-          "shortLabel": "Medical / Nursing",
-          "matchType": "field",
-          "matchedPostsCount": 0,
-          "matchingPosts": [],
-          "description": "Direct Field Match: Specifically requires Medical / Nursing"
-        }
-      ],
-      "ineligibleWarnings": [],
-      "tags": [
-        "Medical & Healthcare",
-        "Uttar",
-        "UPSSSC",
-        "Till 05/10/2026",
-        "Active",
-        "Science / Agri",
-        "Medical / Nursing"
-      ]
-    },
-    {
-      "id": "upsc-advt-no-11-2026",
-      "title": "UPSC Assistant Public Prosecutor and Other Post Online Form 2026 | Last Date : 02/10/2026",
-      "link": "https://www.sarkariresult.com/2026/upsc-advt-no-11-2026/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
-      "section": "latestJobs",
-      "sector": "Civil Services & State PSC",
-      "sectorBadge": "civil-services",
-      "sectorColor": "#4338ca",
-      "state": "Central / All India",
-      "qualification": "Graduate / Degree",
-      "organization": "UPSC",
-      "lastDate": "2026-10-02",
-      "lastDateFormatted": "02/10/2026",
-      "isExpired": false,
-      "isActive": true,
-      "status": "Till 02/10/2026",
-      "statusType": "success",
-      "eligibleDisciplines": [
-        "law_legal"
-      ],
-      "fieldDisciplines": [
-        "law_legal"
-      ],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [
-        {
-          "id": "law_legal",
-          "label": "Law & Legal (LLB / LLM)",
-          "shortLabel": "Law (LLB)",
-          "matchType": "field",
-          "matchedPostsCount": 0,
-          "matchingPosts": [],
-          "description": "Direct Field Match: Specifically requires Law (LLB)"
-        }
-      ],
-      "ineligibleWarnings": [],
-      "tags": [
-        "Civil Services & State PSC",
-        "Central",
-        "UPSC",
-        "Till 02/10/2026",
-        "Active",
-        "Law (LLB)"
-      ]
-    },
-    {
-      "id": "upsssc-s-instructor-21-exam-2026",
-      "title": "UPSSSC Senior Instructor Online Form 2026 | Last Date : 05/10/2026",
-      "link": "https://www.sarkariresult.com/2026/upsssc-s-instructor-21-exam-2026/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
-      "section": "latestJobs",
-      "sector": "State Subordinate & Welfare",
-      "sectorBadge": "state-subordinate",
-      "sectorColor": "#d97706",
-      "state": "Uttar Pradesh (UP)",
-      "qualification": "Graduate / Check Notice",
-      "organization": "UPSSSC",
-      "lastDate": "2026-10-05",
-      "lastDateFormatted": "05/10/2026",
-      "isExpired": false,
-      "isActive": true,
-      "status": "Till 05/10/2026",
-      "statusType": "success",
-      "eligibleDisciplines": [],
-      "fieldDisciplines": [],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [],
-      "ineligibleWarnings": [],
-      "tags": [
-        "State Subordinate & Welfare",
-        "Uttar",
-        "UPSSSC",
-        "Till 05/10/2026",
-        "Active"
-      ]
-    },
-    {
-      "id": "isro-various-post-jul26",
-      "title": "ISRO ICRB Assistant and Other Post Admit Card 2026",
-      "link": "https://www.sarkariresult.com/2026/isro-various-post-jul26/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
+      "scrapedAt": "2026-09-30T12:37:49.262Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
       "sectorColor": "#475569",
       "state": "Central / All India",
       "qualification": "Graduate / Check Notice",
-      "organization": "Government of India",
-      "lastDate": null,
-      "lastDateFormatted": null,
+      "organization": "UIIC",
+      "lastDate": "2026-10-01",
+      "lastDateFormatted": "01/10/2026",
       "isExpired": false,
       "isActive": true,
-      "status": "Admit Card Out",
-      "statusType": "info",
-      "eligibleDisciplines": [],
-      "fieldDisciplines": [],
-      "generalDisciplines": [],
-      "eligibleDisciplinesMeta": [],
-      "ineligibleWarnings": [],
-      "tags": [
-        "General & Others",
-        "Central",
-        "Government of India",
-        "Admit Card Out",
-        "Active"
-      ]
-    },
-    {
-      "id": "ukpsc-pre-2026",
-      "title": "UKPSC Pre Combined State Civil Upper Subordinate Service Online Form 2026 | Last Date : 29/09/2026",
-      "link": "https://www.sarkariresult.com/2026/ukpsc-pre-2026/",
-      "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
-      "section": "latestJobs",
-      "sector": "Civil Services & State PSC",
-      "sectorBadge": "civil-services",
-      "sectorColor": "#4338ca",
-      "state": "Uttarakhand",
-      "qualification": "Graduate / Check Notice",
-      "organization": "Government of India",
-      "lastDate": "2026-09-29",
-      "lastDateFormatted": "29/09/2026",
-      "isExpired": false,
-      "isActive": true,
-      "status": "Till 29/09/2026",
+      "status": "Till 01/10/2026",
       "statusType": "success",
       "eligibleDisciplines": [
         "cs_it",
@@ -4400,9 +3996,7 @@
         "medical_healthcare",
         "education_teaching"
       ],
-      "fieldDisciplines": [
-        "civil_eng"
-      ],
+      "fieldDisciplines": [],
       "generalDisciplines": [
         "cs_it",
         "civil_eng",
@@ -4429,10 +4023,10 @@
           "id": "civil_eng",
           "label": "Civil Engineering (B.Tech/Diploma)",
           "shortLabel": "Civil Engg",
-          "matchType": "both",
+          "matchType": "general",
           "matchedPostsCount": 0,
           "matchingPosts": [],
-          "description": "Direct Field Match (0 posts) + Open to Any Graduate"
+          "description": "Eligible via Any Bachelor Degree (Open to all streams)"
         },
         {
           "id": "mech_eng",
@@ -4509,10 +4103,10 @@
       ],
       "ineligibleWarnings": [],
       "tags": [
-        "Civil Services & State PSC",
-        "Uttarakhand",
-        "Government of India",
-        "Till 29/09/2026",
+        "General & Others",
+        "Central",
+        "UIIC",
+        "Till 01/10/2026",
         "Active",
         "CS & IT",
         "Civil Engg",
@@ -4527,23 +4121,284 @@
       ]
     },
     {
-      "id": "upsssc-livestock-17-exam-2026",
-      "title": "UPSSSC Livestock Extension Officer Online Form 2026 | Last Date : 29/09/2026",
-      "link": "https://www.sarkariresult.com/2026/upsssc-livestock-17-exam-2026/",
+      "id": "csir-neeri-sep26",
+      "title": "CSIR NEERI Technical Officer Online Form 2026 | Last Date : 15/10/2026",
+      "link": "https://www.sarkariresult.com/2026/csir-neeri-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
+      "scrapedAt": "2026-09-30T12:37:49.262Z",
+      "section": "latestJobs",
+      "sector": "Engineering & Technical",
+      "sectorBadge": "engineering",
+      "sectorColor": "#0891b2",
+      "state": "Central / All India",
+      "qualification": "Graduate / Degree",
+      "organization": "CSIR",
+      "lastDate": "2026-10-15",
+      "lastDateFormatted": "15/10/2026",
+      "isExpired": false,
+      "isActive": true,
+      "status": "Till 15/10/2026",
+      "statusType": "success",
+      "eligibleDisciplines": [],
+      "fieldDisciplines": [],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Engineering & Technical",
+        "Central",
+        "CSIR",
+        "Till 15/10/2026",
+        "Active"
+      ]
+    },
+    {
+      "id": "mphc-assistant-grade-3rd-august26",
+      "title": "MP High Court Assistant Grade III Online Form 2026 | Last Date : 30/09/2026 | Date Extended",
+      "link": "https://www.sarkariresult.com/2026/mphc-assistant-grade-3rd-august26/",
+      "category": "latestJobs",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
+      "section": "latestJobs",
+      "sector": "Judiciary & Law",
+      "sectorBadge": "judiciary",
+      "sectorColor": "#9333ea",
+      "state": "Madhya Pradesh (MP)",
+      "qualification": "Graduate / Check Notice",
+      "organization": "Government of India",
+      "lastDate": "2026-09-30",
+      "lastDateFormatted": "30/09/2026",
+      "isExpired": false,
+      "isActive": true,
+      "status": "Extended till 30/09/2026",
+      "statusType": "warning",
+      "eligibleDisciplines": [],
+      "fieldDisciplines": [],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Judiciary & Law",
+        "Madhya",
+        "Government of India",
+        "Extended till 30/09/2026",
+        "Active"
+      ]
+    },
+    {
+      "id": "dhc-pa-spa-sep26",
+      "title": "DHC Delhi High Court PA and SPA Online Form 2026 for 150 Post | Last Date : 05/10/2026",
+      "link": "https://www.sarkariresult.com/2026/dhc-pa-spa-sep26/",
+      "category": "latestJobs",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
+      "section": "latestJobs",
+      "sector": "Judiciary & Law",
+      "sectorBadge": "judiciary",
+      "sectorColor": "#9333ea",
+      "state": "Delhi",
+      "qualification": "Graduate / Check Notice",
+      "organization": "Government of India",
+      "lastDate": "2026-10-05",
+      "lastDateFormatted": "05/10/2026",
+      "isExpired": false,
+      "isActive": true,
+      "status": "Till 05/10/2026",
+      "statusType": "success",
+      "eligibleDisciplines": [],
+      "fieldDisciplines": [],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Judiciary & Law",
+        "Delhi",
+        "Government of India",
+        "Till 05/10/2026",
+        "Active"
+      ]
+    },
+    {
+      "id": "railway-rrb-paramedical-cen-05-2026",
+      "title": "Railway RRB Paramedical Online Form 2026 CEN 05/2026 | Last Date : 14/10/2026",
+      "link": "https://www.sarkariresult.com/2026/railway-rrb-paramedical-cen-05-2026/",
+      "category": "latestJobs",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
+      "section": "latestJobs",
+      "sector": "Railway (RRB)",
+      "sectorBadge": "railway",
+      "sectorColor": "#b91c1c",
+      "state": "Central / All India",
+      "qualification": "Graduate / Check Notice",
+      "organization": "RRB",
+      "lastDate": "2026-10-14",
+      "lastDateFormatted": "14/10/2026",
+      "isExpired": false,
+      "isActive": true,
+      "status": "Till 14/10/2026",
+      "statusType": "success",
+      "eligibleDisciplines": [
+        "science_agriculture",
+        "medical_healthcare"
+      ],
+      "fieldDisciplines": [
+        "science_agriculture",
+        "medical_healthcare"
+      ],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [
+        {
+          "id": "science_agriculture",
+          "label": "Science & Agriculture (B.Sc / M.Sc)",
+          "shortLabel": "Science / Agri",
+          "matchType": "field",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match: Specifically requires Science / Agri"
+        },
+        {
+          "id": "medical_healthcare",
+          "label": "Medical, Nursing & Pharmacy (MBBS/GNM/B.Pharm)",
+          "shortLabel": "Medical / Nursing",
+          "matchType": "field",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match: Specifically requires Medical / Nursing"
+        }
+      ],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Railway (RRB)",
+        "Central",
+        "RRB",
+        "Till 14/10/2026",
+        "Active",
+        "Science / Agri",
+        "Medical / Nursing"
+      ]
+    },
+    {
+      "id": "upsssc-veterinary-18-exam-2026",
+      "title": "UPSSSC Veterinary Pharmacist Online Form 2026 | Last Date : 05/10/2026",
+      "link": "https://www.sarkariresult.com/2026/upsssc-veterinary-18-exam-2026/",
+      "category": "latestJobs",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
+      "section": "latestJobs",
+      "sector": "Medical & Healthcare",
+      "sectorBadge": "medical",
+      "sectorColor": "#db2777",
+      "state": "Uttar Pradesh (UP)",
+      "qualification": "Medical / Nursing Degree",
+      "organization": "UPSSSC",
+      "lastDate": "2026-10-05",
+      "lastDateFormatted": "05/10/2026",
+      "isExpired": false,
+      "isActive": true,
+      "status": "Till 05/10/2026",
+      "statusType": "success",
+      "eligibleDisciplines": [
+        "science_agriculture",
+        "medical_healthcare"
+      ],
+      "fieldDisciplines": [
+        "science_agriculture",
+        "medical_healthcare"
+      ],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [
+        {
+          "id": "science_agriculture",
+          "label": "Science & Agriculture (B.Sc / M.Sc)",
+          "shortLabel": "Science / Agri",
+          "matchType": "field",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match: Specifically requires Science / Agri"
+        },
+        {
+          "id": "medical_healthcare",
+          "label": "Medical, Nursing & Pharmacy (MBBS/GNM/B.Pharm)",
+          "shortLabel": "Medical / Nursing",
+          "matchType": "field",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match: Specifically requires Medical / Nursing"
+        }
+      ],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Medical & Healthcare",
+        "Uttar",
+        "UPSSSC",
+        "Till 05/10/2026",
+        "Active",
+        "Science / Agri",
+        "Medical / Nursing"
+      ]
+    },
+    {
+      "id": "upsc-advt-no-11-2026",
+      "title": "UPSC Assistant Public Prosecutor and Other Post Online Form 2026 | Last Date : 02/10/2026",
+      "link": "https://www.sarkariresult.com/2026/upsc-advt-no-11-2026/",
+      "category": "latestJobs",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
+      "section": "latestJobs",
+      "sector": "Civil Services & State PSC",
+      "sectorBadge": "civil-services",
+      "sectorColor": "#4338ca",
+      "state": "Central / All India",
+      "qualification": "Graduate / Degree",
+      "organization": "UPSC",
+      "lastDate": "2026-10-02",
+      "lastDateFormatted": "02/10/2026",
+      "isExpired": false,
+      "isActive": true,
+      "status": "Till 02/10/2026",
+      "statusType": "success",
+      "eligibleDisciplines": [
+        "law_legal"
+      ],
+      "fieldDisciplines": [
+        "law_legal"
+      ],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [
+        {
+          "id": "law_legal",
+          "label": "Law & Legal (LLB / LLM)",
+          "shortLabel": "Law (LLB)",
+          "matchType": "field",
+          "matchedPostsCount": 0,
+          "matchingPosts": [],
+          "description": "Direct Field Match: Specifically requires Law (LLB)"
+        }
+      ],
+      "ineligibleWarnings": [],
+      "tags": [
+        "Civil Services & State PSC",
+        "Central",
+        "UPSC",
+        "Till 02/10/2026",
+        "Active",
+        "Law (LLB)"
+      ]
+    },
+    {
+      "id": "upsssc-s-instructor-21-exam-2026",
+      "title": "UPSSSC Senior Instructor Online Form 2026 | Last Date : 05/10/2026",
+      "link": "https://www.sarkariresult.com/2026/upsssc-s-instructor-21-exam-2026/",
+      "category": "latestJobs",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "State Subordinate & Welfare",
       "sectorBadge": "state-subordinate",
       "sectorColor": "#d97706",
       "state": "Uttar Pradesh (UP)",
-      "qualification": "Graduate / Degree",
+      "qualification": "Graduate / Check Notice",
       "organization": "UPSSSC",
-      "lastDate": "2026-09-29",
-      "lastDateFormatted": "29/09/2026",
+      "lastDate": "2026-10-05",
+      "lastDateFormatted": "05/10/2026",
       "isExpired": false,
       "isActive": true,
-      "status": "Till 29/09/2026",
+      "status": "Till 05/10/2026",
       "statusType": "success",
       "eligibleDisciplines": [],
       "fieldDisciplines": [],
@@ -4554,7 +4409,39 @@
         "State Subordinate & Welfare",
         "Uttar",
         "UPSSSC",
-        "Till 29/09/2026",
+        "Till 05/10/2026",
+        "Active"
+      ]
+    },
+    {
+      "id": "isro-various-post-jul26",
+      "title": "ISRO ICRB Assistant and Other Post Admit Card 2026",
+      "link": "https://www.sarkariresult.com/2026/isro-various-post-jul26/",
+      "category": "latestJobs",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
+      "section": "latestJobs",
+      "sector": "General & Others",
+      "sectorBadge": "general",
+      "sectorColor": "#475569",
+      "state": "Central / All India",
+      "qualification": "Graduate / Check Notice",
+      "organization": "Government of India",
+      "lastDate": null,
+      "lastDateFormatted": null,
+      "isExpired": false,
+      "isActive": true,
+      "status": "Admit Card Out",
+      "statusType": "info",
+      "eligibleDisciplines": [],
+      "fieldDisciplines": [],
+      "generalDisciplines": [],
+      "eligibleDisciplinesMeta": [],
+      "ineligibleWarnings": [],
+      "tags": [
+        "General & Others",
+        "Central",
+        "Government of India",
+        "Admit Card Out",
         "Active"
       ]
     },
@@ -4563,7 +4450,7 @@
       "title": "UKSSSC Group C Various Post Online Form 2026 | Last Date : 07/10/2026",
       "link": "https://www.sarkariresult.com/2026/uksssc-group-c-various-post-aug26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
@@ -4595,7 +4482,7 @@
       "title": "GIMS Staff Nurse Online Form 2026 | Last Date : 30/09/2026 (Date Extended)",
       "link": "https://www.sarkariresult.com/2026/gims-staff-nurse-august26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "Medical & Healthcare",
       "sectorBadge": "medical",
@@ -4654,7 +4541,7 @@
       "title": "Bihar Police BPSSC Company Commander Online Form 2026 Advt. No.-11/2026 | Last Date : 10/10/2026",
       "link": "https://www.sarkariresult.com/2026/bihar-police-bpssc-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "Police & Security",
       "sectorBadge": "police",
@@ -4809,7 +4696,7 @@
       "title": "CTET September 2026 Correction / Edit Form",
       "link": "https://www.sarkariresult.com/2026/ctet-september-2026/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "Teaching & Education",
       "sectorBadge": "teaching",
@@ -4855,7 +4742,7 @@
       "title": "CSIR NGRI Technician Online Form 2026 | Last Date : 04/10/2026",
       "link": "https://www.sarkariresult.com/2026/csir-ngri-technician-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "Railway (RRB)",
       "sectorBadge": "railway",
@@ -4887,7 +4774,7 @@
       "title": "Bihar Library Eligibility Test BLET Online Form 2026 | Last Date : 21/10/2026",
       "link": "https://www.sarkariresult.com/2026/blet-september26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
@@ -4934,7 +4821,7 @@
       "title": "IBPS Clerk 16th Correction Form 2026 for 11403 Post",
       "link": "https://www.sarkariresult.com/2026/ibps-clerk-16th-august26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "Banking & Financial",
       "sectorBadge": "banking",
@@ -5088,7 +4975,7 @@
       "title": "CONCOR Management Trainee / Assistant Officer Online Form 2026 | Last Date : 30/09/2026",
       "link": "https://www.sarkariresult.com/2026/concor-mt-ao-august26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
@@ -5243,7 +5130,7 @@
       "title": "NIC Scientific / Technical Assistant A Online Form 2026 | Last Date : 30/09/2026",
       "link": "https://www.sarkariresult.com/2026/nic-s-t-a-sep26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.175Z",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "Engineering & Technical",
       "sectorBadge": "engineering",
@@ -5302,7 +5189,7 @@
       "title": "MPESB Group 2 Sub Group 4 Patwari and Other Post Correction / Edit Form 2026",
       "link": "https://www.sarkariresult.com/2026/mpesb-group2-subgroup-4-aug26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.176Z",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "State Subordinate & Welfare",
       "sectorBadge": "state-subordinate",
@@ -5333,7 +5220,7 @@
       "title": "Bank of Baroda Local Bank Officer LBO Online Form 2026",
       "link": "https://www.sarkariresult.com/2026/bob-lbo-aug26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.176Z",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "Banking & Financial",
       "sectorBadge": "banking",
@@ -5488,7 +5375,7 @@
       "title": "UPPSC Assistant Professor GDC Mains Online Form 2026",
       "link": "https://www.sarkariresult.com/2025/uppsc-asst-professor-a7-e1/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.176Z",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "Teaching & Education",
       "sectorBadge": "teaching",
@@ -5535,7 +5422,7 @@
       "title": "Integral Coach Factory ICF Apprentices Online Form 2026 for 1010 Post",
       "link": "https://www.sarkariresult.com/2026/icf-chennai-apprentices-202/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.176Z",
+      "scrapedAt": "2026-09-30T12:37:49.263Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
@@ -5690,7 +5577,7 @@
       "title": "SJVN Ltd Various Post Online Form 2026 for 21 Post",
       "link": "https://www.sarkariresult.com/2026/sjvn-various-jul26/",
       "category": "latestJobs",
-      "scrapedAt": "2026-09-29T07:28:28.177Z",
+      "scrapedAt": "2026-09-30T12:37:49.264Z",
       "section": "latestJobs",
       "sector": "General & Others",
       "sectorBadge": "general",
