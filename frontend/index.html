@@ -351,7 +351,37 @@
 
       <!-- Secondary Multi-Filter Bar (State, Qualification, Discipline, Reset) -->
       <section class="filter-controls-bar" aria-label="Filter Controls">
-        <div class="filter-group-dropdowns">
+        <!-- Mobile Quick Filter Toggle Bar (Sleek collapsible view for <= 768px) -->
+        <div class="mobile-filter-bar-header">
+          <button type="button" id="btn-toggle-mobile-filters" class="btn-toggle-mobile-filters" aria-expanded="false" aria-controls="filter-group-dropdowns">
+            <svg class="mobile-filter-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            <span id="mobile-filter-toggle-label">Filter Jobs (State / Degree)</span>
+            <span id="mobile-filter-count-badge" class="mobile-filter-count-badge" style="display: none;">0</span>
+            <svg class="mobile-filter-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <div class="mobile-filter-quick-actions">
+            <label class="mobile-active-toggle" for="mobile-filter-active-only" title="Show only active notifications">
+              <input type="checkbox" id="mobile-filter-active-only" checked />
+              <span class="mobile-active-track">
+                <span class="mobile-active-thumb"></span>
+              </span>
+              <span class="mobile-active-text">Active</span>
+            </label>
+            <button id="btn-reset-filters-mobile" class="btn-reset-filters-mobile" type="button" title="Reset all filters" aria-label="Reset all filters">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-group-dropdowns" id="filter-group-dropdowns">
           <!-- Candidate Degree / Branch Stream Filter -->
           <div class="select-filter-wrapper select-discipline-wrapper">
             <select id="filter-discipline" class="select-filter select-discipline" aria-label="Filter by Candidate Degree / Branch">
@@ -394,7 +424,7 @@
           </div>
 
           <!-- Active Jobs Only Filter Toggle -->
-          <label class="filter-toggle-wrapper" for="filter-active-only" title="Hide expired notifications and show only active jobs">
+          <label class="filter-toggle-wrapper desktop-filter-toggle" for="filter-active-only" title="Hide expired notifications and show only active jobs">
             <input type="checkbox" id="filter-active-only" class="filter-toggle-input" checked />
             <span class="filter-toggle-slider"></span>
             <span class="filter-toggle-label">Active Only</span>
@@ -402,7 +432,7 @@
           </label>
         </div>
 
-        <div class="filter-meta-stats">
+        <div class="filter-meta-stats desktop-filter-meta">
           <button id="btn-quick-subscribe-filters" class="quick-subscribe-filters-btn" type="button" title="Get notified when new jobs match these active filters">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>

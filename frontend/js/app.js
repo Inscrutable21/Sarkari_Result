@@ -130,6 +130,55 @@ function renderAll() {
 
   // Update real-time alert match count preview if modal is active
   updateAlertMatchPreview();
+
+  // Update mobile filter badges and state indicators
+  updateMobileFilterUI();
+}
+
+/**
+ * Updates mobile filter button text and active badge count
+ */
+function updateMobileFilterUI() {
+  const badge = document.getElementById('mobile-filter-count-badge');
+  const label = document.getElementById('mobile-filter-toggle-label');
+  const mobileActiveCheck = document.getElementById('mobile-filter-active-only');
+
+  if (mobileActiveCheck) {
+    mobileActiveCheck.checked = Boolean(state.filters.activeOnly);
+  }
+
+  let count = 0;
+  let activeNames = [];
+
+  if (state.filters.degreeStream && state.filters.degreeStream !== 'all') {
+    count++;
+    activeNames.push('Degree');
+  }
+  if (state.filters.state && state.filters.state !== 'all') {
+    count++;
+    activeNames.push('State');
+  }
+  if (state.filters.qualification && state.filters.qualification !== 'all') {
+    count++;
+    activeNames.push('Qual');
+  }
+
+  if (badge) {
+    if (count > 0) {
+      badge.textContent = count;
+      badge.style.display = 'inline-flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  if (label) {
+    if (count > 0) {
+      label.textContent = `Filtered (${activeNames.join(', ')})`;
+    } else {
+      label.textContent = 'Filter Jobs (State / Degree)';
+    }
+  }
 }
 
 /**
@@ -423,16 +472,37 @@ function setupEventListeners() {
     showToast(e.target.checked ? 'Active jobs only (expired hidden)' : 'Showing all listings (including closed)', 'info');
   });
 
-  // 5. Reset Filters Button
-  resetFiltersBtn?.addEventListener('click', () => {
+  // 5. Reset Filters Button (Desktop & Mobile)
+  const handleResetFilters = () => {
     if (searchInput) searchInput.value = '';
     document.querySelectorAll('.quick-tag-pill').forEach(b => b.classList.remove('is-active'));
     if (disciplineSelect) disciplineSelect.value = 'all';
     if (stateSelect) stateSelect.value = 'all';
     if (qualSelect) qualSelect.value = 'all';
     if (activeOnlyCheckbox) activeOnlyCheckbox.checked = true;
+    const mobileActiveOnly = document.getElementById('mobile-filter-active-only');
+    if (mobileActiveOnly) mobileActiveOnly.checked = true;
     resetFilters();
     showToast('Filters cleared', 'info');
+  };
+
+  resetFiltersBtn?.addEventListener('click', handleResetFilters);
+  document.getElementById('btn-reset-filters-mobile')?.addEventListener('click', handleResetFilters);
+
+  // Mobile Filter Drawer Toggle
+  const btnToggleMobileFilters = document.getElementById('btn-toggle-mobile-filters');
+  const mobileDropdowns = document.getElementById('filter-group-dropdowns');
+  btnToggleMobileFilters?.addEventListener('click', () => {
+    const isExpanded = mobileDropdowns?.classList.toggle('is-mobile-expanded');
+    btnToggleMobileFilters.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+  });
+
+  // Mobile Active Only Switch
+  const mobileActiveOnly = document.getElementById('mobile-filter-active-only');
+  mobileActiveOnly?.addEventListener('change', (e) => {
+    if (activeOnlyCheckbox) activeOnlyCheckbox.checked = e.target.checked;
+    setFilters({ activeOnly: e.target.checked });
+    showToast(e.target.checked ? 'Active jobs only' : 'Showing all listings', 'info');
   });
 
   // Quick Subscribe to Currently Selected Filters
