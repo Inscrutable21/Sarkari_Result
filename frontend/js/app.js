@@ -461,6 +461,30 @@ function setupEventListeners() {
     });
   });
 
+  // Mobile Bottom Navigation Bar Interactions
+  document.querySelectorAll('.mobile-nav-btn[data-bottom-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabTarget = btn.getAttribute('data-bottom-tab');
+      document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+
+      document.querySelectorAll('.matrix-tab-btn').forEach(b => {
+        b.classList.toggle('is-active', b.getAttribute('data-target') === tabTarget);
+      });
+      document.querySelectorAll('.matrix-column').forEach(col => {
+        col.classList.remove('is-mobile-active');
+      });
+      document.getElementById(`matrix-col-${tabTarget}`)?.classList.add('is-mobile-active');
+
+      document.querySelector('.matrix-section')?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  document.getElementById('btn-bottom-alerts')?.addEventListener('click', () => {
+    openAlertsModal();
+  });
+
+
   // 8. Secondary Services Tabs Switching
   document.querySelectorAll('.tab-nav-item').forEach(btn => {
     btn.addEventListener('click', () => {

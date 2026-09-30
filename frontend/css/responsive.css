@@ -1,22 +1,41 @@
 /* ========================================================
    SARKARI RESULT - ADVANCED RESPONSIVE DESIGN SYSTEM
-   Supports: Desktop, Tablets, Foldables, and Mobile Phones
-======================================================== */
+   Full Mobile, Tablet, Phablet & Ultra-Compact Support
+   ======================================================== */
 
 /* ========================================================
-   1. TABLET LANDSCAPE & SMALL DESKTOPS (Max-Width: 1024px)
-======================================================== */
+   GLOBAL MOBILE-FIRST ANTI-OVERFLOW RULES
+   ======================================================== */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+img, svg, video, canvas, audio, iframe, embed, object {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Form input iOS zoom prevention (inputs < 16px trigger auto-zoom in Safari) */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* ========================================================
+   1. LAPTOPS & TABLET LANDSCAPE (Max-Width: 1024px)
+   ======================================================== */
 @media (max-width: 1024px) {
   .container {
     max-width: 100%;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
-  }
-
-  /* Trending Grid: 2 Columns on Tablet */
-  .trending-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
   }
 
   /* Core Matrix: Switch to Tabbed View */
@@ -28,15 +47,16 @@
   .matrix-mobile-tabs {
     display: flex;
     position: sticky;
-    top: 0;
-    z-index: 60;
+    top: 56px;
+    z-index: 50;
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     padding: 0.35rem;
     margin-bottom: 1.25rem;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .matrix-tab-btn {
@@ -44,6 +64,11 @@
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
+    flex: 1 1 0;
+    text-align: center;
+    padding: 0.6rem 0.5rem;
+    font-size: 0.85rem;
+    border-radius: var(--radius-md);
   }
 
   /* Hide columns unless active tab */
@@ -68,7 +93,7 @@
     }
   }
 
-  /* Secondary Items Grid: 2 Columns */
+  /* Secondary Items Grid */
   .secondary-items-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
@@ -86,22 +111,27 @@
 }
 
 /* ========================================================
-   2. TABLETS & LARGE MOBILE DEVICES (Max-Width: 768px)
-======================================================== */
+   2. TABLETS & SMARTPHONES (Max-Width: 768px)
+   ======================================================== */
 @media (max-width: 768px) {
+  /* Extra bottom padding on body for the fixed mobile bottom bar */
+  body {
+    padding-bottom: 64px;
+  }
+
   /* Top Live Ticker Bar */
   .top-announcement-bar {
-    padding: 0.35rem 0;
-    font-size: 0.8rem;
+    padding: 0.3rem 0;
+    font-size: 0.775rem;
   }
 
   .top-bar-inner {
-    gap: 0.65rem;
+    gap: 0.5rem;
   }
 
   .live-badge {
-    padding: 0.15rem 0.5rem;
-    font-size: 0.7rem;
+    padding: 0.15rem 0.45rem;
+    font-size: 0.68rem;
     letter-spacing: 0.3px;
   }
 
@@ -112,24 +142,75 @@
   }
 
   .ticker-content {
-    font-size: 0.8rem;
+    font-size: 0.775rem;
   }
 
-  /* Site Header */
+  /* Sticky Site Header */
   .site-header {
-    padding: 0.75rem 0;
+    padding: 0.5rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
 
   .header-inner {
+    display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0;
   }
 
+  .brand {
+    gap: 0.55rem;
+  }
+
+  .brand-logo-frame {
+    width: 38px;
+    height: 38px;
+  }
+
+  .brand-title {
+    font-size: 1.25rem;
+    letter-spacing: -0.3px;
+  }
+
+  .brand-subtitle {
+    display: none; /* Hide long subtitle to prevent header push */
+  }
+
+  /* Header Action Buttons */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-left: auto;
+  }
+
+  .btn-job-alerts {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.8rem;
+    gap: 0.35rem;
+  }
+
+  .btn-theme-toggle {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+
+  /* Header Horizontal Scroll Nav Bar */
   .header-nav {
     order: 3;
     width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
     overflow-x: auto;
-    padding-bottom: 0.35rem;
+    white-space: nowrap;
+    padding: 0.35rem 0 0.2rem;
+    gap: 0.25rem;
+    border-top: 1px solid var(--border-color);
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
   }
@@ -138,81 +219,117 @@
     display: none;
   }
 
-  .brand {
-    gap: 0.65rem;
-  }
-
-  .brand-logo-frame,
-  .brand-emblem {
-    width: 40px;
-    height: 40px;
-  }
-
-  .brand-title {
-    font-size: 1.35rem;
-    letter-spacing: -0.3px;
-  }
-
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    margin-left: auto;
-  }
-
-  .btn-theme-toggle {
-    width: 38px;
-    height: 38px;
+  .nav-item {
     flex-shrink: 0;
+    font-size: 0.825rem;
+    padding: 0.35rem 0.65rem;
   }
 
-  /* Hero Gateway Card Responsive */
+  /* Hero Gateway Card */
   .hero-gateway-card {
-    padding: 1.75rem 1.25rem;
-    margin-top: 1rem;
-    border-radius: 18px;
+    padding: 1.5rem 1.15rem;
+    margin: 0.85rem 0 1.25rem;
+    border-radius: 16px;
   }
 
   .hero-parliament-bg {
     width: 100%;
-    opacity: 0.18;
+    opacity: 0.14;
     background-position: right bottom;
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.75) 100%);
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.75) 100%);
+  }
+
+  .hero-content-col {
+    gap: 1rem;
+    max-width: 100%;
+  }
+
+  .hero-eyebrow-tag {
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    margin-bottom: 0.35rem;
   }
 
   .hero-display-title {
-    font-size: 1.95rem;
+    font-size: clamp(1.45rem, 5.8vw, 1.95rem);
     line-height: 1.2;
+    letter-spacing: -0.025em;
   }
 
-  /* Trending Horizontal Swipe Carousel on Mobile */
-  .trending-grid {
-    display: flex;
+  .hero-display-subtitle {
+    font-size: 0.825rem;
+    line-height: 1.4;
+  }
+
+  /* Hero Search Bar */
+  .hero-search-wrapper {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .hero-search-bar {
+    padding: 0.3rem 0.35rem 0.3rem 0.85rem;
+  }
+
+  .hero-search-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 0.45rem;
+  }
+
+  .hero-search-input {
+    font-size: 0.88rem;
+    min-width: 0;
+  }
+
+  .search-badge-hint {
+    display: none !important; /* Hide keyboard shortcut on touch screens */
+  }
+
+  .hero-search-btn {
+    padding: 0.45rem 1rem;
+    font-size: 0.82rem;
+    border-radius: var(--radius-full);
+  }
+
+  /* Quick Category Pills Swipe Row */
+  .hero-quick-tags-row {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .hero-tags-list {
+    flex-wrap: nowrap;
     overflow-x: auto;
-    gap: 0.85rem;
-    padding-bottom: 0.5rem;
+    white-space: nowrap;
+    padding-bottom: 0.25rem;
+    gap: 0.4rem;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
+    width: 100%;
   }
 
-  .trending-grid::-webkit-scrollbar {
+  .hero-tags-list::-webkit-scrollbar {
     display: none;
   }
 
-  .trending-card {
-    flex: 0 0 250px;
-    min-height: 165px;
+  .quick-tag-pill {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    padding: 0.28rem 0.7rem;
   }
 
-  /* Horizontal Category Chips */
+  .quick-tag-next {
+    display: none;
+  }
+
+  /* Category Chips Horizontal Edge-to-Edge Scroll */
   .sector-chips-scroll {
     margin-left: -1.25rem;
     margin-right: -1.25rem;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
     padding-bottom: 0.4rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.15rem;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
@@ -222,24 +339,25 @@
   }
 
   .sector-chip {
-    padding: 0.45rem 0.85rem;
-    font-size: 0.825rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+    flex-shrink: 0;
   }
 
   /* Filter Controls Bar */
   .filter-controls-bar {
     flex-direction: column;
     align-items: stretch;
-    padding: 1rem;
-    gap: 0.75rem;
-    margin-bottom: 1.25rem;
+    padding: 0.85rem;
+    gap: 0.65rem;
+    margin-bottom: 1.15rem;
   }
 
   .filter-group-dropdowns {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
-    gap: 0.65rem;
+    gap: 0.55rem;
   }
 
   .select-filter-wrapper {
@@ -248,118 +366,144 @@
 
   .select-filter {
     width: 100%;
-    font-size: 0.95rem; /* Easy touch target */
-    padding: 0.65rem 2.2rem 0.65rem 0.95rem;
+    font-size: 0.88rem;
+    padding: 0.6rem 2.2rem 0.6rem 0.85rem;
+    border-radius: var(--radius-md);
   }
 
   .filter-toggle-wrapper {
     width: 100%;
     justify-content: space-between;
-    padding: 0.6rem 0.85rem;
-    background-color: var(--bg-surface-soft);
-    border: 1px solid var(--border-color);
+    padding: 0.55rem 0.85rem;
     border-radius: var(--radius-md);
-    cursor: pointer;
-  }
-
-  .filter-meta-stats {
-    width: 100%;
   }
 
   .reset-filters-btn {
     width: 100%;
     text-align: center;
-    padding: 0.65rem 1rem;
-    font-size: 0.875rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
   }
 
   /* Opportunity Scope Pills */
   .degree-scope-container {
-    padding: 0.85rem 1rem;
-    margin-top: 0.65rem;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1.25rem;
   }
 
   .degree-scope-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.35rem;
+    gap: 0.25rem;
+  }
+
+  .degree-scope-title {
+    font-size: 0.85rem;
   }
 
   .scope-stat-summary {
-    font-size: 0.775rem;
+    font-size: 0.72rem;
   }
 
   .degree-scope-pills {
     width: 100%;
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
 
   .scope-pill {
-    flex: 1 1 calc(50% - 0.5rem);
+    flex: 1 1 calc(50% - 0.4rem);
     justify-content: center;
-    font-size: 0.8rem;
-    padding: 0.5rem 0.65rem;
+    font-size: 0.775rem;
+    padding: 0.45rem 0.55rem;
     text-align: center;
   }
 
-  /* Trending Section */
+  /* Trending Spotlight Horizontal Carousel (Smooth native swipe) */
   .trending-section {
-    margin-bottom: 2rem;
+    margin-bottom: 1.75rem;
   }
 
   .trending-grid {
-    grid-template-columns: 1fr;
+    display: flex !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
     gap: 0.85rem;
+    padding: 0.25rem 0.25rem 0.65rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    margin-left: -1.25rem;
+    margin-right: -1.25rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .trending-grid::-webkit-scrollbar {
+    display: none;
   }
 
   .trending-card {
-    padding: 1rem 1.15rem;
+    flex: 0 0 78vw !important;
+    max-width: 300px;
+    min-height: 160px;
+    scroll-snap-align: start;
+    padding: 0.95rem 1rem;
   }
 
   .trending-title {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    line-height: 1.35;
   }
 
-  /* Matrix Mobile Tabs */
+  /* Core Matrix Mobile Tabs */
   .matrix-mobile-tabs {
-    margin-bottom: 1rem;
+    position: sticky;
+    top: 52px;
+    z-index: 50;
+    margin-bottom: 0.85rem;
+    padding: 0.25rem;
   }
 
   .matrix-tab-btn {
-    padding: 0.6rem 0.5rem;
-    font-size: 0.85rem;
+    padding: 0.55rem 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 600;
   }
 
   .matrix-item {
-    padding: 0.85rem 1rem;
+    padding: 0.85rem 0.95rem;
   }
 
   .matrix-item-title {
-    font-size: 0.95rem;
-    line-height: 1.45;
+    font-size: 0.92rem;
+    line-height: 1.4;
   }
 
   .matrix-item-badges {
-    gap: 0.35rem;
+    flex-wrap: wrap;
+    gap: 0.3rem;
   }
 
   .badge {
-    font-size: 0.725rem;
-    padding: 0.15rem 0.45rem;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
   }
 
   /* Secondary Tabbed Section */
   .secondary-section {
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
   }
 
   .tab-nav-bar {
+    display: flex;
+    flex-wrap: nowrap;
     overflow-x: auto;
+    white-space: nowrap;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     gap: 0.25rem;
-    margin-bottom: 1rem;
-    border-bottom-width: 1.5px;
+    margin-bottom: 0.85rem;
+    border-bottom: 1px solid var(--border-color);
   }
 
   .tab-nav-bar::-webkit-scrollbar {
@@ -367,65 +511,80 @@
   }
 
   .tab-nav-item {
-    padding: 0.65rem 0.85rem;
-    font-size: 0.85rem;
+    flex-shrink: 0;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.825rem;
   }
 
   .secondary-items-grid {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: 0.65rem;
   }
 
   .secondary-card {
-    padding: 0.9rem 1rem;
+    padding: 0.85rem 0.95rem;
   }
 
   /* ========================================================
-     MODAL DIALOG ON TABLETS / MOBILE: BOTTOM SHEET ADAPTATION
+     MODAL DIALOGS: NATIVE MOBILE BOTTOM SHEETS
   ======================================================== */
   .modal-overlay {
     padding: 0;
     align-items: flex-end;
   }
 
-  .modal-dialog {
-    width: 100%;
-    max-width: 100%;
-    height: 92vh;
-    max-height: 92vh;
-    border-radius: 20px 20px 0 0;
-    border-bottom: none;
+  .modal-dialog,
+  .modal-container,
+  .alerts-modal-dialog,
+  .track-modal-dialog {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 92vh !important;
+    max-height: 92vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    border-bottom: none !important;
     transform: translateY(100%);
     transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25);
+    background-color: var(--bg-surface);
   }
 
-  .modal-overlay.is-open .modal-dialog {
+  .modal-overlay.is-open .modal-dialog,
+  .modal-overlay.is-open .modal-container,
+  .modal-overlay.is-open .alerts-modal-dialog,
+  .modal-overlay.is-open .track-modal-dialog {
     transform: translateY(0);
   }
 
   .modal-header {
-    padding: 1rem 1.25rem;
+    padding: 0.85rem 1.15rem;
     position: sticky;
     top: 0;
     z-index: 10;
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border-color);
   }
 
-  .modal-title-group h3 {
-    font-size: 1.15rem;
+  .modal-title-group h3,
+  .modal-item-title {
+    font-size: 1.1rem;
+    line-height: 1.3;
   }
 
-  .modal-body {
-    padding: 1.15rem;
+  .modal-body,
+  .alerts-modal-body {
+    padding: 1rem 1.15rem;
     -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
   }
 
   .modal-meta-grid {
     grid-template-columns: 1fr;
-    gap: 0.85rem;
+    gap: 0.75rem;
   }
 
   .modal-info-box {
-    padding: 1rem;
+    padding: 0.85rem;
   }
 
   .vacancy-table-wrapper {
@@ -437,20 +596,61 @@
 
   .modal-vacancy-table th,
   .modal-vacancy-table td {
-    padding: 0.45rem 0.55rem;
-    font-size: 0.8rem;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.78rem;
   }
 
-  .modal-actions {
+  .modal-actions-row,
+  .modal-actions,
+  .alerts-modal-actions {
     flex-direction: column;
-    gap: 0.65rem;
+    gap: 0.55rem;
   }
 
-  .modal-actions .btn-primary-action,
-  .modal-actions .btn-secondary-action {
-    width: 100%;
+  .btn-primary-action,
+  .btn-secondary-action,
+  .btn-primary-alert,
+  .btn-secondary-alert,
+  .btn-track-action {
+    width: 100% !important;
     justify-content: center;
-    padding: 0.85rem 1.25rem;
+    padding: 0.75rem 1.15rem;
+    font-size: 0.9rem;
+  }
+
+  /* SEO Guide & FAQ Section Mobile Adaptations */
+  .seo-guide-card {
+    padding: 1.25rem 1rem;
+    margin: 1.75rem 0 2rem 0;
+    border-radius: var(--radius-md);
+  }
+
+  .seo-guide-title {
+    font-size: 1.15rem;
+  }
+
+  .seo-guide-intro {
+    font-size: 0.88rem;
+  }
+
+  .seo-quick-grid-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .seo-editorial-articles {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .seo-faq-question {
+    padding: 0.85rem 1rem;
+    font-size: 0.88rem;
+  }
+
+  .seo-faq-answer {
+    padding: 0 1rem 1rem 1rem;
+    font-size: 0.84rem;
   }
 
   /* Footer Layout */
@@ -461,135 +661,187 @@
 
   .footer-bottom {
     flex-direction: column;
-    gap: 0.85rem;
+    gap: 0.65rem;
     text-align: center;
-  }
-
-  /* Toast Notifications */
-  .toast-container {
-    bottom: 1rem;
-    right: 1rem;
-    left: 1rem;
-  }
-
-  .toast {
-    font-size: 0.85rem;
-    padding: 0.75rem 1rem;
+    font-size: 0.78rem;
   }
 }
 
 /* ========================================================
-   3. SMALL PHONES (Max-Width: 480px)
-======================================================== */
+   3. MOBILE PHONES & PHABLETS (Max-Width: 640px)
+   ======================================================== */
+@media (max-width: 640px) {
+  .header-actions .btn-job-alerts span:not(.alerts-badge) {
+    display: none; /* Icon-only compact alerts button */
+  }
+
+  .header-actions .btn-job-alerts.btn-tracked-nav span {
+    display: none; /* Icon-only compact tracked button */
+  }
+
+  .header-actions .btn-job-alerts {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .header-actions .alerts-badge {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    font-size: 0.6rem;
+    padding: 1px 4px;
+  }
+
+  .header-actions {
+    gap: 0.4rem;
+  }
+}
+
+/* ========================================================
+   4. COMPACT MOBILE PHONES (Max-Width: 480px)
+   ======================================================== */
 @media (max-width: 480px) {
-  .top-announcement-bar {
-    padding: 0.25rem 0;
-  }
-
-  .live-badge {
-    padding: 0.12rem 0.45rem;
-    font-size: 0.65rem;
-  }
-
   .container {
     padding-left: 0.85rem;
     padding-right: 0.85rem;
   }
 
   .brand-title {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
 
-  .brand-logo-frame,
-  .brand-emblem {
-    width: 36px;
-    height: 36px;
+  .brand-logo-frame {
+    width: 34px;
+    height: 34px;
   }
 
-  .header-actions {
-    gap: 0.5rem;
+  .hero-gateway-card {
+    padding: 1.25rem 0.85rem;
   }
 
-  .search-hero {
-    padding: 1rem 0 0.5rem;
+  .hero-display-title {
+    font-size: 1.4rem;
   }
 
-  /* Single column for opportunity scope pills on tiny screens */
   .degree-scope-pills {
     flex-direction: column;
   }
 
   .scope-pill {
-    width: 100%;
     flex: 1 1 100%;
-    justify-content: flex-start;
-    padding: 0.5rem 0.75rem;
+    width: 100%;
   }
 
   .matrix-mobile-tabs {
-    padding: 0.25rem;
+    padding: 0.2rem;
   }
 
   .matrix-tab-btn {
-    font-size: 0.8rem;
-    padding: 0.55rem 0.35rem;
+    font-size: 0.775rem;
+    padding: 0.5rem 0.2rem;
   }
 
-  .column-header {
-    padding: 0.85rem 1rem;
-  }
-
-  .column-title-group h3 {
-    font-size: 1.1rem;
-  }
-
-  .modal-dialog {
-    height: 95vh;
-    max-height: 95vh;
-    border-radius: 16px 16px 0 0;
-  }
-
-  .modal-header {
-    padding: 0.85rem 1rem;
-  }
-
-  .modal-body {
-    padding: 0.95rem;
-  }
-
-  .eligibility-banner {
-    padding: 0.75rem 0.85rem;
-    font-size: 0.825rem;
-  }
-
-  .eligibility-banner-icon {
-    font-size: 1.1rem;
-  }
-
-  /* Job Alerts Mobile Adjustments */
-  .job-alerts-banner {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 1.1rem;
-    gap: 1rem;
-  }
-
-  .btn-banner-subscribe {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .form-row {
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .alerts-modal-actions {
-    flex-direction: column;
-  }
-
-  .btn-primary-alert, .btn-secondary-alert {
-    width: 100%;
+  .modal-dialog,
+  .modal-container,
+  .alerts-modal-dialog,
+  .track-modal-dialog {
+    height: 95vh !important;
+    max-height: 95vh !important;
+    border-radius: 16px 16px 0 0 !important;
   }
 }
 
+/* ========================================================
+   5. ULTRA-COMPACT / FOLDABLES (Max-Width: 360px)
+   ======================================================== */
+@media (max-width: 360px) {
+  .brand-title {
+    font-size: 1rem;
+  }
+
+  .brand-logo-frame {
+    width: 30px;
+    height: 30px;
+  }
+
+  .matrix-tab-btn {
+    font-size: 0.72rem;
+    padding: 0.45rem 0.15rem;
+  }
+
+  .hero-search-btn {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.78rem;
+  }
+}
+
+/* ========================================================
+   6. DEDICATED MOBILE BOTTOM NAVIGATION BAR
+   App-like bottom touch bar for <= 768px screens
+   ======================================================== */
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    height: 58px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 0.5rem;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  [data-theme="dark"] .mobile-bottom-nav {
+    background: rgba(16, 22, 35, 0.94);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.35);
+  }
+
+  .mobile-nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.35rem 0.5rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    flex: 1;
+    cursor: pointer;
+  }
+
+  .mobile-nav-btn svg {
+    color: var(--text-muted);
+    transition: transform var(--transition-fast), color var(--transition-fast);
+  }
+
+  .mobile-nav-btn:hover,
+  .mobile-nav-btn.is-active {
+    color: var(--primary-red);
+  }
+
+  .mobile-nav-btn:hover svg,
+  .mobile-nav-btn.is-active svg {
+    color: var(--primary-red);
+    transform: translateY(-2px);
+  }
+}
