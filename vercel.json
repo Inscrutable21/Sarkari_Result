@@ -1,6 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "outputDirectory": "frontend",
+  "crons": [
+    {
+      "path": "/api/cron/reminders",
+      "schedule": "30 12 * * *"
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",

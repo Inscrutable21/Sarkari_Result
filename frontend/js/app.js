@@ -900,7 +900,7 @@ function setupEventListeners() {
 
       if (trackStatusMsg) {
         trackStatusMsg.className = 'alerts-status-banner is-success';
-        trackStatusMsg.innerHTML = `<strong>${escapeHtml(res.message || 'Reminders activated!')}</strong><br>Check your inbox (${escapeHtml(email)}) for the confirmation email. We will send daily countdown alerts with days left.`;
+        trackStatusMsg.innerHTML = `<strong>${escapeHtml(res.message || 'Reminders activated!')}</strong><br>Check your inbox (${escapeHtml(email)}) for the confirmation email. We will send daily countdown alerts every day at 6:00 PM with days left.`;
         trackStatusMsg.style.display = 'block';
       }
 

@@ -500,6 +500,33 @@ const server = createServer(async (request, response) => {
     return;
   }
 
+  // 11b. Vercel Cron Scheduled Daily Trigger (Triggers automatically every day at 6:00 PM IST / 12:30 UTC)
+  if (url.pathname === "/api/cron/reminders" && (request.method === "GET" || request.method === "POST")) {
+    const cronSecret = process.env.CRON_SECRET;
+    const authHeader = request.headers["authorization"];
+    if (cronSecret && authHeader !== `Bearer ${cronSecret}` && !isAdminAuthorized(request, url)) {
+      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: "Unauthorized cron trigger" }));
+      return;
+    }
+
+    try {
+      console.log("[Vercel Cron] 6:00 PM IST scheduled reminder job running via Vercel Cron...");
+      const summary = await sendDailyJobReminders();
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({
+        success: true,
+        message: "Daily 6:00 PM reminders processed successfully via Vercel Cron",
+        summary
+      }));
+    } catch (err) {
+      console.error("[Vercel Cron] Daily reminder execution failed:", err.message);
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
   // 12. Google Sheets Status & Live Refresh
   if (url.pathname === "/api/google-sheets/status" && request.method === "GET") {
     const { isGoogleSheetEnabled } = require("./src/services/googleSheetService");
@@ -672,23 +699,62 @@ server.on("error", (err) => {
   }
 });
 
-// Automated Background Reminder Scheduler
+// Automated Background Reminder Scheduler (Configured for 6:00 PM daily trigger)
 let reminderSchedulerInterval = null;
+let lastReminderTriggerDate = null;
+
+function getCurrentScheduledTime() {
+  try {
+    const now = new Date();
+    // Resolve Indian Standard Time (Asia/Kolkata)
+    const formatter = new Intl.DateTimeFormat("en-US", {
+      timeZone: process.env.TIMEZONE || "Asia/Kolkata",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: false
+    });
+    const parts = formatter.formatToParts(now);
+    const getPart = (type) => parts.find(p => p.type === type)?.value;
+    const hour = parseInt(getPart("hour"), 10);
+    const minute = parseInt(getPart("minute"), 10);
+    const dateStr = `${getPart("year")}-${getPart("month")}-${getPart("day")}`;
+    return { hour, minute, dateStr };
+  } catch {
+    const now = new Date();
+    return {
+      hour: now.getHours(),
+      minute: now.getMinutes(),
+      dateStr: now.toISOString().split("T")[0]
+    };
+  }
+}
+
 function startReminderScheduler() {
   if (reminderSchedulerInterval) return;
-  console.log('[Reminder Scheduler] Initialized automated reminder engine (60s check interval)...');
+  const targetHour = Number(process.env.REMINDER_TRIGGER_HOUR) || 18; // 6:00 PM (18:00)
+  const targetMinute = Number(process.env.REMINDER_TRIGGER_MINUTE) || 0;
+  console.log(`[Reminder Scheduler] Automated reminder engine active: scheduled to trigger daily at 6:00 PM (${targetHour.toString().padStart(2, '0')}:${targetMinute.toString().padStart(2, '0')} IST)...`);
+
+  // Check every 30 seconds to guarantee the 6:00 PM trigger window is captured
   reminderSchedulerInterval = setInterval(async () => {
     try {
-      const now = new Date();
-      // Daily batch reminder at 9:00 AM
-      if (now.getHours() === 9 && now.getMinutes() === 0) {
-        console.log('[Reminder Scheduler] 9:00 AM dispatch triggering daily reminders...');
-        await sendDailyJobReminders();
+      const timeInfo = getCurrentScheduledTime();
+      // Target trigger: 6:00 PM (window: 18:00 - 18:02)
+      if (timeInfo.hour === targetHour && timeInfo.minute >= targetMinute && timeInfo.minute <= (targetMinute + 2)) {
+        if (lastReminderTriggerDate !== timeInfo.dateStr) {
+          lastReminderTriggerDate = timeInfo.dateStr;
+          console.log(`[Reminder Scheduler] 6:00 PM Daily Trigger reached for ${timeInfo.dateStr}! Dispatching reminders for tracked jobs...`);
+          const summary = await sendDailyJobReminders();
+          console.log(`[Reminder Scheduler] 6:00 PM Dispatch complete: ${summary.dispatched} reminders sent (${summary.skippedApplied} applied, ${summary.skippedExpired} expired).`);
+        }
       }
     } catch (err) {
       console.warn('[Reminder Scheduler] Periodic check error:', err.message);
     }
-  }, 60 * 1000);
+  }, 30 * 1000);
 }
 
 process.on("SIGINT", () => {
