@@ -15,17 +15,13 @@ const candidates = [
 const API_BASE_CANDIDATES = Array.from(new Set(candidates));
 let resolvedApiBase = null;
 
-/**
- * Executes a fetch request with automatic candidate resolution
- */
 async function fetchWithFallback(endpoint, options = {}) {
   // If we already know the working backend API base, try it first
   if (resolvedApiBase) {
     try {
       const res = await fetch(`${resolvedApiBase}${endpoint}`, options);
-      if (res.ok) return res;
+      return res;
     } catch {
-      // If cached candidate fails, reset and retry candidates
       resolvedApiBase = null;
     }
   }
@@ -36,19 +32,17 @@ async function fetchWithFallback(endpoint, options = {}) {
     try {
       const url = `${candidate}${endpoint}`;
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 3500);
+      const timer = setTimeout(() => controller.abort(), 4000);
       const res = await fetch(url, { ...options, signal: controller.signal });
       clearTimeout(timer);
-      if (res.ok) {
-        resolvedApiBase = candidate;
-        return res;
-      }
+      resolvedApiBase = candidate;
+      return res;
     } catch (err) {
       lastError = err;
     }
   }
 
-  throw lastError || new Error(`Failed request to ${endpoint}`);
+  throw new Error(`Unable to reach the backend server. Please ensure the backend is running on http://localhost:3000 (npm start). Detail: ${lastError?.message || 'Connection refused'}`);
 }
 
 export async function fetchHealth() {
