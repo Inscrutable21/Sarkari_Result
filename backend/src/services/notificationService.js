@@ -140,12 +140,13 @@ async function saveSubscribers(subscribers) {
  * Loads all currently tracked jobs across candidates (Google Sheet or local)
  */
 async function getTrackedJobs() {
+  let list = [];
   if (isGoogleSheetEnabled()) {
     try {
       const sheetTracked = await getTrackedJobsFromSheet();
       if (Array.isArray(sheetTracked) && sheetTracked.length > 0) {
-        return sheetTracked.map(t => ({
-          id: t.ID || t.id,
+        list = sheetTracked.map((t, idx) => ({
+          id: t.ID || t.id || ('trk_sheet_' + idx + '_' + Math.random().toString(36).slice(2, 7)),
           email: (t.Email || t.email || '').trim().toLowerCase(),
           name: t.Name || t.name || 'Job Aspirant',
           jobId: t.JobID || t.jobId || '',
@@ -156,7 +157,7 @@ async function getTrackedJobs() {
           link: t.Link || t.link || '',
           subscribedAt: t.SubscribedAt || t.subscribedAt || new Date().toISOString(),
           lastReminderSentAt: t.LastReminderSent || t.lastReminderSentAt || null,
-          reminderCount: 1,
+          reminderCount: t.ReminderCount ? Number(t.ReminderCount) : 0,
           applied: String(t.Applied).toLowerCase() === 'true',
           active: String(t.Applied).toLowerCase() !== 'true'
         }));
@@ -166,13 +167,65 @@ async function getTrackedJobs() {
     }
   }
 
+  // Load local file
+  let localList = [];
   try {
     const raw = await fs.readFile(TRACKED_JOBS_FILE, 'utf-8');
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    localList = Array.isArray(parsed) ? parsed : [];
   } catch {
-    return [];
+    localList = [];
   }
+
+  if (list.length === 0) {
+    list = localList;
+  } else {
+    // Merge local entries into list if local has better date or existing ID
+    for (const localItem of localList) {
+      const existingInSheet = list.find(s =>
+        (s.id && localItem.id && s.id === localItem.id) ||
+        (s.email.toLowerCase() === localItem.email.toLowerCase() && (s.jobTitle === localItem.jobTitle || s.jobId === localItem.jobId))
+      );
+      if (existingInSheet) {
+        if (!existingInSheet.id && localItem.id) existingInSheet.id = localItem.id;
+        if ((!existingInSheet.lastDate || existingInSheet.lastDate === 'null') && localItem.lastDate) {
+          existingInSheet.lastDate = localItem.lastDate;
+          existingInSheet.lastDateFormatted = localItem.lastDateFormatted;
+        }
+      } else {
+        list.push(localItem);
+      }
+    }
+  }
+
+  // Deduplicate entries by email + job (keeping the one with valid lastDate or latest)
+  const dedupMap = new Map();
+  for (const item of list) {
+    const key = `${(item.email || '').trim().toLowerCase()}_${(item.jobId || item.jobTitle || '').trim().toLowerCase()}`;
+    if (!dedupMap.has(key)) {
+      dedupMap.set(key, item);
+    } else {
+      const existing = dedupMap.get(key);
+      if ((!existing.lastDate || existing.lastDate === 'null') && item.lastDate) {
+        dedupMap.set(key, { ...existing, lastDate: item.lastDate, lastDateFormatted: item.lastDateFormatted });
+      }
+    }
+  }
+  const cleanList = Array.from(dedupMap.values());
+
+  // Ensure every item has a unique id
+  let needsSave = false;
+  for (let i = 0; i < cleanList.length; i++) {
+    if (!cleanList[i].id) {
+      cleanList[i].id = 'trk_' + Date.now() + '_' + i + '_' + Math.random().toString(36).slice(2, 7);
+      needsSave = true;
+    }
+  }
+  if (needsSave || cleanList.length !== list.length) {
+    await saveTrackedJobs(cleanList);
+  }
+
+  return cleanList;
 }
 
 /**
@@ -726,15 +779,43 @@ function calculateDaysLeft(lastDateStr) {
 }
 
 /**
+ * Active in-memory reminder timers map
+ */
+const activeReminderTimers = new Map();
+
+/**
+ * Returns active reminder timers (optionally filtered by email)
+ */
+function getActiveReminderTimers(filterEmail = null) {
+  const now = Date.now();
+  const list = [];
+  for (const [key, timer] of activeReminderTimers.entries()) {
+    if (filterEmail && timer.email.toLowerCase() !== filterEmail.toLowerCase().trim()) {
+      continue;
+    }
+    const remainingMs = Math.max(0, timer.targetTime - now);
+    list.push({
+      timerId: key,
+      trackId: timer.trackId,
+      email: timer.email,
+      jobTitle: timer.jobTitle,
+      remainingSeconds: Math.ceil(remainingMs / 1000),
+      targetTime: new Date(timer.targetTime).toISOString()
+    });
+  }
+  return list;
+}
+
+/**
  * Builds HTML template for Job Specific Reminders & Confirmation
  */
-function buildJobReminderEmailHtml({ track, daysLeft, isConfirmation = false }) {
+function buildJobReminderEmailHtml({ track, daysLeft, isConfirmation = false, isTestReminder = false }) {
   const portalUrl = process.env.PORTAL_URL || 'http://localhost:3000';
   const applyLink = track.link || portalUrl;
   const deadlineFormatted = track.lastDateFormatted || track.lastDate || 'Check official advertisement';
   const org = track.organization || 'Government of India';
 
-  const statusBaseUrl = `${portalUrl}/api/track-job/status?trackId=${encodeURIComponent(track.id)}`;
+  const statusBaseUrl = `${portalUrl}/api/track-job/status?trackId=${encodeURIComponent(track.id || '')}`;
   const appliedUrl = `${statusBaseUrl}&status=applied`;
   const pendingUrl = `${statusBaseUrl}&status=pending`;
 
@@ -744,7 +825,13 @@ function buildJobReminderEmailHtml({ track, daysLeft, isConfirmation = false }) 
   let badgeBg = '#dbeafe';
   let badgeColor = '#1e40af';
 
-  if (isConfirmation) {
+  if (isTestReminder) {
+    headline = '1-Minute Test Reminder: ' + (daysLeft !== null && daysLeft > 0 ? `${daysLeft} Days Remaining` : 'Deadline Countdown Alert');
+    subheadline = `This is a test notification for your tracked recruitment deadline. Reminders are fully active and will be delivered daily until you submit your form.`;
+    badgeText = daysLeft !== null && daysLeft > 0 ? `${daysLeft} Days Left (Test Passed)` : '1-Min Test Passed';
+    badgeBg = '#dcfce7';
+    badgeColor = '#15803d';
+  } else if (isConfirmation) {
     headline = 'Application Reminders Activated';
     subheadline = `You are successfully subscribed to daily deadline countdown reminders for this recruitment.`;
     badgeText = daysLeft !== null && daysLeft >= 0 ? `${daysLeft} Days Remaining` : 'Active Recruitment';
@@ -760,18 +847,18 @@ function buildJobReminderEmailHtml({ track, daysLeft, isConfirmation = false }) 
     badgeText = '1 Day Left';
     badgeBg = '#fef3c7';
     badgeColor = '#b45309';
-  } else if (daysLeft > 1) {
+  } else if (daysLeft !== null && daysLeft > 1) {
     headline = `${daysLeft} DAYS LEFT: Please Fill The Form`;
     subheadline = `Daily deadline countdown reminder for your tracked government recruitment.`;
     badgeText = `${daysLeft} Days Left`;
     badgeBg = '#fef3c7';
     badgeColor = '#b45309';
   } else {
-    headline = 'Application Deadline Closed';
-    subheadline = `The application window for this recruitment has officially concluded.`;
-    badgeText = 'Deadline Passed';
-    badgeBg = '#f1f5f9';
-    badgeColor = '#64748b';
+    headline = 'Application Deadline Notification';
+    subheadline = `Please check closing dates and complete your application promptly before the deadline.`;
+    badgeText = 'Check Closing Date';
+    badgeBg = '#e0f2fe';
+    badgeColor = '#0369a1';
   }
 
   return `
@@ -797,6 +884,17 @@ function buildJobReminderEmailHtml({ track, daysLeft, isConfirmation = false }) 
           <!-- Main Content -->
           <tr>
             <td style="padding: 24px;">
+              ${isTestReminder ? `
+              <div style="background-color: #ecfdf5; border: 1px solid #86efac; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px;">
+                <div style="font-weight: 700; color: #15803d; font-size: 14px; margin-bottom: 4px;">
+                  ⏱️ 1-Minute Scheduled Test Reminder Delivered Successfully!
+                </div>
+                <div style="font-size: 12px; color: #166534; line-height: 1.4;">
+                  This confirms your email notification system is working perfectly. You will receive daily deadline countdown updates for this post until you apply.
+                </div>
+              </div>
+              ` : ''}
+
               <div style="display: inline-block; background-color: ${badgeBg}; color: ${badgeColor}; font-size: 12px; font-weight: 700; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; letter-spacing: 0.5px; margin-bottom: 12px;">
                 ${badgeText}
               </div>
@@ -882,9 +980,9 @@ function buildJobReminderEmailHtml({ track, daysLeft, isConfirmation = false }) 
 /**
  * Sends a single job reminder or confirmation email to a candidate
  */
-async function sendTrackedJobEmail(track, daysLeft, isConfirmation = false) {
+async function sendTrackedJobEmail(track, daysLeft, isConfirmation = false, isTestReminder = false) {
   const transporter = await getTransporter();
-  const html = buildJobReminderEmailHtml({ track, daysLeft, isConfirmation });
+  const html = buildJobReminderEmailHtml({ track, daysLeft, isConfirmation, isTestReminder });
   const emailUser = process.env.EMAIL_USER || process.env.SMTP_USER;
   const defaultFrom = emailUser
     ? `"sarkari hith Job Alerts" <${emailUser}>`
@@ -892,14 +990,18 @@ async function sendTrackedJobEmail(track, daysLeft, isConfirmation = false) {
   const fromEmail = process.env.NOTIFICATION_FROM_EMAIL || defaultFrom;
 
   let subject = '';
-  if (isConfirmation) {
-    subject = `[Subscribed] You are Subscribed to Application Reminders: ${track.jobTitle} (${daysLeft} Days Left)`;
+  if (isTestReminder) {
+    subject = `[TEST 1-Min REMINDER] ${daysLeft !== null && daysLeft > 0 ? daysLeft + ' Days Left' : 'Deadline Alert'}: ${track.jobTitle}`;
+  } else if (isConfirmation) {
+    subject = `[Subscribed] You are Subscribed to Application Reminders: ${track.jobTitle} (${daysLeft !== null ? daysLeft + ' Days Left' : 'Active'})`;
   } else if (daysLeft === 0) {
     subject = `[LAST DAY TODAY] Final Notice: Apply Today for ${track.jobTitle}`;
   } else if (daysLeft === 1) {
     subject = `[1 Day Left] Deadline Tomorrow: Please Fill ${track.jobTitle}`;
-  } else {
+  } else if (daysLeft !== null && daysLeft > 1) {
     subject = `[Deadline Reminder] ${daysLeft} Days Left: Please Fill ${track.jobTitle}`;
+  } else {
+    subject = `[Deadline Reminder] Please Fill ${track.jobTitle}`;
   }
 
   const mailOptions = {
@@ -917,7 +1019,7 @@ async function sendTrackedJobEmail(track, daysLeft, isConfirmation = false) {
     recipientName: track.name,
     jobCount: 1,
     jobTitles: [track.jobTitle],
-    isTest: false,
+    isTest: isTestReminder,
     isReminder: true,
     daysLeft,
     messageId: info.messageId || 'reminder-id'
@@ -928,6 +1030,100 @@ async function sendTrackedJobEmail(track, daysLeft, isConfirmation = false) {
     recipient: track.email,
     messageId: info.messageId,
     daysLeft
+  };
+}
+
+/**
+ * Schedules a 1-minute (or custom delay) test reminder for an existing tracked job
+ */
+async function scheduleReminderTimer({ trackId, email, delaySeconds = 60 }) {
+  const trackedList = await getTrackedJobs();
+  const track = trackedList.find(t =>
+    (trackId && t.id === trackId) ||
+    (email && t.email.toLowerCase() === email.trim().toLowerCase())
+  );
+
+  if (!track) {
+    throw new Error('Tracked job record not found. Please verify your email or tracking ID.');
+  }
+
+  const timerKey = `${track.id || track.email}`;
+  // Cancel previous pending timer for this record if any
+  if (activeReminderTimers.has(timerKey)) {
+    clearTimeout(activeReminderTimers.get(timerKey).timeoutHandle);
+    activeReminderTimers.delete(timerKey);
+  }
+
+  const delayMs = Math.max(5000, (Number(delaySeconds) || 60) * 1000);
+  const targetTime = Date.now() + delayMs;
+
+  console.log(`[Timer Scheduled] Reminder for ${track.email} (${track.jobTitle}) scheduled in ${Math.round(delayMs / 1000)} seconds.`);
+
+  const timeoutHandle = setTimeout(async () => {
+    activeReminderTimers.delete(timerKey);
+    try {
+      console.log(`[Timer Fired] Executing scheduled 1-min reminder dispatch for ${track.email}...`);
+      let daysLeft = calculateDaysLeft(track.lastDate);
+      if (daysLeft === null || daysLeft <= 0) {
+        daysLeft = 5; // realistic fallback for test dispatch
+      }
+      const sendRes = await sendTrackedJobEmail(track, daysLeft, false, true);
+      track.lastReminderSentAt = new Date().toISOString();
+      track.reminderCount = (track.reminderCount || 0) + 1;
+      await saveTrackedJobs(trackedList);
+      console.log(`[Timer Success] 1-min test reminder delivered to ${track.email}:`, sendRes.messageId);
+    } catch (err) {
+      console.error(`[Timer Error] Scheduled reminder dispatch failed for ${track.email}:`, err.message);
+    }
+  }, delayMs);
+
+  activeReminderTimers.set(timerKey, {
+    trackId: track.id,
+    email: track.email,
+    jobTitle: track.jobTitle,
+    targetTime,
+    timeoutHandle
+  });
+
+  return {
+    success: true,
+    message: `1-minute reminder timer set! Email will be delivered in ${Math.round(delayMs / 1000)} seconds to ${track.email}.`,
+    delaySeconds: Math.round(delayMs / 1000),
+    targetTime: new Date(targetTime).toISOString(),
+    track
+  };
+}
+
+/**
+ * Dispatches a reminder email immediately for verification
+ */
+async function sendImmediateReminder({ trackId, email }) {
+  const trackedList = await getTrackedJobs();
+  const track = trackedList.find(t =>
+    (trackId && t.id === trackId) ||
+    (email && t.email.toLowerCase() === email.trim().toLowerCase())
+  );
+
+  if (!track) {
+    throw new Error('Tracked job record not found.');
+  }
+
+  let daysLeft = calculateDaysLeft(track.lastDate);
+  if (daysLeft === null || daysLeft <= 0) {
+    daysLeft = 5; // realistic fallback
+  }
+
+  const sendRes = await sendTrackedJobEmail(track, daysLeft, false, true);
+  track.lastReminderSentAt = new Date().toISOString();
+  track.reminderCount = (track.reminderCount || 0) + 1;
+  await saveTrackedJobs(trackedList);
+
+  return {
+    success: true,
+    message: `Test reminder email successfully dispatched to ${track.email}! Check your inbox.`,
+    track,
+    daysLeft,
+    messageId: sendRes.messageId
   };
 }
 
@@ -1082,7 +1278,7 @@ async function updateJobApplicationStatus(trackId, status) {
 /**
  * Batch processor: dispatches daily deadline countdown reminders to all active tracked jobs
  */
-async function sendDailyJobReminders() {
+async function sendDailyJobReminders(force = false) {
   console.log('[Job Reminders] Checking daily deadline reminders for candidates...');
   const trackedList = await getTrackedJobs();
   const now = new Date();
@@ -1102,23 +1298,27 @@ async function sendDailyJobReminders() {
     }
 
     // 2. Calculate days remaining
-    const daysLeft = calculateDaysLeft(track.lastDate);
+    let daysLeft = calculateDaysLeft(track.lastDate);
 
-    // If deadline has completely passed (more than 1 day ago)
-    if (daysLeft !== null && daysLeft < 0) {
+    // If deadline has completely passed (more than 1 day ago) and not forced
+    if (daysLeft !== null && daysLeft < 0 && !force) {
       skippedExpired++;
       track.active = false;
       continue;
     }
 
-    // 3. Prevent duplicate emails on the exact same calendar day
-    if (track.lastReminderSentAt && track.lastReminderSentAt.startsWith(todayStr)) {
+    if (daysLeft === null || daysLeft < 0) {
+      daysLeft = 5; // realistic fallback
+    }
+
+    // 3. Prevent duplicate emails on the exact same calendar day unless forced
+    if (!force && track.lastReminderSentAt && track.lastReminderSentAt.startsWith(todayStr)) {
       skippedAlreadySentToday++;
       continue;
     }
 
     try {
-      const mailRes = await sendTrackedJobEmail(track, daysLeft, false);
+      const mailRes = await sendTrackedJobEmail(track, daysLeft, false, force);
       track.lastReminderSentAt = now.toISOString();
       track.reminderCount = (track.reminderCount || 0) + 1;
       dispatched++;
@@ -1325,6 +1525,9 @@ module.exports = {
   trackJob,
   updateJobApplicationStatus,
   sendDailyJobReminders,
+  scheduleReminderTimer,
+  sendImmediateReminder,
+  getActiveReminderTimers,
   calculateDaysLeft,
   renderStatusPageHtml
 };

@@ -49,6 +49,9 @@ const {
   trackJob,
   updateJobApplicationStatus,
   sendDailyJobReminders,
+  scheduleReminderTimer,
+  sendImmediateReminder,
+  getActiveReminderTimers,
   renderStatusPageHtml
 } = require("./src/services/notificationService");
 
@@ -357,6 +360,16 @@ const server = createServer(async (request, response) => {
     try {
       const body = await parseBody(request);
       const result = await trackJob(body);
+
+      // If user requested 1-minute test reminder upon tracking
+      if (body.testTimer === true || body.testTimer === 'true' || body.delaySeconds) {
+        scheduleReminderTimer({
+          trackId: result.track.id,
+          email: result.track.email,
+          delaySeconds: body.delaySeconds || 60
+        }).catch(tErr => console.warn('[Job Tracker] Auto-test timer schedule error:', tErr.message));
+      }
+
       response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({
         success: true,
@@ -364,7 +377,8 @@ const server = createServer(async (request, response) => {
           ? `Daily deadline reminders activated! Confirmation email sent to ${result.track.email}.`
           : `Reminders refreshed for ${result.track.jobTitle}!`,
         data: result.track,
-        daysLeft: result.daysLeft
+        daysLeft: result.daysLeft,
+        testTimerScheduled: Boolean(body.testTimer || body.delaySeconds)
       }));
     } catch (err) {
       response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
@@ -420,6 +434,50 @@ const server = createServer(async (request, response) => {
       response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: false, error: err.message }));
     }
+    return;
+  }
+
+  // 10a. Schedule 1-minute test reminder for candidate's tracked job
+  if (url.pathname === "/api/track-job/schedule-timer" && request.method === "POST") {
+    try {
+      const body = await parseBody(request);
+      const result = await scheduleReminderTimer({
+        trackId: body.trackId,
+        email: body.email,
+        delaySeconds: body.delaySeconds || 60
+      });
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify(result));
+    } catch (err) {
+      response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 10b. Immediately dispatch reminder email for candidate's tracked job
+  if (url.pathname === "/api/track-job/send-reminder-now" && request.method === "POST") {
+    try {
+      const body = await parseBody(request);
+      const result = await sendImmediateReminder({
+        trackId: body.trackId,
+        email: body.email
+      });
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify(result));
+    } catch (err) {
+      response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 10c. Get active reminder timers
+  if (url.pathname === "/api/track-job/active-timers" && request.method === "GET") {
+    const email = url.searchParams.get("email");
+    const timers = getActiveReminderTimers(email);
+    response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+    response.end(JSON.stringify({ success: true, count: timers.length, data: timers }));
     return;
   }
 
@@ -614,12 +672,33 @@ server.on("error", (err) => {
   }
 });
 
+// Automated Background Reminder Scheduler
+let reminderSchedulerInterval = null;
+function startReminderScheduler() {
+  if (reminderSchedulerInterval) return;
+  console.log('[Reminder Scheduler] Initialized automated reminder engine (60s check interval)...');
+  reminderSchedulerInterval = setInterval(async () => {
+    try {
+      const now = new Date();
+      // Daily batch reminder at 9:00 AM
+      if (now.getHours() === 9 && now.getMinutes() === 0) {
+        console.log('[Reminder Scheduler] 9:00 AM dispatch triggering daily reminders...');
+        await sendDailyJobReminders();
+      }
+    } catch (err) {
+      console.warn('[Reminder Scheduler] Periodic check error:', err.message);
+    }
+  }, 60 * 1000);
+}
+
 process.on("SIGINT", () => {
+  if (reminderSchedulerInterval) clearInterval(reminderSchedulerInterval);
   try { server.close(); } catch { }
   process.exit(0);
 });
 
 process.on("SIGTERM", () => {
+  if (reminderSchedulerInterval) clearInterval(reminderSchedulerInterval);
   try { server.close(); } catch { }
   process.exit(0);
 });
@@ -628,6 +707,7 @@ if (require.main === module) {
   server.listen(port, () => {
     listenAttempts = 0;
     console.log(`sarkari hith is running at http://localhost:${port}`);
+    startReminderScheduler();
   });
 }
 

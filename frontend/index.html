@@ -1124,6 +1124,15 @@
             autocomplete="name">
         </div>
 
+        <div class="form-group" style="margin-top: -6px; margin-bottom: 12px;">
+          <label class="form-checkbox-label" style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.82rem; color: var(--text-primary); cursor: pointer;">
+            <input type="checkbox" id="track-input-test-timer" name="testTimer" value="1" checked style="margin-top: 2px;">
+            <span>
+              <strong>Send 1-minute test reminder email</strong> (dispatches a test countdown email to your inbox in 1 minute to verify delivery).
+            </span>
+          </label>
+        </div>
+
         <!-- How It Works Note -->
         <div class="track-how-it-works-box">
           <div class="track-step">
@@ -1177,6 +1186,11 @@
       </header>
 
       <div class="alerts-modal-body">
+        <div style="background-color: var(--bg-surface-soft); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary-red)" stroke-width="2.2" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span><strong>Test Your Reminders:</strong> Use <strong>"1-Min Test"</strong> to receive an automated reminder in 60s, or <strong>"Send Now"</strong> to test instant email delivery.</span>
+        </div>
+
         <div style="display: flex; gap: 8px; margin-bottom: 16px;">
           <input type="email" id="tracked-filter-email" class="form-input"
             placeholder="Enter your email to load tracked jobs" style="flex: 1;">

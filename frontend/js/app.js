@@ -10,6 +10,9 @@ import {
   trackJobOpening,
   fetchTrackedJobs,
   updateTrackedJobStatus,
+  scheduleJobReminderTimer,
+  sendJobReminderNow,
+  fetchActiveReminderTimers,
   trackAnalyticsEvent
 } from './api.js';
 import {
@@ -751,8 +754,78 @@ function setupEventListeners() {
     loadUserTrackedJobs(email);
   });
 
-  // Toggle "I Have Applied" / "Reactivate" from Dashboard
+  // Toggle "I Have Applied" / "Reactivate", "1-Min Test", or "Send Now" from Dashboard
   trackedJobsContainer?.addEventListener('click', async (e) => {
+    // 1. Schedule 1-Minute Test Reminder
+    const btnTest = e.target.closest('.btn-test-timer-1m');
+    if (btnTest) {
+      const trackId = btnTest.getAttribute('data-track-id');
+      const email = btnTest.getAttribute('data-email') || trackedFilterEmail?.value.trim();
+      const title = btnTest.getAttribute('data-title') || 'this recruitment';
+
+      btnTest.setAttribute('disabled', 'true');
+      btnTest.classList.add('is-counting');
+      const originalHtml = btnTest.innerHTML;
+
+      try {
+        await scheduleJobReminderTimer({ trackId, email, delaySeconds: 60 });
+        showToast(`⏱️ 1-Minute test reminder set for ${title}! Check your inbox in 60s.`, 'info');
+
+        let secondsRemaining = 60;
+        btnTest.innerHTML = `<span>⏱️ in ${secondsRemaining}s</span>`;
+
+        const countdownInterval = setInterval(() => {
+          secondsRemaining--;
+          if (secondsRemaining > 0) {
+            btnTest.innerHTML = `<span>⏱️ in ${secondsRemaining}s</span>`;
+          } else {
+            clearInterval(countdownInterval);
+            btnTest.classList.remove('is-counting');
+            btnTest.innerHTML = `<span>✅ Sent!</span>`;
+            showToast(`✅ 1-Minute test reminder delivered to ${email}! Check your inbox.`, 'success');
+            setTimeout(() => {
+              btnTest.removeAttribute('disabled');
+              btnTest.innerHTML = originalHtml;
+            }, 3000);
+          }
+        }, 1000);
+      } catch (err) {
+        showToast(err.message || 'Failed to start 1-minute test', 'error');
+        btnTest.removeAttribute('disabled');
+        btnTest.classList.remove('is-counting');
+        btnTest.innerHTML = originalHtml;
+      }
+      return;
+    }
+
+    // 2. Dispatch reminder email immediately
+    const btnSendNow = e.target.closest('.btn-send-now');
+    if (btnSendNow) {
+      const trackId = btnSendNow.getAttribute('data-track-id');
+      const email = btnSendNow.getAttribute('data-email') || trackedFilterEmail?.value.trim();
+      const title = btnSendNow.getAttribute('data-title') || 'this recruitment';
+
+      btnSendNow.setAttribute('disabled', 'true');
+      const origHtml = btnSendNow.innerHTML;
+      btnSendNow.innerHTML = '<span>Sending...</span>';
+
+      try {
+        await sendJobReminderNow({ trackId, email });
+        btnSendNow.innerHTML = '<span>✅ Sent!</span>';
+        showToast(`✅ Reminder email dispatched immediately to ${email}!`, 'success');
+        setTimeout(() => {
+          btnSendNow.removeAttribute('disabled');
+          btnSendNow.innerHTML = origHtml;
+        }, 2500);
+      } catch (err) {
+        showToast(err.message || 'Failed to dispatch reminder', 'error');
+        btnSendNow.removeAttribute('disabled');
+        btnSendNow.innerHTML = origHtml;
+      }
+      return;
+    }
+
+    // 3. Toggle Applied / Reactivate
     const btn = e.target.closest('.btn-toggle-applied');
     if (!btn) return;
     const trackId = btn.getAttribute('data-track-id');
@@ -795,6 +868,7 @@ function setupEventListeners() {
     const lastDateFormatted = document.getElementById('track-input-job-last-date-fmt')?.value;
     const jobTitle = document.getElementById('track-job-name')?.textContent;
     const organization = document.getElementById('track-job-org')?.textContent;
+    const testTimer = Boolean(document.getElementById('track-input-test-timer')?.checked);
 
     if (!email) {
       showToast('Please enter your email address', 'error');
@@ -816,7 +890,8 @@ function setupEventListeners() {
         organization,
         lastDate,
         lastDateFormatted,
-        link
+        link,
+        testTimer
       });
 
       // Save user identity in localStorage for convenience

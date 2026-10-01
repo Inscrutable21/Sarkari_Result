@@ -200,6 +200,43 @@ export async function updateTrackedJobStatus(trackId, status = 'applied') {
   return result;
 }
 
+export async function scheduleJobReminderTimer({ trackId, email, delaySeconds = 60 }) {
+  const response = await fetchWithFallback('/track-job/schedule-timer', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ trackId, email, delaySeconds })
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || result.message || 'Failed to schedule 1-minute reminder');
+  }
+  return result;
+}
+
+export async function sendJobReminderNow({ trackId, email }) {
+  const response = await fetchWithFallback('/track-job/send-reminder-now', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ trackId, email })
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || result.message || 'Failed to send reminder now');
+  }
+  return result;
+}
+
+export async function fetchActiveReminderTimers(email = '') {
+  try {
+    const query = email ? `?email=${encodeURIComponent(email)}` : '';
+    const response = await fetchWithFallback(`/track-job/active-timers${query}`);
+    const result = await response.json();
+    return result.data || [];
+  } catch {
+    return [];
+  }
+}
+
 export async function triggerDailyReminders() {
   const response = await fetchWithFallback('/notifications/reminders/send', {
     method: 'POST',

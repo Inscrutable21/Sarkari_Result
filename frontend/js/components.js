@@ -881,10 +881,19 @@ export function renderTrackedJobsList(container, trackedList = []) {
               ${isApplied ? 'Applied' : `Tracking (${daysText})`}
             </span>
           </div>
+          <div class="track-timer-status" id="timer-status-${escapeHtml(t.id)}" style="display:none; font-size: 0.72rem; color: #15803d; margin-top: 4px; font-weight: 600;"></div>
         </div>
-        <div>
+        <div class="tracked-job-actions">
+          <button type="button" class="btn-test-timer-1m" data-track-id="${escapeHtml(t.id)}" data-email="${escapeHtml(t.email)}" data-title="${escapeHtml(t.jobTitle)}" title="Schedule an automated 1-minute test reminder email to verify delivery">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span class="btn-label">1-Min Test</span>
+          </button>
+          <button type="button" class="btn-send-now" data-track-id="${escapeHtml(t.id)}" data-email="${escapeHtml(t.email)}" data-title="${escapeHtml(t.jobTitle)}" title="Send reminder email right now to verify immediately">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 2L11 13"></path><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            <span>Send Now</span>
+          </button>
           <button type="button" class="btn-toggle-applied ${isApplied ? 'is-applied' : 'is-pending'}" data-track-id="${escapeHtml(t.id)}" data-current="${isApplied ? 'applied' : 'pending'}">
-            ${isApplied ? 'Reactivate Reminders' : 'I Have Applied'}
+            ${isApplied ? 'Reactivate' : 'I Applied'}
           </button>
         </div>
       </div>
