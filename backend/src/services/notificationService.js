@@ -1,6 +1,7 @@
 const fs = require('node:fs/promises');
 const nodeFs = require('node:fs');
 const path = require('node:path');
+const crypto = require('node:crypto');
 const nodemailer = require('nodemailer');
 
 // Load environment variables from .env if not already set
@@ -75,6 +76,16 @@ function safeHttpUrl(rawUrl, fallback = '') {
   return fallback;
 }
 
+/**
+ * Generates a stable deterministic tracking ID from candidate email and job key
+ */
+function generateStableTrackId(email, jobKey) {
+  const normEmail = (email || '').trim().toLowerCase();
+  const normKey = (jobKey || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 40);
+  const hash = crypto.createHash('md5').update(`${normEmail}::${normKey}`).digest('hex').slice(0, 10);
+  return `trk_${hash}`;
+}
+
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 
 function isValidEmail(email) {
@@ -140,34 +151,7 @@ async function saveSubscribers(subscribers) {
  * Loads all currently tracked jobs across candidates (Google Sheet or local)
  */
 async function getTrackedJobs() {
-  let list = [];
-  if (isGoogleSheetEnabled()) {
-    try {
-      const sheetTracked = await getTrackedJobsFromSheet();
-      if (Array.isArray(sheetTracked) && sheetTracked.length > 0) {
-        list = sheetTracked.map((t, idx) => ({
-          id: t.ID || t.id || ('trk_sheet_' + idx + '_' + Math.random().toString(36).slice(2, 7)),
-          email: (t.Email || t.email || '').trim().toLowerCase(),
-          name: t.Name || t.name || 'Job Aspirant',
-          jobId: t.JobID || t.jobId || '',
-          jobTitle: t.JobTitle || t.jobTitle || '',
-          organization: t.Organization || t.organization || 'Government Department',
-          lastDate: t.Deadline || t.lastDate || null,
-          lastDateFormatted: t.Deadline || t.lastDateFormatted || 'Check Notice',
-          link: t.Link || t.link || '',
-          subscribedAt: t.SubscribedAt || t.subscribedAt || new Date().toISOString(),
-          lastReminderSentAt: t.LastReminderSent || t.lastReminderSentAt || null,
-          reminderCount: t.ReminderCount ? Number(t.ReminderCount) : 0,
-          applied: String(t.Applied).toLowerCase() === 'true',
-          active: String(t.Applied).toLowerCase() !== 'true'
-        }));
-      }
-    } catch (err) {
-      console.warn('[Google Sheets] getTrackedJobs fallback to local:', err.message);
-    }
-  }
-
-  // Load local file
+  // 1. Load local file first so existing IDs (including legacy trk_sheet_*) are retained
   let localList = [];
   try {
     const raw = await fs.readFile(TRACKED_JOBS_FILE, 'utf-8');
@@ -175,6 +159,48 @@ async function getTrackedJobs() {
     localList = Array.isArray(parsed) ? parsed : [];
   } catch {
     localList = [];
+  }
+
+  let list = [];
+  if (isGoogleSheetEnabled()) {
+    try {
+      const sheetTracked = await getTrackedJobsFromSheet();
+      if (Array.isArray(sheetTracked) && sheetTracked.length > 0) {
+        list = sheetTracked.map((t, idx) => {
+          const email = (t.Email || t.email || '').trim().toLowerCase();
+          const jobTitle = t.JobTitle || t.jobTitle || '';
+          const jobId = t.JobID || t.jobId || '';
+
+          // Look for an existing local record to keep the exact same ID sent in previous emails
+          const existingLocal = localList.find(loc =>
+            (loc.id && (loc.id === t.ID || loc.id === t.id)) ||
+            (loc.email && loc.email.toLowerCase() === email && (loc.jobTitle === jobTitle || (jobId && loc.jobId === jobId))) ||
+            (loc.id && loc.id.startsWith(`trk_sheet_${idx}_`))
+          );
+
+          const id = t.ID || t.id || (existingLocal && existingLocal.id) || generateStableTrackId(email, jobId || jobTitle);
+
+          return {
+            id,
+            email,
+            name: t.Name || t.name || (existingLocal && existingLocal.name) || 'Job Aspirant',
+            jobId,
+            jobTitle,
+            organization: t.Organization || t.organization || (existingLocal && existingLocal.organization) || 'Government Department',
+            lastDate: t.Deadline || t.lastDate || (existingLocal && existingLocal.lastDate) || null,
+            lastDateFormatted: t.Deadline || t.lastDateFormatted || (existingLocal && existingLocal.lastDateFormatted) || 'Check Notice',
+            link: t.Link || t.link || (existingLocal && existingLocal.link) || '',
+            subscribedAt: t.SubscribedAt || t.subscribedAt || (existingLocal && existingLocal.subscribedAt) || new Date().toISOString(),
+            lastReminderSentAt: t.LastReminderSent || t.lastReminderSentAt || (existingLocal && existingLocal.lastReminderSentAt) || null,
+            reminderCount: t.ReminderCount ? Number(t.ReminderCount) : (existingLocal ? existingLocal.reminderCount || 0 : 0),
+            applied: String(t.Applied).toLowerCase() === 'true' || (existingLocal && existingLocal.applied === true),
+            active: String(t.Applied).toLowerCase() !== 'true' && !(existingLocal && existingLocal.applied === true)
+          };
+        });
+      }
+    } catch (err) {
+      console.warn('[Google Sheets] getTrackedJobs fallback to local:', err.message);
+    }
   }
 
   if (list.length === 0) {
@@ -187,10 +213,15 @@ async function getTrackedJobs() {
         (s.email.toLowerCase() === localItem.email.toLowerCase() && (s.jobTitle === localItem.jobTitle || s.jobId === localItem.jobId))
       );
       if (existingInSheet) {
-        if (!existingInSheet.id && localItem.id) existingInSheet.id = localItem.id;
+        // ALWAYS keep localItem's ID if present so already dispatched email URLs don't break
+        if (localItem.id) existingInSheet.id = localItem.id;
         if ((!existingInSheet.lastDate || existingInSheet.lastDate === 'null') && localItem.lastDate) {
           existingInSheet.lastDate = localItem.lastDate;
           existingInSheet.lastDateFormatted = localItem.lastDateFormatted;
+        }
+        if (localItem.applied === true) {
+          existingInSheet.applied = true;
+          existingInSheet.active = false;
         }
       } else {
         list.push(localItem);
@@ -206,22 +237,28 @@ async function getTrackedJobs() {
       dedupMap.set(key, item);
     } else {
       const existing = dedupMap.get(key);
-      if ((!existing.lastDate || existing.lastDate === 'null') && item.lastDate) {
-        dedupMap.set(key, { ...existing, lastDate: item.lastDate, lastDateFormatted: item.lastDateFormatted });
-      }
+      const merged = {
+        ...existing,
+        id: existing.id || item.id,
+        lastDate: ((!existing.lastDate || existing.lastDate === 'null') && item.lastDate) ? item.lastDate : existing.lastDate,
+        lastDateFormatted: (existing.lastDateFormatted === 'Check Notice' && item.lastDateFormatted) ? item.lastDateFormatted : existing.lastDateFormatted,
+        applied: existing.applied || item.applied,
+        active: (existing.applied || item.applied) ? false : (existing.active && item.active)
+      };
+      dedupMap.set(key, merged);
     }
   }
   const cleanList = Array.from(dedupMap.values());
 
-  // Ensure every item has a unique id
+  // Ensure every item has a stable id
   let needsSave = false;
   for (let i = 0; i < cleanList.length; i++) {
     if (!cleanList[i].id) {
-      cleanList[i].id = 'trk_' + Date.now() + '_' + i + '_' + Math.random().toString(36).slice(2, 7);
+      cleanList[i].id = generateStableTrackId(cleanList[i].email, cleanList[i].jobId || cleanList[i].jobTitle);
       needsSave = true;
     }
   }
-  if (needsSave || cleanList.length !== list.length) {
+  if (needsSave || cleanList.length !== localList.length) {
     await saveTrackedJobs(cleanList);
   }
 
@@ -815,7 +852,9 @@ function buildJobReminderEmailHtml({ track, daysLeft, isConfirmation = false, is
   const deadlineFormatted = track.lastDateFormatted || track.lastDate || 'Check official advertisement';
   const org = track.organization || 'Government of India';
 
-  const statusBaseUrl = `${portalUrl}/api/track-job/status?trackId=${encodeURIComponent(track.id || '')}`;
+  const emailParam = encodeURIComponent(track.email || '');
+  const jobParam = encodeURIComponent(track.jobId || track.jobTitle || '');
+  const statusBaseUrl = `${portalUrl}/api/track-job/status?trackId=${encodeURIComponent(track.id || '')}&email=${emailParam}&job=${jobParam}`;
   const appliedUrl = `${statusBaseUrl}&status=applied`;
   const pendingUrl = `${statusBaseUrl}&status=pending`;
 
@@ -1009,7 +1048,7 @@ async function sendTrackedJobEmail(track, daysLeft, isConfirmation = false, isTe
     to: track.email,
     subject,
     html,
-    text: `${subject}\n\nOrganization: ${track.organization}\nDeadline: ${track.lastDateFormatted}\nDays Left: ${daysLeft}\n\nApply Link: ${track.link}\nMark Applied: ${process.env.PORTAL_URL || 'http://localhost:3000'}/api/track-job/status?trackId=${track.id}&status=applied`
+    text: `${subject}\n\nOrganization: ${track.organization}\nDeadline: ${track.lastDateFormatted}\nDays Left: ${daysLeft}\n\nApply Link: ${track.link}\nMark Applied: ${process.env.PORTAL_URL || 'http://localhost:3000'}/api/track-job/status?trackId=${encodeURIComponent(track.id || '')}&status=applied&email=${encodeURIComponent(track.email || '')}\nPending: ${process.env.PORTAL_URL || 'http://localhost:3000'}/api/track-job/status?trackId=${encodeURIComponent(track.id || '')}&status=pending&email=${encodeURIComponent(track.email || '')}`
   };
 
   const info = await transporter.sendMail(mailOptions);
@@ -1235,14 +1274,75 @@ async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, 
 
 /**
  * Updates application status from candidate response ("applied" or "pending")
+ * Supports multi-strategy matching: direct ID, stable hash, sheet index pattern, or fallback query context
  */
-async function updateJobApplicationStatus(trackId, status) {
-  if (!trackId) throw new Error('Missing tracking identifier');
+async function updateJobApplicationStatus(trackId, status, fallbackContext = {}) {
+  const cleanTrackId = (trackId || '').trim();
+  const queryEmail = (fallbackContext.email || '').trim().toLowerCase();
+  const queryJob = (fallbackContext.jobId || fallbackContext.job || '').trim().toLowerCase();
+
+  if (!cleanTrackId && !queryEmail) {
+    throw new Error('Missing tracking identifier');
+  }
 
   const trackedList = await getTrackedJobs();
-  const track = trackedList.find(t => t.id === trackId);
+  let track = null;
+
+  // 1. Exact match on track ID
+  if (cleanTrackId) {
+    track = trackedList.find(t => t.id === cleanTrackId);
+  }
+
+  // 2. Case-insensitive / trimmed match
+  if (!track && cleanTrackId) {
+    track = trackedList.find(t => t.id && t.id.toLowerCase() === cleanTrackId.toLowerCase());
+  }
+
+  // 3. Match by stable deterministic hash
+  if (!track && cleanTrackId) {
+    track = trackedList.find(t => {
+      const stableId = generateStableTrackId(t.email, t.jobId || t.jobTitle);
+      return stableId.toLowerCase() === cleanTrackId.toLowerCase();
+    });
+  }
+
+  // 4. Legacy index pattern match: "trk_sheet_<index>_<random>" (e.g. "trk_sheet_3_znaiq" -> index 3)
+  if (!track && cleanTrackId) {
+    const sheetMatch = cleanTrackId.match(/^trk_sheet_(\d+)(?:_[a-z0-9]+)?$/i);
+    if (sheetMatch) {
+      const idx = parseInt(sheetMatch[1], 10);
+      if (!isNaN(idx) && idx >= 0 && idx < trackedList.length) {
+        track = trackedList[idx];
+      }
+    }
+  }
+
+  // 5. Fallback match by Email + Job Identifier/Title
+  if (!track && queryEmail) {
+    track = trackedList.find(t => {
+      const emailMatches = (t.email || '').toLowerCase() === queryEmail;
+      if (!emailMatches) return false;
+      if (!queryJob) return true;
+      const idMatches = (t.jobId || '').toLowerCase() === queryJob;
+      const titleMatches = (t.jobTitle || '').toLowerCase().includes(queryJob) ||
+                           queryJob.includes((t.jobTitle || '').toLowerCase());
+      return idMatches || titleMatches;
+    });
+  }
+
+  // 6. Match by cleaned Job Title or ID in trackId
+  if (!track && cleanTrackId) {
+    track = trackedList.find(t =>
+      (t.jobId && t.jobId.toLowerCase() === cleanTrackId.toLowerCase()) ||
+      (t.jobTitle && t.jobTitle.toLowerCase().replace(/[^a-z0-9]/g, '') === cleanTrackId.toLowerCase().replace(/[^a-z0-9]/g, ''))
+    );
+  }
+
   if (!track) {
-    return { found: false, message: 'Tracking record not found' };
+    return {
+      found: false,
+      message: 'Tracking record not found'
+    };
   }
 
   const isApplied = status === 'applied';
@@ -1263,7 +1363,7 @@ async function updateJobApplicationStatus(trackId, status) {
 
   // Sync status to Google Sheet
   if (isGoogleSheetEnabled()) {
-    updateTrackedJobStatusInSheet(trackId, status).catch(err => {
+    updateTrackedJobStatusInSheet(track.id || cleanTrackId, status, { email: track.email, jobTitle: track.jobTitle }).catch(err => {
       console.warn('[Google Sheets] Status sync error:', err.message);
     });
   }
@@ -1346,8 +1446,9 @@ async function sendDailyJobReminders(force = false) {
  * Renders user-facing HTML response when candidate clicks "I Applied" / "Not Yet" in email
  */
 function renderStatusPageHtml(result, requestedStatus) {
-  const isApplied = requestedStatus === 'applied' && result.found;
-  const track = result.track || {};
+  const isFound = result && result.found;
+  const isApplied = requestedStatus === 'applied' && isFound;
+  const track = (result && result.track) || {};
   const portalUrl = process.env.PORTAL_URL || '/';
 
   return `
@@ -1356,7 +1457,7 @@ function renderStatusPageHtml(result, requestedStatus) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Application Status Recorded | Sarkari Hith</title>
+  <title>${!isFound ? 'Tracking Record Not Located' : (isApplied ? 'Application Recorded' : 'Reminder Active')} | Sarkari Hith</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -1416,6 +1517,10 @@ function renderStatusPageHtml(result, requestedStatus) {
       background: #e0f2fe;
       color: #0284c7;
     }
+    .icon-error {
+      background: #fee2e2;
+      color: #dc2626;
+    }
     .job-title {
       font-size: 17px;
       font-weight: 700;
@@ -1443,6 +1548,7 @@ function renderStatusPageHtml(result, requestedStatus) {
       padding: 12px 24px;
       border-radius: 6px;
       font-size: 14px;
+      text-align: center;
     }
     .btn-apply-job {
       display: block;
@@ -1454,6 +1560,7 @@ function renderStatusPageHtml(result, requestedStatus) {
       padding: 10px 24px;
       border-radius: 6px;
       font-size: 13px;
+      text-align: center;
     }
   </style>
 </head>
@@ -1464,45 +1571,64 @@ function renderStatusPageHtml(result, requestedStatus) {
       <p>Government Recruitment &amp; Student Welfare Portal</p>
     </div>
     <div class="content">
-      <div class="icon-circle ${isApplied ? 'icon-applied' : 'icon-pending'}">
-        ${isApplied
-      ? '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>'
-      : '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>'
-    }
-      </div>
-
-      <div class="job-title">
-        ${escapeHtml(track.jobTitle || 'Government Recruitment Post')}
-      </div>
-
-      ${isApplied ? `
-        <div style="display: inline-block; background: #dcfce7; color: #15803d; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 4px; margin-bottom: 12px; text-transform: uppercase;">
-          Application Recorded
+      ${!isFound ? `
+        <div class="icon-circle icon-error">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        </div>
+        <div class="job-title">Tracking Record Not Located</div>
+        <div style="display: inline-block; background: #fee2e2; color: #991b1b; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 4px; margin-bottom: 12px; text-transform: uppercase;">
+          Record Not Found
         </div>
         <p class="desc">
-          You marked that you have submitted your online application for this post. <strong>Daily deadline reminders for this job have been stopped.</strong><br><br>
-          Best wishes from Sarkari Hith for your upcoming exam and final selection!
+          We could not locate this active recruitment tracking record. It may have expired, or the tracking link is outdated.<br><br>
+          You can check and manage all your active application reminders anytime directly from the Sarkari Hith portal.
         </p>
-      ` : `
-        <div style="display: inline-block; background: #e0f2fe; color: #0369a1; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 4px; margin-bottom: 12px; text-transform: uppercase;">
-          Reminder Active
-        </div>
-        <p class="desc">
-          Your reminder is active. We will send you tomorrow's daily update with the remaining days.<br><br>
-          Don't forget to submit your application before <strong>${escapeHtml(track.lastDateFormatted || 'the closing deadline')}</strong>.
-        </p>
-      `}
-
-      <div class="actions">
-        ${safeHttpUrl(track.link) ? `
-          <a href="${escapeHtml(safeHttpUrl(track.link))}" target="_blank" rel="noopener noreferrer" class="btn-apply-job">
-            Open Official Form Page &rarr;
+        <div class="actions">
+          <a href="${escapeHtml(safeHttpUrl(portalUrl, '/'))}" class="btn-portal">
+            Open Sarkari Hith Portal
           </a>
-        ` : ''}
-        <a href="${escapeHtml(safeHttpUrl(portalUrl, '/'))}" class="btn-portal">
-          Return to Sarkari Hith Portal
-        </a>
-      </div>
+        </div>
+      ` : `
+        <div class="icon-circle ${isApplied ? 'icon-applied' : 'icon-pending'}">
+          ${isApplied
+            ? '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+            : '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>'
+          }
+        </div>
+
+        <div class="job-title">
+          ${escapeHtml(track.jobTitle || 'Government Recruitment Post')}
+        </div>
+
+        ${isApplied ? `
+          <div style="display: inline-block; background: #dcfce7; color: #15803d; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 4px; margin-bottom: 12px; text-transform: uppercase;">
+            Application Recorded
+          </div>
+          <p class="desc">
+            You marked that you have submitted your online application for this post. <strong>Daily deadline reminders for this job have been stopped.</strong><br><br>
+            Best wishes from Sarkari Hith for your upcoming exam and final selection!
+          </p>
+        ` : `
+          <div style="display: inline-block; background: #e0f2fe; color: #0369a1; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 4px; margin-bottom: 12px; text-transform: uppercase;">
+            Reminder Active
+          </div>
+          <p class="desc">
+            Your reminder is active. We will send you tomorrow's daily update with the remaining days.<br><br>
+            Don't forget to submit your application before <strong>${escapeHtml(track.lastDateFormatted || 'the closing deadline')}</strong>.
+          </p>
+        `}
+
+        <div class="actions">
+          ${safeHttpUrl(track.link) ? `
+            <a href="${escapeHtml(safeHttpUrl(track.link))}" target="_blank" rel="noopener noreferrer" class="btn-apply-job">
+              Open Official Form Page &rarr;
+            </a>
+          ` : ''}
+          <a href="${escapeHtml(safeHttpUrl(portalUrl, '/'))}" class="btn-portal">
+            Return to Sarkari Hith Portal
+          </a>
+        </div>
+      `}
     </div>
   </div>
 </body>

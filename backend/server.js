@@ -392,7 +392,9 @@ const server = createServer(async (request, response) => {
     try {
       const trackId = url.searchParams.get("trackId");
       const status = url.searchParams.get("status") || "applied";
-      const result = await updateJobApplicationStatus(trackId, status);
+      const email = url.searchParams.get("email") || "";
+      const job = url.searchParams.get("job") || url.searchParams.get("jobId") || "";
+      const result = await updateJobApplicationStatus(trackId, status, { email, jobId: job, job });
       response.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
       response.end(renderStatusPageHtml(result, status));
     } catch (err) {
@@ -427,7 +429,11 @@ const server = createServer(async (request, response) => {
   if (url.pathname === "/api/track-job/apply" && request.method === "POST") {
     try {
       const body = await parseBody(request);
-      const result = await updateJobApplicationStatus(body.trackId, body.status || "applied");
+      const result = await updateJobApplicationStatus(body.trackId, body.status || "applied", {
+        email: body.email,
+        jobId: body.jobId,
+        job: body.jobTitle
+      });
       response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: true, data: result }));
     } catch (err) {

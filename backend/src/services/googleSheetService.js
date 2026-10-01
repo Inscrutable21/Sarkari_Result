@@ -230,10 +230,15 @@ async function getTrackedJobsFromSheet() {
 /**
  * Updates application status ("applied" or "pending") in the Google Sheet
  */
-async function updateTrackedJobStatusInSheet(trackId, status) {
+async function updateTrackedJobStatusInSheet(trackId, status, extra = {}) {
   if (!isGoogleSheetEnabled()) return null;
   try {
-    const res = await callSheetPost('updateTrackedJobStatus', { trackId, status });
+    const res = await callSheetPost('updateTrackedJobStatus', {
+      trackId,
+      status,
+      email: extra.email || '',
+      jobTitle: extra.jobTitle || ''
+    });
     console.log(`[Google Sheets] Status updated for trackId ${trackId}: ${status}`);
     return res;
   } catch (err) {
