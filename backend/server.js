@@ -225,6 +225,32 @@ const server = createServer(async (request, response) => {
     return;
   }
 
+  // Admin Key Verification Endpoint
+  if (url.pathname === "/api/admin/verify") {
+    if (!isAdminAuthorized(request, url)) {
+      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: "Invalid Admin Authorization Key" }));
+      return;
+    }
+    response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+    response.end(JSON.stringify({ success: true, message: "Admin authorization verified" }));
+    return;
+  }
+
+  // Database Telemetry & Admin Overview Endpoint
+  if (url.pathname === "/api/mongodb/status" || url.pathname === "/api/admin/status") {
+    const { getMongoStatus } = require("./src/services/mongoService");
+    try {
+      const status = await getMongoStatus();
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: true, isScraping: isScrapingInProgress, ...status }));
+    } catch (err) {
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
   // --- Job Alert & Email Notification Endpoints ---
 
   // 1. Subscribe to custom email job alerts (Rate Limited)
@@ -707,7 +733,10 @@ const server = createServer(async (request, response) => {
     }
   }
 
-  const requestedPath = url.pathname === "/" ? "/index.html" : url.pathname;
+  let requestedPath = url.pathname === "/" ? "/index.html" : url.pathname;
+  if (requestedPath === "/admin" || requestedPath === "/admin/") {
+    requestedPath = "/admin.html";
+  }
   const filePath = resolve(frontendRoot, `.${requestedPath}`);
   if (filePath !== frontendRoot && !filePath.startsWith(`${frontendRoot}${sep}`)) {
     response.writeHead(403, { "Content-Type": "text/plain; charset=utf-8" });

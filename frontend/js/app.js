@@ -927,7 +927,6 @@ function setupEventListeners() {
   });
 
   // Global trigger helper for Remind Me buttons
-  // Global trigger helper for Remind Me buttons
   window.triggerJobTracking = function (jobId) {
     const item = findItemById(jobId);
     if (item) {
@@ -935,244 +934,19 @@ function setupEventListeners() {
     }
   };
 
-  // 13. 5-Tap Gesture Trigger: Tapping 5 times on the screen opens the Admin Scraper Modal
-  let tapCount = 0;
-  let tapTimer = null;
-  const TAP_THRESHOLD = 5;
-  const TAP_WINDOW_MS = 5000; // 5-second continuous tapping window
-
-  function registerTap(e) {
-    // Avoid interfering if user is clicking inside an input, button, select, or link (unless clicking brand header)
-    const target = e.target;
-    const isInteractive = target.closest('input') ||
-      target.closest('textarea') ||
-      target.closest('select') ||
-      target.closest('button') ||
-      target.closest('a') ||
-      target.closest('.modal-dialog');
-
-    if (isInteractive && !target.closest('.brand')) {
-      return;
-    }
-
-    tapCount++;
-
-    if (tapTimer) {
-      clearTimeout(tapTimer);
-    }
-
-    if (tapCount >= TAP_THRESHOLD) {
-      tapCount = 0;
-      clearTimeout(tapTimer);
-      tapTimer = null;
-      showToast('⚡ 5-Tap Detected! Opening Admin Scraper...', 'success');
-      openScraperModal();
-      return;
-    }
-
-    // Reset tap count after TAP_WINDOW_MS
-    tapTimer = setTimeout(() => {
-      tapCount = 0;
-      tapTimer = null;
-    }, TAP_WINDOW_MS);
-  }
-
-  // Listen for taps/clicks across the document (supports both desktop mouse and mobile touch)
-  document.addEventListener('pointerdown', registerTap);
-
-  // 14. Admin Live Scraper Modal Event Handlers
-  const scraperModalCloseBtn = document.getElementById('scraper-modal-close-btn');
-  const btnCancelScraper = document.getElementById('btn-cancel-scraper');
-  const btnDoneScraper = document.getElementById('btn-done-scraper');
-  const scraperForm = document.getElementById('scraper-form');
-  const btnToggleKeyVis = document.getElementById('btn-toggle-key-visibility');
-  const scraperModal = document.getElementById('admin-scraper-modal');
-
-  scraperModalCloseBtn?.addEventListener('click', closeScraperModal);
-  btnCancelScraper?.addEventListener('click', closeScraperModal);
-  btnDoneScraper?.addEventListener('click', () => {
-    closeScraperModal();
-    loadPortalData();
-  });
-
-  scraperModal?.addEventListener('click', (e) => {
-    if (e.target === scraperModal) {
-      closeScraperModal();
-    }
-  });
-
-  // Toggle Admin Key Visibility
-  btnToggleKeyVis?.addEventListener('click', () => {
-    const keyInput = document.getElementById('scraper-admin-key');
-    if (!keyInput) return;
-    if (keyInput.type === 'password') {
-      keyInput.type = 'text';
-      btnToggleKeyVis.textContent = '🔒';
-    } else {
-      keyInput.type = 'password';
-      btnToggleKeyVis.textContent = '👁️';
-    }
-  });
-
-  // Handle Scraper Submission
-  scraperForm?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const keyInput = document.getElementById('scraper-admin-key');
-    const rememberCheckbox = document.getElementById('scraper-remember-key');
-    const adminKey = (keyInput ? keyInput.value : '').trim();
-
-    if (!adminKey) {
-      showToast('Please enter the Admin Authorization Key', 'error');
-      return;
-    }
-
-    if (rememberCheckbox && rememberCheckbox.checked) {
-      localStorage.setItem('sarkari_admin_key', adminKey);
-    } else {
-      localStorage.removeItem('sarkari_admin_key');
-    }
-
-    // Switch views to running view
-    const initView = document.getElementById('scraper-initial-view');
-    const runningView = document.getElementById('scraper-running-view');
-    const resultView = document.getElementById('scraper-result-view');
-    const runningStepEl = document.getElementById('scraper-running-step');
-
-    if (initView) initView.style.display = 'none';
-    if (runningView) runningView.style.display = 'block';
-    if (resultView) resultView.style.display = 'none';
-
-    // Cycle informative step messages
-    const steps = [
-      'Crawling SarkariResult homepage & archive pages...',
-      'Categorizing sectors, states, qualifications & degree disciplines...',
-      'Enriching priority exams with deep specs & application deadlines...',
-      'Filtering expired recruitment forms...',
-      'Persisting all datasets directly into MongoDB Atlas collections...',
-      'Checking and dispatching matching job alerts...'
-    ];
-    let stepIndex = 0;
-    const stepInterval = setInterval(() => {
-      stepIndex = (stepIndex + 1) % steps.length;
-      if (runningStepEl) runningStepEl.textContent = steps[stepIndex];
-    }, 2500);
-
-    try {
-      const response = await triggerLiveScrape(adminKey);
-      clearInterval(stepInterval);
-
-      if (runningView) runningView.style.display = 'none';
-      if (resultView) resultView.style.display = 'block';
-
-      const summary = response?.summary || {};
-      const catSummary = summary.categorySummary || {};
-      const statsEl = document.getElementById('scraper-result-stats');
-      if (statsEl) {
-        statsEl.innerHTML = `
-          <div style="font-weight: 600; color: #10b981; margin-bottom: 8px;">✓ MongoDB Atlas Updated Successfully!</div>
-          <div>• <strong>Total Records Crawled:</strong> ${summary.totalItems || 'All active records'}</div>
-          <div>• <strong>Available Sectors:</strong> ${(catSummary.sectors || []).length} sectors mapped</div>
-          <div>• <strong>Degree Disciplines:</strong> ${(catSummary.disciplines || []).length} categories classified</div>
-          <div>• <strong>Timestamp:</strong> ${new Date(summary.scrapedAt || Date.now()).toLocaleTimeString()}</div>
-        `;
-      }
-
-      showToast('Scraper completed! Portal database updated.', 'success');
-      loadPortalData();
-    } catch (err) {
-      clearInterval(stepInterval);
-      if (runningView) runningView.style.display = 'none';
-      if (initView) initView.style.display = 'block';
-      showToast(`Scraping failed: ${err.message}`, 'error');
-    }
-  });
-
-  // 15. Keyboard Shortcuts
+  // 13. Keyboard Shortcuts
   window.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
       e.preventDefault();
       searchInput?.focus();
-    }
-    // Ctrl + Shift + S shortcut for instant admin scraper
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'S' || e.key === 's')) {
-      e.preventDefault();
-      openScraperModal();
     }
     if (e.key === 'Escape') {
       closeModal();
       closeAlertsModal();
       closeTrackJobModal();
       closeMyTrackedModal();
-      closeScraperModal();
     }
   });
-}
-
-/**
- * Opens the Admin Live Scraper Modal Dialog
- */
-function openScraperModal() {
-  const modal = document.getElementById('admin-scraper-modal');
-  if (!modal) return;
-  modal.classList.add('is-open');
-  modal.removeAttribute('aria-hidden');
-
-  const initView = document.getElementById('scraper-initial-view');
-  const runningView = document.getElementById('scraper-running-view');
-  const resultView = document.getElementById('scraper-result-view');
-  if (initView) initView.style.display = 'block';
-  if (runningView) runningView.style.display = 'none';
-  if (resultView) resultView.style.display = 'none';
-
-  const savedKey = localStorage.getItem('sarkari_admin_key') || '';
-  const keyInput = document.getElementById('scraper-admin-key');
-  const rememberCheckbox = document.getElementById('scraper-remember-key');
-  if (keyInput) {
-    keyInput.value = savedKey;
-    if (!savedKey) {
-      setTimeout(() => keyInput.focus(), 150);
-    }
-  }
-  if (rememberCheckbox) {
-    rememberCheckbox.checked = Boolean(savedKey || true);
-  }
-
-  checkScraperDbStats();
-}
-
-/**
- * Closes the Admin Live Scraper Modal Dialog
- */
-function closeScraperModal() {
-  const modal = document.getElementById('admin-scraper-modal');
-  if (!modal) return;
-  modal.classList.remove('is-open');
-  modal.setAttribute('aria-hidden', 'true');
-}
-
-/**
- * Queries MongoDB Atlas connection status and displays telemetry
- */
-async function checkScraperDbStats() {
-  const statsContainer = document.getElementById('scraper-db-stats');
-  if (!statsContainer) return;
-  try {
-    const status = await fetchMongoStatus();
-    if (status && status.connected) {
-      statsContainer.innerHTML = `
-        <span style="color: #10b981;">✓ Connected to MongoDB Atlas</span>
-        <span>• Collections: <strong>${status.collections?.length || 5}</strong></span>
-        <span>• Latency: <strong>${status.pingMs || 12}ms</strong></span>
-      `;
-    } else {
-      statsContainer.innerHTML = `
-        <span style="color: #10b981;">✓ MongoDB Atlas Ready</span>
-        <span style="color: var(--text-muted);">(Production Database)</span>
-      `;
-    }
-  } catch {
-    statsContainer.innerHTML = `<span style="color: #10b981;">✓ MongoDB Atlas Active</span>`;
-  }
 }
 
 // Bootstrap

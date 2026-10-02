@@ -260,3 +260,28 @@ export async function triggerLiveScrape(adminKey = '') {
   return result;
 }
 
+export async function verifyAdminKey(adminKey = '') {
+  const headers = { 'Content-Type': 'application/json' };
+  if (adminKey) {
+    headers['x-admin-key'] = adminKey;
+  }
+  const query = adminKey ? `?adminKey=${encodeURIComponent(adminKey)}` : '';
+  const response = await fetchWithFallback(`/admin/verify${query}`, {
+    method: 'GET',
+    headers
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Invalid Admin Authorization Key');
+  }
+  return result;
+}
+
+export async function fetchPostingDetails(targetUrl) {
+  const response = await fetchWithFallback(`/details?url=${encodeURIComponent(targetUrl)}`);
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Failed to fetch posting details');
+  }
+  return result;
+}

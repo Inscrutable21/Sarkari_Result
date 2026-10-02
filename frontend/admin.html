@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Control Center | Sarkari Hith Scraper & Database</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+
+<body class="admin-body">
+  <!-- Admin Header -->
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a href="/admin" class="admin-brand">
+        <div class="admin-brand-icon">⚡</div>
+        <div class="admin-brand-title">
+          <span>SARKARI HITH</span>
+          <span class="admin-brand-badge">ADMIN CONSOLE</span>
+        </div>
+      </a>
+
+      <div class="admin-header-actions">
+        <div id="admin-db-status-pill" class="admin-db-pill">
+          <span class="admin-db-dot"></span>
+          <span id="admin-db-status-text">MongoDB Atlas Ready</span>
+        </div>
+
+        <a href="/" target="_blank" class="admin-btn admin-btn-secondary" title="Open public portal in new tab">
+          <span>View Public Portal</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+
+        <button type="button" id="btn-admin-logout" class="admin-btn admin-btn-secondary" style="display: none;">
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace Container -->
+  <main class="admin-container">
+    <!-- 1. Authentication Gate Screen (Shown if not authenticated) -->
+    <section id="admin-login-view" class="admin-auth-card">
+      <div class="admin-auth-icon">🔒</div>
+      <h2 class="admin-auth-title">Admin Access Required</h2>
+      <p class="admin-auth-subtitle">
+        Enter your <code>ADMIN_API_KEY</code> to access the live scraper pipeline, database telemetry, and notification engine.
+      </p>
+
+      <div id="admin-login-error" class="admin-auth-banner is-error"></div>
+
+      <form id="admin-login-form">
+        <div class="admin-input-group">
+          <label for="admin-key-input">Admin Authorization Key</label>
+          <input type="password" id="admin-key-input" class="admin-input-control" placeholder="Enter ADMIN_API_KEY" required autocomplete="current-password">
+          <button type="button" id="btn-toggle-login-key" class="admin-toggle-pwd" title="Toggle visibility">👁️</button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem; text-align: left;">
+          <input type="checkbox" id="admin-remember-session" checked style="cursor: pointer;">
+          <label for="admin-remember-session" style="font-size: 0.82rem; color: #94a3b8; cursor: pointer; margin: 0;">
+            Remember credentials on this browser
+          </label>
+        </div>
+
+        <button type="submit" id="btn-unlock-admin" class="admin-btn admin-btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem;">
+          <span>Unlock Admin Panel</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- 2. Authenticated Dashboard (Shown once authenticated) -->
+    <section id="admin-dashboard-view" style="display: none;">
+      <!-- Telemetry Stats Cards -->
+      <div class="admin-stats-grid">
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon-frame" style="background: rgba(192, 27, 34, 0.15); color: #f87171;">💼</div>
+          <div class="admin-stat-info">
+            <span class="admin-stat-label">Active Jobs</span>
+            <span id="stat-count-jobs" class="admin-stat-value">--</span>
+          </div>
+        </div>
+
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon-frame" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">📝</div>
+          <div class="admin-stat-info">
+            <span class="admin-stat-label">Results</span>
+            <span id="stat-count-results" class="admin-stat-value">--</span>
+          </div>
+        </div>
+
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon-frame" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">🎟️</div>
+          <div class="admin-stat-info">
+            <span class="admin-stat-label">Admit Cards</span>
+            <span id="stat-count-admit" class="admin-stat-value">--</span>
+          </div>
+        </div>
+
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon-frame" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">📧</div>
+          <div class="admin-stat-info">
+            <span class="admin-stat-label">Alert Subscribers</span>
+            <span id="stat-count-subscribers" class="admin-stat-value">--</span>
+          </div>
+        </div>
+
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon-frame" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">⏱️</div>
+          <div class="admin-stat-info">
+            <span class="admin-stat-label">Tracked Applications</span>
+            <span id="stat-count-tracked" class="admin-stat-value">--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Workspace 2-Column Grid -->
+      <div class="admin-workspace-grid">
+        <!-- Left Column: Scraper Command Center -->
+        <div>
+          <div class="admin-panel-card">
+            <div class="admin-card-header">
+              <h3 class="admin-card-title">
+                <span>⚡</span>
+                <span>Live Web Scraper & Cloud Pipeline</span>
+              </h3>
+              <div id="scraper-status-badge" class="admin-brand-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">
+                READY
+              </div>
+            </div>
+
+            <!-- Hero Action Box -->
+            <div class="admin-scraper-hero">
+              <div class="admin-scraper-hero-text">
+                <h3>SarkariResult Multi-Page Crawl & Classifier</h3>
+                <p>
+                  Crawls the live homepage & dedicated archives (Latest Jobs, Results, Admit Cards, UPSC), categorizes all vacancies by sector & degree, removes expired postings, and persists everything directly into <strong>MongoDB Atlas</strong>.
+                </p>
+              </div>
+
+              <button type="button" id="btn-trigger-scrape" class="admin-btn admin-btn-primary admin-scraper-hero-btn">
+                <span>🚀 Run Full Scraper Pipeline</span>
+              </button>
+            </div>
+
+            <!-- Scraper Progress Bar (Active while scraping) -->
+            <div id="scraper-progress-container" style="display: none; margin-bottom: 1.25rem;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; margin-bottom: 6px;">
+                <span id="scraper-progress-text">Scraping in progress...</span>
+                <span id="scraper-timer">00:00</span>
+              </div>
+              <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden;">
+                <div class="scraper-progress-bar" style="width: 45%;"></div>
+              </div>
+            </div>
+
+            <!-- Live Execution Terminal / Log Output -->
+            <div class="admin-terminal-window">
+              <div class="admin-terminal-header">
+                <div class="admin-terminal-dots">
+                  <span class="admin-terminal-dot" style="background: #ef4444;"></span>
+                  <span class="admin-terminal-dot" style="background: #f59e0b;"></span>
+                  <span class="admin-terminal-dot" style="background: #10b981;"></span>
+                </div>
+                <span class="admin-terminal-title">Execution Log Console</span>
+                <button type="button" id="btn-clear-logs" style="background: none; border: none; color: #64748b; font-size: 0.72rem; cursor: pointer;">
+                  Clear
+                </button>
+              </div>
+
+              <div id="admin-terminal-logs" class="admin-terminal-body">
+                <div class="log-entry">
+                  <span class="log-time">[System]</span>
+                  <span class="log-msg-info">Admin Control Center initialized. Ready to trigger scraper pipeline.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Last Run Stats Summary -->
+            <div id="admin-last-run-box" style="display: none; margin-top: 1.25rem; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 10px; padding: 1rem;">
+              <h4 style="margin: 0 0 0.5rem; color: #34d399; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+                <span>✓</span>
+                <span>Last Scrape Run Successful</span>
+              </h4>
+              <div id="admin-last-run-details" style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.6;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Quick Diagnostics & Utilities -->
+        <div>
+          <!-- MongoDB Atlas Health -->
+          <div class="admin-panel-card">
+            <div class="admin-card-header">
+              <h3 class="admin-card-title">
+                <span>🍃</span>
+                <span>Database Health</span>
+              </h3>
+              <button type="button" id="btn-refresh-telemetry" class="admin-btn admin-btn-secondary" style="padding: 4px 10px; font-size: 0.75rem;">
+                ↻ Refresh
+              </button>
+            </div>
+
+            <div style="font-size: 0.84rem; line-height: 1.8; color: #cbd5e1;">
+              <div><strong>Status:</strong> <span id="db-health-status" style="color: #34d399;">Connected</span></div>
+              <div><strong>Target:</strong> <span>MongoDB Atlas Cloud</span></div>
+              <div><strong>Database:</strong> <code id="db-health-name" style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px;">sarkari_hith</code></div>
+              <div><strong>Latency:</strong> <span id="db-health-ping">-- ms</span></div>
+              <div><strong>Sync Mode:</strong> <span style="color: #60a5fa;">Direct Cloud Sync (No Local JSON)</span></div>
+            </div>
+          </div>
+
+          <!-- Single Posting Specs Inspector -->
+          <div class="admin-panel-card">
+            <div class="admin-card-header">
+              <h3 class="admin-card-title">
+                <span>🔍</span>
+                <span>Specs URL Inspector</span>
+              </h3>
+            </div>
+            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0 0 0.75rem;">
+              Test scraper on a single recruitment URL (e.g. UPSC, SSC, Banking):
+            </p>
+
+            <form id="admin-inspector-form">
+              <div class="admin-inspector-input">
+                <input type="url" id="inspector-url-input" class="admin-input-control" placeholder="https://www.sarkariresult.com/..." required style="font-size: 0.8rem; padding: 0.55rem 0.75rem;">
+                <button type="submit" id="btn-inspect-url" class="admin-btn admin-btn-secondary" style="flex-shrink: 0;">
+                  Inspect
+                </button>
+              </div>
+            </form>
+
+            <div id="inspector-result-box" class="admin-preview-box">
+              Enter a URL above to inspect extracted eligibility, vacancies, fee, and dates...
+            </div>
+          </div>
+
+          <!-- Notification Engine Manual Trigger -->
+          <div class="admin-panel-card">
+            <div class="admin-card-header">
+              <h3 class="admin-card-title">
+                <span>⏰</span>
+                <span>Reminder Engine</span>
+              </h3>
+            </div>
+            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0 0 1rem; line-height: 1.5;">
+              The system automatically sends daily deadline countdown emails to tracked candidates at 6:00 PM IST. You can also trigger it manually right now:
+            </p>
+
+            <button type="button" id="btn-manual-reminders" class="admin-btn admin-btn-secondary" style="width: 100%; justify-content: center;">
+              <span>📬 Dispatch Daily Reminders Now</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="admin-footer">
+    <span>Sarkari Hith Administration Portal • Cloud Native MongoDB Atlas Architecture</span>
+  </footer>
+
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <script type="module" src="/js/admin.js"></script>
+</body>
+
+</html>
