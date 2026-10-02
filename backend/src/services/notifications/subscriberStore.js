@@ -11,15 +11,43 @@ const {
   getSubscribersFromSheet
 } = require('../googleSheetService');
 const {
+  isMongoEnabled,
+  getSubscribersFromMongo,
+  upsertSubscriberInMongo,
+  unsubscribeUserInMongo
+} = require('../mongoService');
+const {
   getSentJobHistory,
   recordSentJobsForSubscriber
 } = require('./sentHistoryStore');
 
 /**
- * Loads current list of subscribers (from Google Sheets if enabled, merged with local sent history)
+ * Loads current list of subscribers (from MongoDB Atlas if enabled, or Google Sheets / local JSON)
  */
 async function getSubscribers() {
   const sentHistory = await getSentJobHistory();
+
+  // 1. Try MongoDB Atlas (Primary cloud store)
+  if (isMongoEnabled()) {
+    try {
+      const mongoSubs = await getSubscribersFromMongo();
+      if (Array.isArray(mongoSubs) && mongoSubs.length > 0) {
+        return mongoSubs.map(s => {
+          const email = (s.email || '').trim().toLowerCase();
+          const historyIds = sentHistory[email]?.jobIds || [];
+          return {
+            ...s,
+            email,
+            notifiedJobIds: Array.from(new Set([...(s.notifiedJobIds || []), ...historyIds]))
+          };
+        });
+      }
+    } catch (err) {
+      console.warn('[MongoDB] getSubscribers fallback:', err.message);
+    }
+  }
+
+  // 2. Fallback to local subscribers.json
   let localSubs = [];
   try {
     const raw = await fs.readFile(SUBSCRIBERS_FILE, 'utf-8');
@@ -35,6 +63,7 @@ async function getSubscribers() {
     if (em) localMap.set(em, s);
   }
 
+  // 3. Fallback to Google Sheets if configured
   if (isGoogleSheetEnabled()) {
     try {
       const sheetSubs = await getSubscribersFromSheet();
@@ -78,11 +107,26 @@ async function getSubscribers() {
 }
 
 /**
- * Persists subscribers to local file and syncs to Google Sheets
+ * Persists subscribers to local file, MongoDB Atlas, and Google Sheets
  */
 async function saveSubscribers(subscribers) {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  await fs.writeFile(SUBSCRIBERS_FILE, JSON.stringify(subscribers, null, 2), 'utf-8');
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    await fs.writeFile(SUBSCRIBERS_FILE, JSON.stringify(subscribers, null, 2), 'utf-8');
+  } catch (fsErr) {
+    // On serverless environments filesystem may be read-only; log and continue
+    console.warn('[Storage] Local write notice:', fsErr.message);
+  }
+
+  // Sync to MongoDB Atlas
+  if (isMongoEnabled() && subscribers.length > 0) {
+    const latest = subscribers[subscribers.length - 1];
+    if (latest) {
+      upsertSubscriberInMongo(latest).catch(err => {
+        console.warn('[MongoDB] Subscriber sync error:', err.message);
+      });
+    }
+  }
 
   // Sync to Google Sheet if configured
   if (isGoogleSheetEnabled() && subscribers.length > 0) {
@@ -250,8 +294,15 @@ async function subscribeUser({ email, name, qualification, disciplines, state, s
  */
 async function unsubscribeUser(email) {
   if (!email) throw new Error('Email is required to unsubscribe');
-  const subscribers = await getSubscribers();
   const cleanEmail = email.trim().toLowerCase();
+
+  if (isMongoEnabled()) {
+    await unsubscribeUserInMongo(cleanEmail).catch(err => {
+      console.warn('[MongoDB] unsubscribe error:', err.message);
+    });
+  }
+
+  const subscribers = await getSubscribers();
   const index = subscribers.findIndex(s => s.email.toLowerCase() === cleanEmail);
   if (index === -1) {
     return { found: false, message: 'Email address not found in alert list' };

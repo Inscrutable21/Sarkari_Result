@@ -8,11 +8,13 @@
     "dev": "node --watch --watch-path=server.js --watch-path=src/services server.js",
     "scrape": "node src/services/scraper/runScraper.js",
     "notify": "node src/services/sendNotifications.js",
+    "sync:mongo": "node src/services/pushAllDataToMongo.js",
     "sync:sheets": "node src/services/pushAllDataToSheet.js"
   },
   "dependencies": {
     "axios": "^1.20.0",
     "cheerio": "^1.2.0",
+    "mongodb": "^7.7.0",
     "nodemailer": "^10.0.12"
   },
   "devDependencies": {

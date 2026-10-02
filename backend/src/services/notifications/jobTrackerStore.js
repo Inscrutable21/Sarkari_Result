@@ -13,6 +13,12 @@ const {
   appendTrackedJobToSheet,
   updateTrackedJobStatusInSheet
 } = require('../googleSheetService');
+const {
+  isMongoEnabled,
+  getTrackedJobsFromMongo,
+  upsertTrackedJobInMongo,
+  updateTrackedJobStatusInMongo
+} = require('../mongoService');
 
 /**
  * Calculates calendar days remaining until deadline
@@ -57,6 +63,23 @@ function getActiveReminderTimers(filterEmail = null) {
  * Loads all currently tracked jobs across candidates (Google Sheet or local)
  */
 async function getTrackedJobs() {
+  // 0. Primary: check MongoDB Atlas
+  if (isMongoEnabled()) {
+    try {
+      const mongoTracked = await getTrackedJobsFromMongo();
+      if (Array.isArray(mongoTracked) && mongoTracked.length > 0) {
+        return mongoTracked.map(t => ({
+          ...t,
+          reminderCount: t.reminderCount ? Number(t.reminderCount) : 0,
+          applied: t.applied === true || String(t.applied).toLowerCase() === 'true',
+          active: t.applied !== true && String(t.applied).toLowerCase() !== 'true'
+        }));
+      }
+    } catch (err) {
+      console.warn('[MongoDB] getTrackedJobs fallback:', err.message);
+    }
+  }
+
   // 1. Load local file first so existing IDs (including legacy trk_sheet_*) are retained
   let localList = [];
   try {
@@ -175,8 +198,23 @@ async function getTrackedJobs() {
  * Persists tracked jobs list to disk
  */
 async function saveTrackedJobs(tracked) {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  await fs.writeFile(TRACKED_JOBS_FILE, JSON.stringify(tracked, null, 2), 'utf-8');
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    await fs.writeFile(TRACKED_JOBS_FILE, JSON.stringify(tracked, null, 2), 'utf-8');
+  } catch (fsErr) {
+    console.warn('[Storage] Local write notice:', fsErr.message);
+  }
+
+  // Sync to MongoDB Atlas
+  if (isMongoEnabled() && Array.isArray(tracked)) {
+    for (const t of tracked) {
+      if (t.email && (t.id || t.jobId)) {
+        upsertTrackedJobInMongo(t).catch(err => {
+          console.warn('[MongoDB] Tracked job update warning:', err.message);
+        });
+      }
+    }
+  }
 }
 
 /**
@@ -355,6 +393,13 @@ async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, 
 
   await saveTrackedJobs(trackedList);
 
+  // Sync to MongoDB Atlas
+  if (isMongoEnabled()) {
+    upsertTrackedJobInMongo(trackRecord).catch(err => {
+      console.warn('[MongoDB] Failed to sync tracked job:', err.message);
+    });
+  }
+
   // Sync to Google Sheet if enabled
   if (isGoogleSheetEnabled()) {
     appendTrackedJobToSheet(trackRecord).catch(err => {
@@ -470,6 +515,13 @@ async function updateJobApplicationStatus(trackId, status, fallbackContext = {})
   }
 
   await saveTrackedJobs(trackedList);
+
+  // Sync status to MongoDB Atlas
+  if (isMongoEnabled()) {
+    updateTrackedJobStatusInMongo(track.id || cleanTrackId, status, { email: track.email, jobId: track.jobId, jobTitle: track.jobTitle }).catch(err => {
+      console.warn('[MongoDB] Status sync error:', err.message);
+    });
+  }
 
   // Sync status to Google Sheet
   if (isGoogleSheetEnabled()) {

@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "node backend/server.js",
-    "start": "node backend/server.js"
+    "start": "node backend/server.js",
+    "sync:mongo": "node backend/src/services/pushAllDataToMongo.js"
   },
   "dependencies": {
     "axios": "^1.20.0",
     "cheerio": "^1.2.0",
+    "mongodb": "^7.7.0",
     "nodemailer": "^10.0.12"
   }
 }

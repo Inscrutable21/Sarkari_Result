@@ -604,7 +604,44 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // Endpoints to serve scraped SarkariResult datasets
+  // 14. MongoDB Atlas Status & Collection Telemetry
+  if (url.pathname === "/api/mongodb/status" && request.method === "GET") {
+    const { getMongoStatus } = require("./src/services/mongoService");
+    try {
+      const status = await getMongoStatus();
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: true, ...status }));
+    } catch (err) {
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 15. Force Sync All Local Datasets into MongoDB Atlas (Admin Protected)
+  if (url.pathname === "/api/sync-mongo" && (request.method === "GET" || request.method === "POST")) {
+    if (!isAdminAuthorized(request, url)) {
+      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: "401 Unauthorized: Admin API key required" }));
+      return;
+    }
+    try {
+      const { syncAllDataToMongo } = require("./src/services/pushAllDataToMongo");
+      const result = await syncAllDataToMongo();
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({
+        success: true,
+        message: "All datasets, subscribers, tracked jobs, and logs successfully synced to MongoDB Atlas",
+        ...result
+      }));
+    } catch (err) {
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // Endpoints to serve scraped SarkariResult datasets (MongoDB Atlas primary, local JSON fallback)
   const apiDataMap = {
     "/api/all": "allData.json",
     "/api/jobs": "jobs.json",
@@ -615,74 +652,127 @@ const server = createServer(async (request, response) => {
   };
 
   if (apiDataMap[url.pathname]) {
+    const {
+      isMongoEnabled,
+      getPortalDatasetFromMongo,
+      getAllPortalDataFromMongo,
+      getCategorySummaryFromMongo
+    } = require("./src/services/mongoService");
+
+    const sectorFilter = url.searchParams.get("sector")?.toLowerCase();
+    const stateFilter = url.searchParams.get("state")?.toLowerCase();
+    const qualFilter = url.searchParams.get("qualification")?.toLowerCase();
+    const disciplineFilter = url.searchParams.get("discipline")?.toLowerCase() || url.searchParams.get("degree")?.toLowerCase();
+    const scopeFilter = url.searchParams.get("scope")?.toLowerCase() || url.searchParams.get("degreeScope")?.toLowerCase();
+    const queryFilter = url.searchParams.get("q")?.toLowerCase();
+    const activeOnly = url.searchParams.get("activeOnly") === "true";
+    const hasFilters = Boolean(sectorFilter || stateFilter || qualFilter || disciplineFilter || scopeFilter || queryFilter || activeOnly);
+
+    // 1. Check MongoDB Atlas first
+    let mongoData = null;
+    let dataSource = "local";
+    if (isMongoEnabled()) {
+      try {
+        if (url.pathname === "/api/all") {
+          const allFromMongo = await getAllPortalDataFromMongo();
+          if (allFromMongo) {
+            response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+            response.end(JSON.stringify(allFromMongo));
+            return;
+          }
+        } else if (url.pathname === "/api/categories") {
+          const catFromMongo = await getCategorySummaryFromMongo();
+          if (catFromMongo) {
+            response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+            response.end(JSON.stringify({ success: true, data: catFromMongo, source: "mongodb" }));
+            return;
+          }
+        } else {
+          const datasetKey = url.pathname.replace(/^\/api\//, '').replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+          const itemsFromMongo = await getPortalDatasetFromMongo(datasetKey);
+          if (Array.isArray(itemsFromMongo) && itemsFromMongo.length > 0) {
+            mongoData = itemsFromMongo;
+            dataSource = "mongodb";
+          }
+        }
+      } catch (mErr) {
+        console.warn("[MongoDB] Data serving fallback notice:", mErr.message);
+      }
+    }
+
+    // 2. Process items from MongoDB or fallback to local JSON file
+    let items = mongoData;
     const jsonPath = resolve(dataDir, apiDataMap[url.pathname]);
-    try {
-      const fileInfo = await stat(jsonPath);
-      if (fileInfo.isFile()) {
-        const sectorFilter = url.searchParams.get("sector")?.toLowerCase();
-        const stateFilter = url.searchParams.get("state")?.toLowerCase();
-        const qualFilter = url.searchParams.get("qualification")?.toLowerCase();
-        const disciplineFilter = url.searchParams.get("discipline")?.toLowerCase() || url.searchParams.get("degree")?.toLowerCase();
-        const scopeFilter = url.searchParams.get("scope")?.toLowerCase() || url.searchParams.get("degreeScope")?.toLowerCase();
-        const queryFilter = url.searchParams.get("q")?.toLowerCase();
-        const activeOnly = url.searchParams.get("activeOnly") === "true";
 
-        // If no filter query params, pipe the raw JSON stream directly for maximum speed
-        if (!sectorFilter && !stateFilter && !qualFilter && !disciplineFilter && !scopeFilter && !queryFilter && !activeOnly) {
-          response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-          createReadStream(jsonPath).pipe(response);
-          return;
+    if (!items) {
+      try {
+        const fileInfo = await stat(jsonPath);
+        if (fileInfo.isFile()) {
+          // If no filter query params, pipe the raw JSON stream directly for maximum speed
+          if (!hasFilters) {
+            response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+            createReadStream(jsonPath).pipe(response);
+            return;
+          }
+
+          const rawContent = await readFile(jsonPath, "utf-8");
+          const parsed = JSON.parse(rawContent);
+          items = Array.isArray(parsed) ? parsed : (parsed.data || []);
         }
-
-        const rawContent = await readFile(jsonPath, "utf-8");
-        const parsed = JSON.parse(rawContent);
-        let items = Array.isArray(parsed) ? parsed : (parsed.data || []);
-
-        if (Array.isArray(items)) {
-          const todayIso = new Date().toISOString().split('T')[0];
-          if (url.pathname === "/api/jobs" || activeOnly) {
-            items = items.filter(it => it.isActive !== false && it.isExpired !== true && (!it.lastDate || it.lastDate >= todayIso));
-          }
-          if (disciplineFilter && disciplineFilter !== "all") {
-            if (scopeFilter === "field") {
-              items = items.filter(it => it.fieldDisciplines?.includes(disciplineFilter));
-            } else if (scopeFilter === "general") {
-              items = items.filter(it => it.generalDisciplines?.includes(disciplineFilter));
-            } else {
-              items = items.filter(it => it.eligibleDisciplines?.includes(disciplineFilter));
-            }
-          }
-          if (sectorFilter) {
-            items = items.filter(it => it.sector?.toLowerCase().includes(sectorFilter) || it.sectorBadge?.toLowerCase().includes(sectorFilter));
-          }
-          if (stateFilter) {
-            items = items.filter(it => it.state?.toLowerCase().includes(stateFilter));
-          }
-          if (qualFilter) {
-            items = items.filter(it => it.qualification?.toLowerCase().includes(qualFilter));
-          }
-          if (queryFilter) {
-            items = items.filter(it =>
-              it.title?.toLowerCase().includes(queryFilter) ||
-              it.organization?.toLowerCase().includes(queryFilter) ||
-              it.tags?.some(t => t.toLowerCase().includes(queryFilter))
-            );
-          }
-        }
-
-        response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-        response.end(JSON.stringify({
-          success: true,
-          data: items,
-          meta: { total: items.length, filters: { activeOnly, discipline: disciplineFilter, sector: sectorFilter, state: stateFilter, qualification: qualFilter, q: queryFilter } }
-        }));
+      } catch {
+        response.writeHead(404, { "Content-Type": "application/json; charset=utf-8" });
+        response.end(JSON.stringify({ success: false, error: "Dataset not found. Run scraper or sync:mongo first." }));
         return;
       }
-    } catch {
-      response.writeHead(404, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: "Dataset not found. Run scraper first." }));
+    }
+
+    if (Array.isArray(items)) {
+      const todayIso = new Date().toISOString().split('T')[0];
+      if (url.pathname === "/api/jobs" || activeOnly) {
+        items = items.filter(it => it.isActive !== false && it.isExpired !== true && (!it.lastDate || it.lastDate >= todayIso));
+      }
+      if (disciplineFilter && disciplineFilter !== "all") {
+        if (scopeFilter === "field") {
+          items = items.filter(it => it.fieldDisciplines?.includes(disciplineFilter));
+        } else if (scopeFilter === "general") {
+          items = items.filter(it => it.generalDisciplines?.includes(disciplineFilter));
+        } else {
+          items = items.filter(it => it.eligibleDisciplines?.includes(disciplineFilter));
+        }
+      }
+      if (sectorFilter) {
+        items = items.filter(it => it.sector?.toLowerCase().includes(sectorFilter) || it.sectorBadge?.toLowerCase().includes(sectorFilter));
+      }
+      if (stateFilter) {
+        items = items.filter(it => it.state?.toLowerCase().includes(stateFilter));
+      }
+      if (qualFilter) {
+        items = items.filter(it => it.qualification?.toLowerCase().includes(qualFilter));
+      }
+      if (queryFilter) {
+        items = items.filter(it =>
+          it.title?.toLowerCase().includes(queryFilter) ||
+          it.organization?.toLowerCase().includes(queryFilter) ||
+          it.tags?.some(t => t.toLowerCase().includes(queryFilter))
+        );
+      }
+
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({
+        success: true,
+        data: items,
+        meta: {
+          total: items.length,
+          source: dataSource,
+          filters: { activeOnly, discipline: disciplineFilter, sector: sectorFilter, state: stateFilter, qualification: qualFilter, q: queryFilter }
+        }
+      }));
       return;
     }
+
+    response.writeHead(404, { "Content-Type": "application/json; charset=utf-8" });
+    response.end(JSON.stringify({ success: false, error: "Dataset not found." }));
+    return;
   }
 
   const requestedPath = url.pathname === "/" ? "/index.html" : url.pathname;

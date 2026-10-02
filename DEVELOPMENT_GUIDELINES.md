@@ -121,12 +121,29 @@ Sarkari_Result/
 
 ### Key Endpoints:
 - `GET /api/health` — Service health & uptime.
-- `GET /api/all` — Aggregate dashboard data (latest jobs, top results, trending admit cards, breaking alerts).
-- `GET /api/jobs` — Query params: `?category=...&qualification=...&state=...&search=...&page=...`
+- `GET /api/mongodb/status` — MongoDB Atlas connectivity, latency, and live collection statistics.
+- `POST /api/sync-mongo` — (Admin-protected) Full migration and synchronization of portal data, subscribers, and logs into Atlas.
+- `GET /api/all` — Aggregate dashboard data (served from MongoDB Atlas with local fallback).
+- `GET /api/jobs` — Query params: `?sector=...&qualification=...&state=...&discipline=...&q=...&activeOnly=true`
 - `GET /api/jobs/:id` — Detailed job specification (dates, fees, vacancy breakdown, direct links).
-- `GET /api/results` — Query params: `?search=...&year=...`
-- `GET /api/admit-cards` — Query params: `?search=...&active=true`
+- `GET /api/results` — Query params: `?q=...`
+- `GET /api/admit-cards` — Query params: `?q=...`
 - `GET /api/categories` — List of available categories and post counts.
+- `POST /api/subscribe` — Candidate subscription for degree-matched alerts.
+- `POST /api/track-job` — Candidate tracking for daily deadline countdown notifications.
+- `GET /api/track-job/status` — Status callback ("applied" / "pending") to stop or continue reminders.
+
+### Cloud Database Architecture (MongoDB Atlas):
+- **Serverless-Optimized**: Cached connection pooling (`global._mongoClientPromise`) across Vercel function instances.
+- **Collections**:
+  - `portal_jobs`, `portal_results`, `portal_admit_cards`, `portal_trending`, `portal_metadata`
+  - `subscribers` (unique index on `email`)
+  - `tracked_jobs` (indexes on `id`, `email`, `{ active, applied }`)
+  - `sent_job_history` (deduplication store)
+  - `email_logs` (dispatch audit telemetry)
+- **High Availability & Fallback**:
+  - Primary read/write target is MongoDB Atlas when `MONGODB_URI` is provided.
+  - Automatically falls back gracefully to `src/data/*.json` if offline or unseeded.
 
 ---
 

@@ -4,6 +4,7 @@ const { scrapeHomepage, scrapeCategoryArchive, scrapePostingDetails } = require(
 const { categorizeCollection, DEGREE_DISCIPLINES, isFillableJob } = require('./classifier');
 const { dispatchAllNotifications } = require('../notificationService');
 const { batchUploadAllDataToSheet, isGoogleSheetEnabled } = require('../googleSheetService');
+const { saveAllPortalDataToMongo, saveCategorySummaryToMongo, isMongoEnabled } = require('../mongoService');
 
 const DATA_DIR = path.resolve(__dirname, '../../data');
 
@@ -261,6 +262,18 @@ async function run() {
       await dispatchAllNotifications();
     } catch (notifErr) {
       console.warn('[Notification Warning]:', notifErr.message);
+    }
+
+    // Automatically sync freshly scraped data to MongoDB Atlas
+    if (isMongoEnabled()) {
+      console.log('[Pipeline] Syncing newly scraped data to MongoDB Atlas...');
+      try {
+        await saveAllPortalDataToMongo(data);
+        await saveCategorySummaryToMongo(categorySummary);
+        console.log('[Pipeline] MongoDB Atlas collections updated successfully!');
+      } catch (mongoErr) {
+        console.warn('[MongoDB Sync Warning]:', mongoErr.message);
+      }
     }
 
     // Automatically sync freshly scraped data to live Google Sheet

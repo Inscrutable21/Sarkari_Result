@@ -6,6 +6,11 @@ const {
   LOGS_FILE,
   SENT_JOB_HISTORY_FILE
 } = require('./constants');
+const {
+  isMongoEnabled,
+  getSentJobHistoryFromMongo,
+  recordSentJobsInMongo
+} = require('../mongoService');
 
 /**
  * Normalizes a job title for robust historical deduplication
@@ -51,9 +56,20 @@ function getJobFingerprint(job) {
 
 /**
  * Loads the sent-job history store indexed by subscriber email.
- * If the file doesn't exist, automatically seeds it from emailLogs.json and subscribers.json
+ * If MongoDB is enabled, loads from Atlas. Otherwise from sentJobHistory.json or auto-seeds.
  */
 async function getSentJobHistory() {
+  if (isMongoEnabled()) {
+    try {
+      const mongoHistory = await getSentJobHistoryFromMongo();
+      if (mongoHistory && Object.keys(mongoHistory).length > 0) {
+        return mongoHistory;
+      }
+    } catch (err) {
+      console.warn('[MongoDB] getSentJobHistory fallback:', err.message);
+    }
+  }
+
   try {
     const raw = await fs.readFile(SENT_JOB_HISTORY_FILE, 'utf-8');
     const parsed = JSON.parse(raw);
@@ -227,9 +243,20 @@ async function recordSentJobsForSubscriber(email, jobs) {
     entry.history = entry.history.slice(-500);
   }
 
+  // Persist to MongoDB Atlas
+  if (isMongoEnabled()) {
+    recordSentJobsInMongo(cleanEmail, jobs).catch(err => {
+      console.warn('[MongoDB] recordSentJobs warning:', err.message);
+    });
+  }
+
   // Persist sentJobHistory.json
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  await fs.writeFile(SENT_JOB_HISTORY_FILE, JSON.stringify(historyMap, null, 2), 'utf-8');
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    await fs.writeFile(SENT_JOB_HISTORY_FILE, JSON.stringify(historyMap, null, 2), 'utf-8');
+  } catch (fsErr) {
+    console.warn('[Storage] Local write notice:', fsErr.message);
+  }
 
   // Also update subscribers.json to keep them aligned
   try {
