@@ -234,3 +234,29 @@ export function trackAnalyticsEvent(eventName, data = {}) {
   }
 }
 
+export async function fetchMongoStatus() {
+  try {
+    const response = await fetchWithFallback('/mongodb/status');
+    return await response.json();
+  } catch (err) {
+    return { success: false, connected: false, error: err.message };
+  }
+}
+
+export async function triggerLiveScrape(adminKey = '') {
+  const headers = { 'Content-Type': 'application/json' };
+  if (adminKey) {
+    headers['x-admin-key'] = adminKey;
+  }
+  const query = adminKey ? `?adminKey=${encodeURIComponent(adminKey)}` : '';
+  const response = await fetchWithFallback(`/scrape${query}`, {
+    method: 'POST',
+    headers
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || result.message || 'Scraping failed');
+  }
+  return result;
+}
+
