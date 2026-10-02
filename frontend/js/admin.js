@@ -1,6 +1,6 @@
 /**
  * Admin Control Center Logic for Sarkari Hith
- * Coordinates live scraping, MongoDB Atlas telemetry, and system maintenance.
+ * Coordinates live scraping, cryptographic tokenization, token rotation, and MongoDB Atlas telemetry.
  */
 
 import {
@@ -8,53 +8,25 @@ import {
   fetchMongoStatus,
   verifyAdminKey,
   fetchPostingDetails,
-  triggerDailyReminders
+  triggerDailyReminders,
+  fetchAuthStatus,
+  registerAdmin,
+  loginAdmin,
+  rotateAdminToken,
+  revokeAllAdminSessions,
+  verifySessionToken
 } from './api.js';
 
-// DOM Elements
-const loginView = document.getElementById('admin-login-view');
-const dashboardView = document.getElementById('admin-dashboard-view');
-const loginForm = document.getElementById('admin-login-form');
-const keyInput = document.getElementById('admin-key-input');
-const rememberCheckbox = document.getElementById('admin-remember-session');
-const toggleKeyBtn = document.getElementById('btn-toggle-login-key');
-const loginErrorBanner = document.getElementById('admin-login-error');
-const logoutBtn = document.getElementById('btn-admin-logout');
-
-// Scraper Elements
-const btnTriggerScrape = document.getElementById('btn-trigger-scrape');
-const scraperStatusBadge = document.getElementById('scraper-status-badge');
-const scraperProgressContainer = document.getElementById('scraper-progress-container');
-const scraperProgressText = document.getElementById('scraper-progress-text');
-const scraperTimer = document.getElementById('scraper-timer');
-const terminalLogs = document.getElementById('admin-terminal-logs');
-const btnClearLogs = document.getElementById('btn-clear-logs');
-const lastRunBox = document.getElementById('admin-last-run-box');
-const lastRunDetails = document.getElementById('admin-last-run-details');
-
-// Telemetry Elements
-const statJobs = document.getElementById('stat-count-jobs');
-const statResults = document.getElementById('stat-count-results');
-const statAdmit = document.getElementById('stat-count-admit');
-const statSubscribers = document.getElementById('stat-count-subscribers');
-const statTracked = document.getElementById('stat-count-tracked');
-const dbHealthStatus = document.getElementById('db-health-status');
-const dbHealthPing = document.getElementById('db-health-ping');
-const dbHealthName = document.getElementById('db-health-name');
-const dbStatusText = document.getElementById('admin-db-status-text');
-const btnRefreshTelemetry = document.getElementById('btn-refresh-telemetry');
-
-// Utility Elements
-const inspectorForm = document.getElementById('admin-inspector-form');
-const inspectorUrlInput = document.getElementById('inspector-url-input');
-const inspectorResultBox = document.getElementById('inspector-result-box');
-const btnManualReminders = document.getElementById('btn-manual-reminders');
-
+// State
+let activeToken = '';
 let activeAdminKey = '';
+let sessionData = null;
+let countdownInterval = null;
 let scrapeTimerInterval = null;
 
 // Terminal Log Helper
 function logTerminal(message, type = 'info') {
+  const terminalLogs = document.getElementById('admin-terminal-logs');
   if (!terminalLogs) return;
   const time = new Date().toLocaleTimeString();
   const entry = document.createElement('div');
@@ -95,74 +67,312 @@ function showToast(message, type = 'info') {
   }, 3500);
 }
 
-// Authentication Handlers
-async function authenticate(key, remember = true) {
-  const errBanner = document.getElementById('admin-login-error');
-  const verifyBtn = document.getElementById('btn-unlock-admin');
+// Update Active Session UI Card
+function updateSessionCard(token, session) {
+  const tokenSnippet = document.getElementById('session-token-snippet');
+  const genBadge = document.getElementById('session-gen-badge');
+  const adminUser = document.getElementById('session-admin-user');
+  const countdownEl = document.getElementById('session-expires-countdown');
+
+  if (tokenSnippet) {
+    tokenSnippet.textContent = token ? `${token.substring(0, 22)}...${token.slice(-10)}` : '--';
+    tokenSnippet.title = token || '';
+  }
+
+  const rot = session?.rotationCount ?? session?.rot ?? 0;
+  if (genBadge) {
+    genBadge.textContent = `GEN #${rot}`;
+  }
+
+  if (adminUser) {
+    adminUser.textContent = session?.username || session?.admin?.username || 'Superadmin';
+  }
+
+  // Start live expiration countdown
+  clearInterval(countdownInterval);
+  const expiresAt = session?.expiresAt || (Date.now() + 12 * 3600 * 1000);
+  function tickCountdown() {
+    if (!countdownEl) return;
+    const diff = expiresAt - Date.now();
+    if (diff <= 0) {
+      countdownEl.textContent = 'Expired';
+      countdownEl.style.color = '#ef4444';
+      clearInterval(countdownInterval);
+      return;
+    }
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+    countdownEl.textContent = `${hours}h ${mins}m ${secs}s`;
+    countdownEl.style.color = diff < 15 * 60 * 1000 ? '#f59e0b' : '#34d399';
+  }
+  tickCountdown();
+  countdownInterval = setInterval(tickCountdown, 1000);
+}
+
+// Unlock Dashboard
+function unlockDashboard(token, session, remember = true) {
+  activeToken = token;
+  sessionData = session;
+
+  if (remember) {
+    localStorage.setItem('sarkari_admin_token', token);
+    localStorage.setItem('sarkari_admin_session', JSON.stringify(session));
+  } else {
+    sessionStorage.setItem('sarkari_admin_token', token);
+    sessionStorage.setItem('sarkari_admin_session', JSON.stringify(session));
+  }
+
   const loginSection = document.getElementById('admin-login-view');
   const dashboardSection = document.getElementById('admin-dashboard-view');
   const logoutBtnEl = document.getElementById('btn-admin-logout');
 
-  try {
-    if (errBanner) {
-      errBanner.style.display = 'none';
-      errBanner.textContent = '';
-    }
-    if (verifyBtn) {
-      verifyBtn.setAttribute('disabled', 'true');
-      verifyBtn.innerHTML = '<span>Verifying key...</span>';
-    }
+  if (loginSection) loginSection.style.display = 'none';
+  if (dashboardSection) dashboardSection.style.display = 'block';
+  if (logoutBtnEl) logoutBtnEl.style.display = 'inline-flex';
 
-    console.log('[Admin Auth] Verifying admin authorization...');
-    await verifyAdminKey(key);
-
-    activeAdminKey = key;
-    if (remember) {
-      localStorage.setItem('sarkari_admin_key', key);
-    } else {
-      sessionStorage.setItem('sarkari_admin_key', key);
-    }
-
-    if (loginSection) loginSection.style.display = 'none';
-    if (dashboardSection) dashboardSection.style.display = 'block';
-    if (logoutBtnEl) logoutBtnEl.style.display = 'inline-flex';
-
-    showToast('Admin access granted', 'success');
-    logTerminal('Administrator authenticated successfully.', 'success');
-    loadTelemetry();
-  } catch (err) {
-    console.error('[Admin Auth] Error:', err);
-    if (errBanner) {
-      errBanner.textContent = err.message || 'Invalid Admin Key. Please verify your credentials.';
-      errBanner.style.display = 'block';
-    }
-    showToast(err.message || 'Authentication failed', 'error');
-  } finally {
-    if (verifyBtn) {
-      verifyBtn.removeAttribute('disabled');
-      verifyBtn.innerHTML = '<span>Unlock Admin Panel</span>';
-    }
-  }
+  updateSessionCard(token, session);
+  showToast('Admin session token active', 'success');
+  logTerminal(`Authenticated with cryptographic token (Gen #${session?.rotationCount || 0}).`, 'success');
+  loadTelemetry();
 }
 
 function logout() {
+  activeToken = '';
   activeAdminKey = '';
+  sessionData = null;
+  clearInterval(countdownInterval);
+
+  localStorage.removeItem('sarkari_admin_token');
+  localStorage.removeItem('sarkari_admin_session');
   localStorage.removeItem('sarkari_admin_key');
+  sessionStorage.removeItem('sarkari_admin_token');
+  sessionStorage.removeItem('sarkari_admin_session');
   sessionStorage.removeItem('sarkari_admin_key');
+
   const loginSection = document.getElementById('admin-login-view');
   const dashboardSection = document.getElementById('admin-dashboard-view');
   const logoutBtnEl = document.getElementById('btn-admin-logout');
   const keyField = document.getElementById('admin-key-input');
+  const userField = document.getElementById('admin-login-username');
+
   if (dashboardSection) dashboardSection.style.display = 'none';
   if (loginSection) loginSection.style.display = 'block';
   if (logoutBtnEl) logoutBtnEl.style.display = 'none';
   if (keyField) keyField.value = '';
+  if (userField) userField.value = '';
+
+  checkAuthStatus();
+}
+
+// Check initial registration status
+async function checkAuthStatus() {
+  try {
+    const res = await fetchAuthStatus();
+    const tabRegister = document.getElementById('tab-btn-register');
+    const tabLogin = document.getElementById('tab-btn-login');
+    const formLogin = document.getElementById('admin-login-form');
+    const formRegister = document.getElementById('admin-register-form');
+    const subtitle = document.getElementById('auth-card-subtitle');
+
+    if (!res.isRegistered) {
+      if (subtitle) subtitle.textContent = 'No admin registered yet. Please initialize your administrative account in MongoDB Atlas.';
+      if (tabRegister) {
+        tabRegister.classList.add('is-active');
+        tabLogin?.classList.remove('is-active');
+      }
+      if (formRegister) formRegister.style.display = 'block';
+      if (formLogin) formLogin.style.display = 'none';
+    }
+  } catch (err) {
+    console.debug('[Auth Status]:', err.message);
+  }
+}
+
+// Authentication Handlers
+async function handleLogin(e) {
+  if (e) e.preventDefault();
+  const usernameField = document.getElementById('admin-login-username');
+  const keyField = document.getElementById('admin-key-input');
+  const remField = document.getElementById('admin-remember-session');
+  const errBanner = document.getElementById('admin-login-error');
+  const unlockBtn = document.getElementById('btn-unlock-admin');
+
+  const username = (usernameField?.value || '').trim();
+  const password = (keyField?.value || '').trim();
+  const remember = remField ? remField.checked : true;
+
+  if (!username) {
+    if (errBanner) {
+      errBanner.textContent = 'Please enter your Admin Username or Master Key';
+      errBanner.style.display = 'block';
+    }
+    usernameField?.focus();
+    return;
+  }
+
+  try {
+    if (errBanner) errBanner.style.display = 'none';
+    if (unlockBtn) {
+      unlockBtn.setAttribute('disabled', 'true');
+      unlockBtn.innerHTML = '<span>Issuing secure token...</span>';
+    }
+
+    let result;
+    // If only master key or username provided with no password, test as Master API Key
+    if (!password || username.length > 24) {
+      try {
+        result = await loginAdmin({ apiKey: password || username });
+      } catch (keyErr) {
+        if (password) {
+          result = await loginAdmin({ username, password });
+        } else {
+          throw keyErr;
+        }
+      }
+    } else {
+      result = await loginAdmin({ username, password });
+    }
+
+    unlockDashboard(result.token, result, remember);
+  } catch (err) {
+    console.error('[Login Error]:', err);
+    if (errBanner) {
+      errBanner.textContent = err.message || 'Authentication failed. Please check your credentials.';
+      errBanner.style.display = 'block';
+    }
+    showToast(err.message || 'Login failed', 'error');
+  } finally {
+    if (unlockBtn) {
+      unlockBtn.removeAttribute('disabled');
+      unlockBtn.innerHTML = '<span>🚀 Generate Secure Session Token</span>';
+    }
+  }
+}
+
+async function handleRegister(e) {
+  if (e) e.preventDefault();
+  const userField = document.getElementById('admin-reg-username');
+  const passField = document.getElementById('admin-reg-password');
+  const keyField = document.getElementById('admin-reg-masterkey');
+  const errBanner = document.getElementById('admin-login-error');
+  const regBtn = document.getElementById('btn-register-admin');
+
+  const username = (userField?.value || '').trim();
+  const password = (passField?.value || '').trim();
+  const masterKey = (keyField?.value || '').trim();
+
+  if (!username || username.length < 3) {
+    showToast('Username must be at least 3 characters', 'error');
+    userField?.focus();
+    return;
+  }
+  if (!password || password.length < 8) {
+    showToast('Password must be at least 8 characters', 'error');
+    passField?.focus();
+    return;
+  }
+
+  try {
+    if (errBanner) errBanner.style.display = 'none';
+    if (regBtn) {
+      regBtn.setAttribute('disabled', 'true');
+      regBtn.innerHTML = '<span>Registering in MongoDB Atlas...</span>';
+    }
+
+    const result = await registerAdmin({ username, password, masterKey });
+    showToast('Admin account registered! Session token created.', 'success');
+    unlockDashboard(result.token, result, true);
+  } catch (err) {
+    console.error('[Registration Error]:', err);
+    if (errBanner) {
+      errBanner.textContent = err.message || 'Registration failed';
+      errBanner.style.display = 'block';
+    }
+    showToast(err.message || 'Registration failed', 'error');
+  } finally {
+    if (regBtn) {
+      regBtn.removeAttribute('disabled');
+      regBtn.innerHTML = '<span>✨ Register & Initialize Token</span>';
+    }
+  }
+}
+
+// Token Rotation Handler
+async function handleTokenRotation() {
+  const rotateBtn = document.getElementById('btn-rotate-token');
+  if (!activeToken) {
+    showToast('No active session token to rotate', 'error');
+    return;
+  }
+
+  try {
+    if (rotateBtn) {
+      rotateBtn.setAttribute('disabled', 'true');
+      rotateBtn.innerHTML = '<span>Rotating cryptographic token...</span>';
+    }
+
+    logTerminal('Initiating token rotation with cloud database session store...', 'info');
+    const result = await rotateAdminToken(activeToken);
+
+    activeToken = result.token;
+    sessionData = { ...sessionData, ...result };
+
+    localStorage.setItem('sarkari_admin_token', activeToken);
+    updateSessionCard(activeToken, sessionData);
+
+    logTerminal(`Token rotated successfully! Active Generation #${result.rotationCount}. Old token invalidated.`, 'success');
+    showToast(`Token Rotated! Generation #${result.rotationCount} active.`, 'success');
+  } catch (err) {
+    console.error('[Rotation Error]:', err);
+    logTerminal(`Token rotation failed: ${err.message}`, 'error');
+    showToast(`Token rotation failed: ${err.message}`, 'error');
+  } finally {
+    if (rotateBtn) {
+      rotateBtn.removeAttribute('disabled');
+      rotateBtn.innerHTML = '<span>🔄 Rotate Token (New Generation)</span>';
+    }
+  }
+}
+
+// Emergency Session Revocation
+async function handleRevokeAll() {
+  const confirmed = confirm('WARNING: This will immediately revoke ALL active admin session tokens in MongoDB Atlas across every device. Continue?');
+  if (!confirmed) return;
+
+  try {
+    logTerminal('Emergency revocation triggered: Revoking all active tokens...', 'warn');
+    await revokeAllAdminSessions();
+    showToast('All active sessions revoked', 'info');
+    logout();
+  } catch (err) {
+    showToast(`Revocation failed: ${err.message}`, 'error');
+  }
+}
+
+// Copy Token Helper
+function copyTokenToClipboard() {
+  if (!activeToken) return;
+  navigator.clipboard.writeText(activeToken).then(() => {
+    showToast('Full token copied to clipboard!', 'info');
+  }).catch(() => {
+    showToast('Could not copy to clipboard', 'error');
+  });
 }
 
 // Telemetry & Stats Loader
 async function loadTelemetry() {
   try {
     const status = await fetchMongoStatus();
+    const statJobs = document.getElementById('stat-count-jobs');
+    const statResults = document.getElementById('stat-count-results');
+    const statAdmit = document.getElementById('stat-count-admit');
+    const statSubscribers = document.getElementById('stat-count-subscribers');
+    const statTracked = document.getElementById('stat-count-tracked');
+    const dbHealthStatus = document.getElementById('db-health-status');
+    const dbHealthPing = document.getElementById('db-health-ping');
+    const dbHealthName = document.getElementById('db-health-name');
+    const dbStatusText = document.getElementById('admin-db-status-text');
 
     if (status && (status.connected || status.enabled)) {
       if (dbHealthStatus) dbHealthStatus.textContent = 'Connected (Live)';
@@ -190,18 +400,22 @@ async function loadTelemetry() {
 
 // Live Scraper Runner
 async function runScraper() {
-  if (!activeAdminKey) {
-    showToast('Admin key missing. Please log in again.', 'error');
-    logout();
-    return;
-  }
+  const btnTriggerScrape = document.getElementById('btn-trigger-scrape');
+  const scraperStatusBadge = document.getElementById('scraper-status-badge');
+  const scraperProgressContainer = document.getElementById('scraper-progress-container');
+  const scraperProgressText = document.getElementById('scraper-progress-text');
+  const scraperTimer = document.getElementById('scraper-timer');
+  const lastRunBox = document.getElementById('admin-last-run-box');
+  const lastRunDetails = document.getElementById('admin-last-run-details');
 
   btnTriggerScrape.setAttribute('disabled', 'true');
   btnTriggerScrape.innerHTML = '<span>⏳ Scraper Pipeline Running...</span>';
-  scraperStatusBadge.textContent = 'RUNNING';
-  scraperStatusBadge.style.background = 'rgba(245, 158, 11, 0.15)';
-  scraperStatusBadge.style.color = '#fbbf24';
-  scraperStatusBadge.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+  if (scraperStatusBadge) {
+    scraperStatusBadge.textContent = 'RUNNING';
+    scraperStatusBadge.style.background = 'rgba(245, 158, 11, 0.15)';
+    scraperStatusBadge.style.color = '#fbbf24';
+    scraperStatusBadge.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+  }
 
   if (scraperProgressContainer) scraperProgressContainer.style.display = 'block';
 
@@ -215,7 +429,6 @@ async function runScraper() {
     if (scraperTimer) scraperTimer.textContent = `${m}:${s}`;
   }, 1000);
 
-  // Rotating log steps
   const simulationSteps = [
     'Initiating SarkariResult crawler (homepage, latest jobs, results, admit cards, UPSC)...',
     'Extracting posting links and deduplicating recruitment listings...',
@@ -238,15 +451,17 @@ async function runScraper() {
   }, 2600);
 
   try {
-    const result = await triggerLiveScrape(activeAdminKey);
+    const result = await triggerLiveScrape(activeToken || activeAdminKey);
     clearInterval(logInterval);
     clearInterval(scrapeTimerInterval);
 
     if (scraperProgressContainer) scraperProgressContainer.style.display = 'none';
-    scraperStatusBadge.textContent = 'SUCCESS';
-    scraperStatusBadge.style.background = 'rgba(16, 185, 129, 0.15)';
-    scraperStatusBadge.style.color = '#34d399';
-    scraperStatusBadge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+    if (scraperStatusBadge) {
+      scraperStatusBadge.textContent = 'SUCCESS';
+      scraperStatusBadge.style.background = 'rgba(16, 185, 129, 0.15)';
+      scraperStatusBadge.style.color = '#34d399';
+      scraperStatusBadge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+    }
 
     const summary = result.summary || {};
     const cat = summary.categorySummary || {};
@@ -272,10 +487,12 @@ async function runScraper() {
     clearInterval(scrapeTimerInterval);
 
     if (scraperProgressContainer) scraperProgressContainer.style.display = 'none';
-    scraperStatusBadge.textContent = 'FAILED';
-    scraperStatusBadge.style.background = 'rgba(239, 68, 68, 0.15)';
-    scraperStatusBadge.style.color = '#f87171';
-    scraperStatusBadge.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+    if (scraperStatusBadge) {
+      scraperStatusBadge.textContent = 'FAILED';
+      scraperStatusBadge.style.background = 'rgba(239, 68, 68, 0.15)';
+      scraperStatusBadge.style.color = '#f87171';
+      scraperStatusBadge.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+    }
 
     logTerminal(`Scraper pipeline error: ${err.message}`, 'error');
     showToast(`Scraper error: ${err.message}`, 'error');
@@ -288,7 +505,8 @@ async function runScraper() {
 // Single Posting Inspector Handler
 async function inspectUrl(e) {
   e.preventDefault();
-  const url = (inspectorUrlInput?.value || '').trim();
+  const url = (document.getElementById('inspector-url-input')?.value || '').trim();
+  const inspectorResultBox = document.getElementById('inspector-result-box');
   if (!url) return;
 
   if (inspectorResultBox) {
@@ -311,8 +529,11 @@ async function inspectUrl(e) {
 
 // Manual Daily Reminders Trigger
 async function triggerReminders() {
-  btnManualReminders.setAttribute('disabled', 'true');
-  btnManualReminders.textContent = 'Dispatching reminders...';
+  const btnManualReminders = document.getElementById('btn-manual-reminders');
+  if (btnManualReminders) {
+    btnManualReminders.setAttribute('disabled', 'true');
+    btnManualReminders.textContent = 'Dispatching reminders...';
+  }
   logTerminal('Triggering manual daily reminder engine for tracked candidates...', 'info');
 
   try {
@@ -323,43 +544,52 @@ async function triggerReminders() {
     logTerminal(`Reminder engine error: ${err.message}`, 'error');
     showToast(`Failed to dispatch reminders: ${err.message}`, 'error');
   } finally {
-    btnManualReminders.removeAttribute('disabled');
-    btnManualReminders.textContent = '📬 Dispatch Daily Reminders Now';
-  }
-}
-
-// Login Handler
-function handleLoginSubmit(e) {
-  if (e) e.preventDefault();
-  const keyField = document.getElementById('admin-key-input');
-  const remField = document.getElementById('admin-remember-session');
-  const errBanner = document.getElementById('admin-login-error');
-  const key = (keyField?.value || '').trim();
-  const remember = remField ? remField.checked : true;
-
-  if (!key) {
-    if (errBanner) {
-      errBanner.textContent = 'Please enter your Admin Authorization Key';
-      errBanner.style.display = 'block';
+    if (btnManualReminders) {
+      btnManualReminders.removeAttribute('disabled');
+      btnManualReminders.textContent = '📬 Dispatch Daily Reminders Now';
     }
-    showToast('Please enter your Admin Authorization Key', 'error');
-    keyField?.focus();
-    return;
   }
-
-  authenticate(key, remember);
 }
 
 // Initializer
 function initAdmin() {
-  console.log('[Admin Panel] Initializing admin controller...');
+  console.log('[Admin Panel] Initializing tokenized control center...');
 
-  // Auto-fill or auto-login with stored session
-  const storedKey = localStorage.getItem('sarkari_admin_key') || sessionStorage.getItem('sarkari_admin_key');
-  const keyField = document.getElementById('admin-key-input');
-  if (storedKey && keyField) {
-    keyField.value = storedKey;
-    authenticate(storedKey, Boolean(localStorage.getItem('sarkari_admin_key')));
+  // Tab Switchers
+  const tabLogin = document.getElementById('tab-btn-login');
+  const tabRegister = document.getElementById('tab-btn-register');
+  const formLogin = document.getElementById('admin-login-form');
+  const formRegister = document.getElementById('admin-register-form');
+
+  tabLogin?.addEventListener('click', () => {
+    tabLogin.classList.add('is-active');
+    tabRegister?.classList.remove('is-active');
+    if (formLogin) formLogin.style.display = 'block';
+    if (formRegister) formRegister.style.display = 'none';
+  });
+
+  tabRegister?.addEventListener('click', () => {
+    tabRegister.classList.add('is-active');
+    tabLogin?.classList.remove('is-active');
+    if (formRegister) formRegister.style.display = 'block';
+    if (formLogin) formLogin.style.display = 'none';
+  });
+
+  // Check stored token session
+  const storedToken = localStorage.getItem('sarkari_admin_token') || sessionStorage.getItem('sarkari_admin_token');
+  const storedSessionStr = localStorage.getItem('sarkari_admin_session') || sessionStorage.getItem('sarkari_admin_session');
+  if (storedToken) {
+    let session = null;
+    try { session = JSON.parse(storedSessionStr || '{}'); } catch {}
+    verifySessionToken(storedToken)
+      .then(res => {
+        unlockDashboard(storedToken, res.session || session, Boolean(localStorage.getItem('sarkari_admin_token')));
+      })
+      .catch(() => {
+        logout();
+      });
+  } else {
+    checkAuthStatus();
   }
 
   // Toggle Password Visibility
@@ -377,31 +607,26 @@ function initAdmin() {
   });
 
   // Login Form Submission
-  const formEl = document.getElementById('admin-login-form');
-  formEl?.addEventListener('submit', handleLoginSubmit);
+  formLogin?.addEventListener('submit', handleLogin);
+  document.getElementById('btn-unlock-admin')?.addEventListener('click', handleLogin);
 
-  // Direct Button Click
-  const unlockBtn = document.getElementById('btn-unlock-admin');
-  unlockBtn?.addEventListener('click', handleLoginSubmit);
+  // Register Form Submission
+  formRegister?.addEventListener('submit', handleRegister);
+  document.getElementById('btn-register-admin')?.addEventListener('click', handleRegister);
 
-  // Enter Key on Password Field
-  keyField?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      handleLoginSubmit(e);
-    }
-  });
+  // Token Management
+  document.getElementById('btn-rotate-token')?.addEventListener('click', handleTokenRotation);
+  document.getElementById('btn-revoke-all-sessions')?.addEventListener('click', handleRevokeAll);
+  document.getElementById('btn-copy-token')?.addEventListener('click', copyTokenToClipboard);
 
   // Logout
-  const logoutBtnEl = document.getElementById('btn-admin-logout');
-  logoutBtnEl?.addEventListener('click', logout);
+  document.getElementById('btn-admin-logout')?.addEventListener('click', logout);
 
   // Scraper Trigger
-  const triggerScrapeBtn = document.getElementById('btn-trigger-scrape');
-  triggerScrapeBtn?.addEventListener('click', runScraper);
+  document.getElementById('btn-trigger-scrape')?.addEventListener('click', runScraper);
 
   // Clear Logs
-  const clearLogsBtn = document.getElementById('btn-clear-logs');
-  clearLogsBtn?.addEventListener('click', () => {
+  document.getElementById('btn-clear-logs')?.addEventListener('click', () => {
     const termLogs = document.getElementById('admin-terminal-logs');
     if (termLogs) {
       termLogs.innerHTML = `
@@ -414,19 +639,16 @@ function initAdmin() {
   });
 
   // Refresh Telemetry
-  const refreshTelBtn = document.getElementById('btn-refresh-telemetry');
-  refreshTelBtn?.addEventListener('click', () => {
+  document.getElementById('btn-refresh-telemetry')?.addEventListener('click', () => {
     loadTelemetry();
     showToast('Database telemetry refreshed', 'info');
   });
 
   // Inspector Form
-  const inspForm = document.getElementById('admin-inspector-form');
-  inspForm?.addEventListener('submit', inspectUrl);
+  document.getElementById('admin-inspector-form')?.addEventListener('submit', inspectUrl);
 
   // Manual Reminders
-  const manRemindersBtn = document.getElementById('btn-manual-reminders');
-  manRemindersBtn?.addEventListener('click', triggerReminders);
+  document.getElementById('btn-manual-reminders')?.addEventListener('click', triggerReminders);
 }
 
 // Guarantee execution whether script runs before or after DOM readiness

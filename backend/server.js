@@ -56,6 +56,16 @@ const {
   getSentJobHistory
 } = require("./src/services/notificationService");
 
+const {
+  isAdminRegistered,
+  registerAdmin,
+  loginWithCredentials,
+  loginWithMasterKey,
+  validateSessionToken,
+  rotateToken,
+  revokeAllSessions
+} = require("./src/services/authService");
+
 let isScrapingInProgress = false;
 const detailsCache = new Map();
 
@@ -96,11 +106,23 @@ function isRateLimited(ip, maxRequests = 10, windowMs = 60000) {
   return entry.count > maxRequests;
 }
 
-// Authenticates administrative requests using ADMIN_API_KEY (Fail-Closed)
-function isAdminAuthorized(request, url) {
+// Authenticates administrative requests using Tokenization with ADMIN_API_KEY fallback
+async function isAdminAuthorized(request, url) {
+  const authHeader = request.headers["authorization"] || "";
+  const token = authHeader.replace(/^Bearer\s+/i, "").trim() || url.searchParams.get("token");
+
+  if (token) {
+    const validation = await validateSessionToken(token);
+    if (validation.valid) {
+      request.adminSession = validation;
+      return true;
+    }
+  }
+
+  // Master key fallback (for bootstrap / direct pipeline calls)
   const adminKey = process.env.ADMIN_API_KEY;
   if (!adminKey || !adminKey.trim()) return false;
-  const headerKey = request.headers["x-admin-key"] || request.headers["authorization"]?.replace(/^Bearer\s+/i, "");
+  const headerKey = request.headers["x-admin-key"] || authHeader;
   const queryKey = url.searchParams.get("adminKey");
   return (headerKey && headerKey === adminKey) || (queryKey && queryKey === adminKey);
 }
@@ -196,11 +218,11 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // Trigger live scraping of all data on demand (Admin Protected)
+  // Trigger live scraping of all data on demand (Admin Protected with Tokenization)
   if (url.pathname === "/api/scrape") {
-    if (!isAdminAuthorized(request, url)) {
+    if (!(await isAdminAuthorized(request, url))) {
       response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: "401 Unauthorized: Admin API key required" }));
+      response.end(JSON.stringify({ success: false, error: "401 Unauthorized: Valid Admin token or key required" }));
       return;
     }
 
@@ -225,15 +247,125 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // Admin Key Verification Endpoint
-  if (url.pathname === "/api/admin/verify") {
-    if (!isAdminAuthorized(request, url)) {
+  // --- Admin Registration, Tokenization & Rotation Endpoints ---
+
+  // 1. Check Registration Status (Open vs Registered)
+  if (url.pathname === "/api/auth/status" && request.method === "GET") {
+    try {
+      const isRegistered = await isAdminRegistered();
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({
+        success: true,
+        isRegistered,
+        hasMasterKey: Boolean(process.env.ADMIN_API_KEY)
+      }));
+    } catch (err) {
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 2. Register Admin Account
+  if (url.pathname === "/api/auth/register" && request.method === "POST") {
+    try {
+      const body = await parseBody(request);
+      const result = await registerAdmin(body.username, body.password, body.masterKey);
+      response.writeHead(201, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify(result));
+    } catch (err) {
+      response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 3. Login & Issue Signed Cryptographic Session Token
+  if (url.pathname === "/api/auth/login" && request.method === "POST") {
+    const clientMeta = {
+      ip: request.headers["x-forwarded-for"]?.split(",")[0].trim() || request.socket.remoteAddress || "unknown",
+      userAgent: request.headers["user-agent"] || "unknown"
+    };
+
+    try {
+      const body = await parseBody(request);
+      let result;
+      if (body.apiKey) {
+        result = await loginWithMasterKey(body.apiKey, clientMeta);
+      } else if (body.username && body.password) {
+        result = await loginWithCredentials(body.username, body.password, clientMeta);
+      } else {
+        throw new Error("Credentials or Master Key required");
+      }
+
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify(result));
+    } catch (err) {
       response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: "Invalid Admin Authorization Key" }));
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 4. Token Rotation (Revokes old token, issues new generation)
+  if (url.pathname === "/api/auth/rotate" && request.method === "POST") {
+    const authHeader = request.headers["authorization"] || "";
+    let token = authHeader.replace(/^Bearer\s+/i, "").trim();
+
+    try {
+      if (!token) {
+        const body = await parseBody(request);
+        token = body.token;
+      }
+      if (!token) throw new Error("Active session token required for rotation");
+
+      const clientMeta = {
+        ip: request.headers["x-forwarded-for"]?.split(",")[0].trim() || request.socket.remoteAddress || "unknown",
+        userAgent: request.headers["user-agent"] || "unknown"
+      };
+
+      const result = await rotateToken(token, clientMeta);
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify(result));
+    } catch (err) {
+      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 5. Emergency Revocation of All Sessions
+  if (url.pathname === "/api/auth/revoke-all" && request.method === "POST") {
+    if (!(await isAdminAuthorized(request, url))) {
+      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: "401 Unauthorized" }));
+      return;
+    }
+
+    try {
+      const result = await revokeAllSessions();
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify(result));
+    } catch (err) {
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 6. Verify Current Token Session & Lifetime
+  if (url.pathname === "/api/auth/verify" || url.pathname === "/api/admin/verify") {
+    if (!(await isAdminAuthorized(request, url))) {
+      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: "Invalid Admin Authorization Key or Token" }));
       return;
     }
     response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-    response.end(JSON.stringify({ success: true, message: "Admin authorization verified" }));
+    response.end(JSON.stringify({
+      success: true,
+      message: "Admin authorization verified",
+      session: request.adminSession || null
+    }));
     return;
   }
 

@@ -52,29 +52,71 @@
     <!-- 1. Authentication Gate Screen (Shown if not authenticated) -->
     <section id="admin-login-view" class="admin-auth-card">
       <div class="admin-auth-icon">🔒</div>
-      <h2 class="admin-auth-title">Admin Access Required</h2>
-      <p class="admin-auth-subtitle">
-        Enter your <code>ADMIN_API_KEY</code> to access the live scraper pipeline, database telemetry, and notification engine.
+      <h2 id="auth-card-title" class="admin-auth-title">Admin Security Console</h2>
+      <p id="auth-card-subtitle" class="admin-auth-subtitle">
+        Cryptographic token-based session management and MongoDB Atlas control.
       </p>
 
-      <div id="admin-login-error" class="admin-auth-banner is-error" style="display: none;"></div>
+      <!-- Auth Mode Tabs -->
+      <div class="admin-auth-tabs">
+        <button type="button" id="tab-btn-login" class="admin-auth-tab is-active">
+          🔑 Secure Login
+        </button>
+        <button type="button" id="tab-btn-register" class="admin-auth-tab">
+          📝 Register Admin
+        </button>
+      </div>
 
+      <div id="admin-login-error" class="admin-auth-banner is-error" style="display: none;"></div>
+      <div id="admin-login-success" class="admin-auth-banner" style="display: none; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.28); color: #34d399;"></div>
+
+      <!-- Tab Content: Login Form -->
       <form id="admin-login-form">
         <div class="admin-input-group">
-          <label for="admin-key-input">Admin Authorization Key</label>
-          <input type="password" id="admin-key-input" class="admin-input-control" placeholder="Enter ADMIN_API_KEY" required autocomplete="current-password">
+          <label for="admin-login-username">Admin Username (or Master Key)</label>
+          <input type="text" id="admin-login-username" class="admin-input-control" placeholder="admin or ADMIN_API_KEY" required autocomplete="username">
+        </div>
+
+        <div id="login-password-group" class="admin-input-group">
+          <label for="admin-key-input">Password (leave blank if entering Master Key above)</label>
+          <input type="password" id="admin-key-input" class="admin-input-control" placeholder="Enter password" autocomplete="current-password">
           <button type="button" id="btn-toggle-login-key" class="admin-toggle-pwd" title="Toggle visibility">👁️</button>
         </div>
 
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem; text-align: left;">
           <input type="checkbox" id="admin-remember-session" checked style="cursor: pointer;">
           <label for="admin-remember-session" style="font-size: 0.82rem; color: #94a3b8; cursor: pointer; margin: 0;">
-            Remember credentials on this browser
+            Remember session on this device
           </label>
         </div>
 
         <button type="submit" id="btn-unlock-admin" class="admin-btn admin-btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem;">
-          <span>Unlock Admin Panel</span>
+          <span>🚀 Generate Secure Session Token</span>
+        </button>
+      </form>
+
+      <!-- Tab Content: Registration Form -->
+      <form id="admin-register-form" style="display: none;">
+        <div class="admin-input-group">
+          <label for="admin-reg-username">Choose Admin Username</label>
+          <input type="text" id="admin-reg-username" class="admin-input-control" placeholder="e.g. admin" required minlength="3">
+        </div>
+
+        <div class="admin-input-group">
+          <label for="admin-reg-password">Choose Strong Password</label>
+          <input type="password" id="admin-reg-password" class="admin-input-control" placeholder="Min. 8 characters" required minlength="8">
+        </div>
+
+        <div class="admin-input-group">
+          <label for="admin-reg-masterkey">Master Authorization Key</label>
+          <input type="password" id="admin-reg-masterkey" class="admin-input-control" placeholder="Matches ADMIN_API_KEY">
+          <small style="display: block; margin-top: 4px; font-size: 0.72rem; color: #94a3b8;">
+            Required to register administrative accounts into MongoDB Atlas.
+          </small>
+        </div>
+
+        <button type="submit" id="btn-register-admin" class="admin-btn admin-btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+          <span>✨ Register & Initialize Token</span>
         </button>
       </form>
     </section>
@@ -199,6 +241,44 @@
 
         <!-- Right Column: Quick Diagnostics & Utilities -->
         <div>
+          <!-- Active Tokenization & Session Management -->
+          <div class="admin-panel-card">
+            <div class="admin-card-header">
+              <h3 class="admin-card-title">
+                <span>🔐</span>
+                <span>Security Token & Session</span>
+              </h3>
+              <span id="session-gen-badge" class="admin-brand-badge" style="background: rgba(99, 102, 241, 0.15); color: #818cf8; border-color: rgba(99, 102, 241, 0.3);">
+                GEN #0
+              </span>
+            </div>
+
+            <div style="font-size: 0.82rem; line-height: 1.8; color: #cbd5e1; margin-bottom: 1rem;">
+              <div><strong>Admin Identity:</strong> <span id="session-admin-user">Superadmin</span></div>
+              <div><strong>Expires In:</strong> <span id="session-expires-countdown" style="color: #34d399; font-weight: 600;">Active Session</span></div>
+              <div style="margin-top: 6px;">
+                <label style="display: block; font-size: 0.72rem; color: #94a3b8; margin-bottom: 2px;">Signed Cryptographic Token:</label>
+                <div style="display: flex; gap: 6px; align-items: center;">
+                  <code id="session-token-snippet" style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; font-size: 0.72rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; border: 1px solid rgba(255,255,255,0.08);">
+                    --
+                  </code>
+                  <button type="button" id="btn-copy-token" class="admin-btn admin-btn-secondary" style="padding: 4px 8px; font-size: 0.7rem;" title="Copy full token to clipboard">
+                    Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <button type="button" id="btn-rotate-token" class="admin-btn admin-btn-primary" style="justify-content: center; width: 100%; padding: 0.6rem; font-size: 0.8rem; background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);">
+                <span>🔄 Rotate Token (New Generation)</span>
+              </button>
+              <button type="button" id="btn-revoke-all-sessions" class="admin-btn admin-btn-secondary" style="justify-content: center; width: 100%; padding: 0.5rem; font-size: 0.76rem; color: #fca5a5; border-color: rgba(239, 68, 68, 0.25);">
+                <span>🚨 Revoke All Active Sessions</span>
+              </button>
+            </div>
+          </div>
+
           <!-- MongoDB Atlas Health -->
           <div class="admin-panel-card">
             <div class="admin-card-header">

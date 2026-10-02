@@ -16,10 +16,21 @@ const API_BASE_CANDIDATES = Array.from(new Set(candidates));
 let resolvedApiBase = null;
 
 async function fetchWithFallback(endpoint, options = {}) {
+  // Automatically inject stored cryptographic session token if available
+  const token = typeof window !== 'undefined'
+    ? (localStorage.getItem('sarkari_admin_token') || sessionStorage.getItem('sarkari_admin_token'))
+    : null;
+
+  const headers = { ...(options.headers || {}) };
+  if (token && !headers['Authorization'] && !headers['authorization']) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const finalOptions = { ...options, headers };
+
   // If we already know the working backend API base, try it first
   if (resolvedApiBase) {
     try {
-      const res = await fetch(`${resolvedApiBase}${endpoint}`, options);
+      const res = await fetch(`${resolvedApiBase}${endpoint}`, finalOptions);
       return res;
     } catch {
       resolvedApiBase = null;
@@ -33,7 +44,7 @@ async function fetchWithFallback(endpoint, options = {}) {
       const url = `${candidate}${endpoint}`;
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 4000);
-      const res = await fetch(url, { ...options, signal: controller.signal });
+      const res = await fetch(url, { ...finalOptions, signal: controller.signal });
       clearTimeout(timer);
       resolvedApiBase = candidate;
       return res;
@@ -262,3 +273,98 @@ export async function fetchPostingDetails(targetUrl) {
   }
   return result;
 }
+
+/**
+ * Checks whether an admin user is already registered in MongoDB Atlas
+ */
+export async function fetchAuthStatus() {
+  const response = await fetchWithFallback('/auth/status');
+  return await response.json();
+}
+
+/**
+ * Registers an admin account in MongoDB Atlas and returns an initial session token
+ */
+export async function registerAdmin(data) {
+  const response = await fetchWithFallback('/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Admin registration failed');
+  }
+  return result;
+}
+
+/**
+ * Logs in with credentials or Master Key and issues a signed session token
+ */
+export async function loginAdmin(credentials) {
+  const response = await fetchWithFallback('/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(credentials)
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Invalid credentials or master key');
+  }
+  return result;
+}
+
+/**
+ * Rotates the active session token (revokes current, generates new generation)
+ */
+export async function rotateAdminToken(token) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const response = await fetchWithFallback('/auth/rotate', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ token })
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Token rotation failed');
+  }
+  return result;
+}
+
+/**
+ * Emergency revocation of all active sessions
+ */
+export async function revokeAllAdminSessions() {
+  const response = await fetchWithFallback('/auth/revoke-all', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' }
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Revocation failed');
+  }
+  return result;
+}
+
+/**
+ * Verifies active token validity and remaining expiration time
+ */
+export async function verifySessionToken(token) {
+  const headers = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const response = await fetchWithFallback('/auth/verify', {
+    method: 'GET',
+    headers
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Session token invalid or expired');
+  }
+  return result;
+}
+
