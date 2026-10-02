@@ -51,37 +51,13 @@ export async function fetchHealth() {
 }
 
 export async function fetchAllData() {
-  try {
-    const response = await fetchWithFallback('/all');
-    return await response.json();
-  } catch (err) {
-    console.warn('Backend /api/all unreachable, falling back to local static dataset:', err.message);
-    // Offline / Standalone static fallback
-    const fallbackResponse = await fetch('./data/allData.json');
-    if (!fallbackResponse.ok) {
-      const rootFallback = await fetch('/data/allData.json');
-      if (!rootFallback.ok) throw new Error('Failed to load portal datasets from backend and offline fallback');
-      return await rootFallback.json();
-    }
-    return await fallbackResponse.json();
-  }
+  const response = await fetchWithFallback('/all');
+  return await response.json();
 }
 
 export async function fetchCategories() {
-  try {
-    const response = await fetchWithFallback('/categories');
-    return await response.json();
-  } catch (err) {
-    console.warn('Backend /api/categories unreachable, falling back to local static categories:', err.message);
-    // Offline / Standalone static fallback
-    const fallbackResponse = await fetch('./data/categories.json');
-    if (!fallbackResponse.ok) {
-      const rootFallback = await fetch('/data/categories.json');
-      if (!rootFallback.ok) throw new Error('Failed to load categories summary');
-      return await rootFallback.json();
-    }
-    return await fallbackResponse.json();
-  }
+  const response = await fetchWithFallback('/categories');
+  return await response.json();
 }
 
 export async function triggerLiveScrape() {
