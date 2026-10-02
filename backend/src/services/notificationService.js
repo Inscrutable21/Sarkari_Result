@@ -543,88 +543,235 @@ function buildJobAlertEmailHtml({ subscriber, jobs, isTest = false, isConfirmati
     : 'All Streams';
 
   const qualText = subscriber.qualification !== 'all' ? subscriber.qualification : 'Any Eligibility';
+  const cleanPortalUrl = escapeHtml(safeHttpUrl(portalUrl, 'https://www.sarkariresult.com'));
+  const candidateName = escapeHtml(subscriber.name || 'Job Aspirant');
 
   const jobsListHtml = jobs.map((job, idx) => {
-    const applyLink = job.link || portalUrl;
-    const lastDate = job.lastDateFormatted || job.lastDate || 'Check Notification';
-    const org = job.organization || 'Government of India';
-    const sectorBadge = job.sector || 'Central / State';
+    const applyLink = escapeHtml(safeHttpUrl(job.link, portalUrl));
+    const lastDate = escapeHtml(job.lastDateFormatted || job.lastDate || 'Check Notification');
+    const org = escapeHtml(job.organization || 'Government of India');
+    const sectorBadge = escapeHtml(job.sector || 'Central / State');
+    const jobTitle = escapeHtml(job.title || 'Government Recruitment Vacancy');
+    const jobQual = escapeHtml(job.qualification || 'Check official advertisement');
+    const vacancies = job.details?.totalVacancies ? escapeHtml(String(job.details.totalVacancies)) : null;
 
     return `
-      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-          <span style="display: inline-block; background: #fee2e2; color: #b91c1c; font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;">
-            ${org} &bull; ${sectorBadge}
-          </span>
-          <span style="display: inline-block; background: #fef3c7; color: #92400e; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px;">
-            Last Date: ${lastDate}
-          </span>
-        </div>
-        <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #0f172a; line-height: 1.35;">
-          ${idx + 1}. ${job.title}
-        </h3>
-        <p style="margin: 0 0 12px 0; font-size: 13px; color: #475569; line-height: 1.45;">
-          <strong>Eligibility:</strong> ${job.qualification || 'Check official advertisement'} 
-          ${job.details?.totalVacancies ? `&bull; <strong>Vacancies:</strong> ${job.details.totalVacancies}` : ''}
-        </p>
-        <div style="display: flex; gap: 10px; align-items: center;">
-          <a href="${applyLink}" style="display: inline-block; background: #b30000; color: #ffffff; text-decoration: none; font-size: 12px; font-weight: 700; padding: 7px 16px; border-radius: 5px;" target="_blank">
-            Apply Online / View Details &rarr;
-          </a>
-        </div>
-      </div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 16px; box-shadow: 0 2px 5px rgba(15, 23, 42, 0.04); overflow: hidden;">
+        <tr>
+          <td style="padding: 18px 20px;">
+            <!-- Badges Row -->
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 10px;">
+              <tr>
+                <td align="left" style="vertical-align: middle;">
+                  <span style="display: inline-block; background-color: #fee2e2; color: #991b1b; font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; letter-spacing: 0.5px; border: 1px solid #fecaca;">
+                    🏛️ ${org} &bull; ${sectorBadge}
+                  </span>
+                </td>
+                <td align="right" style="vertical-align: middle;">
+                  <span style="display: inline-block; background-color: #fef3c7; color: #92400e; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 4px; border: 1px solid #fde68a;">
+                    📅 Last Date: <strong>${lastDate}</strong>
+                  </span>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Job Title -->
+            <h3 style="margin: 0 0 10px 0; font-size: 16px; font-weight: 700; color: #0f172a; line-height: 1.4;">
+              <span style="color: #b30000; font-weight: 800;">${idx + 1}.</span> ${jobTitle}
+            </h3>
+
+            <!-- Details Chips / Summary -->
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border: 1px solid #edf2f7; border-radius: 6px; margin-bottom: 14px;">
+              <tr>
+                <td style="padding: 10px 14px; font-size: 13px; color: #475569; line-height: 1.5;">
+                  <span style="color: #64748b; font-weight: 600;">🎓 Eligibility:</span> <strong style="color: #1e293b;">${jobQual}</strong>
+                  ${vacancies ? `<span style="color: #cbd5e1; margin: 0 8px;">|</span><span style="color: #64748b; font-weight: 600;">👥 Vacancies:</span> <strong style="color: #047857; background-color: #ecfdf5; padding: 2px 6px; border-radius: 4px; border: 1px solid #a7f3d0;">${vacancies} Posts</strong>` : ''}
+                </td>
+              </tr>
+            </table>
+
+            <!-- Action Button -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="border-radius: 6px; background-color: #b30000;">
+                  <a href="${applyLink}" target="_blank" rel="noopener noreferrer" style="border: 1px solid #b30000; border-radius: 6px; display: inline-block; padding: 9px 20px; font-size: 13px; font-weight: 700; color: #ffffff; text-decoration: none; letter-spacing: 0.2px;">
+                    Apply Online / View Notification &rarr;
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
     `;
   }).join('');
 
-  return `
-<!DOCTYPE html>
-<html>
+  return `<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>sarkari hith Job Alert</title>
+  <title>Sarkari Hith Job Alert</title>
 </head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 20px; color: #1e293b;">
-  <div style="max-width: 640px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
-    
-    <!-- Header Banner -->
-    <div style="background: linear-gradient(135deg, #b30000 0%, #7f1d1d 100%); padding: 24px; text-align: center; color: #ffffff;">
-      <h1 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">sarkari hith &bull; JOB NOTIFICATIONS</h1>
-      <p style="margin: 6px 0 0; font-size: 13px; opacity: 0.9;">Tailored Recruitment Notifications Based on Your Qualifications</p>
-    </div>
+<body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; color: #1e293b;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f1f5f9; padding: 24px 8px;">
+    <tr>
+      <td align="center">
+        <!-- Main Email Container (620px max) -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 620px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08); border: 1px solid #e2e8f0;">
+          
+          <!-- Indian Tricolor Accent Top Bar -->
+          <tr>
+            <td style="line-height: 0; font-size: 0; padding: 0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="height: 4px;">
+                <tr>
+                  <td width="33%" style="background-color: #ff9933; height: 4px;"></td>
+                  <td width="34%" style="background-color: #ffffff; height: 4px;"></td>
+                  <td width="33%" style="background-color: #138808; height: 4px;"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-    <!-- Alert Summary Bar -->
-    <div style="background: #f1f5f9; padding: 16px 24px; border-bottom: 1px solid #e2e8f0; font-size: 13px; color: #334155;">
-      ${isTest ? '<div style="background: #e0e7ff; color: #3730a3; padding: 6px 12px; border-radius: 6px; font-weight: 700; margin-bottom: 10px; font-size: 12px;">TEST NOTIFICATION PREVIEW</div>' : ''}
-      ${isConfirmation ? '<div style="background: #ecfdf5; border: 1px solid #10b981; color: #065f46; padding: 10px 14px; border-radius: 6px; font-weight: 700; margin-bottom: 12px; font-size: 13px;">SUBSCRIPTION ACTIVE: You are now subscribed to Sarkari Job Alerts! We will automatically email you when new eligible vacancies are announced.</div>' : ''}
-      <strong>Hello ${subscriber.name || 'Job Aspirant'},</strong><br>
-      ${isConfirmation ? 'Your job notification service is active. Here are currently active openings matching your profile:' : `Found <strong>${jobs.length} government jobs</strong> matching your preferences:`}
-      <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px;">
-        <span style="background: #ffffff; border: 1px solid #cbd5e1; padding: 3px 10px; border-radius: 4px; font-size: 12px;"><strong>Degree:</strong> ${degreeText}</span>
-        <span style="background: #ffffff; border: 1px solid #cbd5e1; padding: 3px 10px; border-radius: 4px; font-size: 12px;"><strong>Qualification:</strong> ${qualText}</span>
-        <span style="background: #ffffff; border: 1px solid #cbd5e1; padding: 3px 10px; border-radius: 4px; font-size: 12px;"><strong>Status:</strong> Active &amp; Subscribed</span>
-      </div>
-    </div>
+          <!-- Header Masthead -->
+          <tr>
+            <td style="background-color: #990000; padding: 24px 28px; text-align: center;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center">
+                    <div style="display: inline-block; background-color: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 20px; padding: 4px 14px; margin-bottom: 10px;">
+                      <span style="color: #fef08a; font-size: 11px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase;">
+                        🏛️ OFFICIAL GOVERNMENT RECRUITMENT ALERTS
+                      </span>
+                    </div>
+                    <h1 style="margin: 0; font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: 0.6px; line-height: 1.2;">
+                      SARKARI HITH
+                    </h1>
+                    <p style="margin: 6px 0 0 0; font-size: 13px; color: #fecaca; font-weight: 500; line-height: 1.4;">
+                      National Government Examination &amp; Recruitment Notification Portal
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-    <!-- Job Listings -->
-    <div style="padding: 20px 24px; background: #f8fafc;">
-      ${jobsListHtml || '<p style="text-align: center; color: #64748b; font-size: 14px;">No new matching jobs at this moment. We will alert you the moment a new one is announced!</p>'}
-    </div>
+          <!-- Notification Context & Personalization Banner -->
+          <tr>
+            <td style="background-color: #f8fafc; padding: 18px 24px; border-bottom: 1px solid #e2e8f0;">
+              ${isTest ? `
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #eef2ff; border: 1px solid #c7d2fe; border-radius: 8px; margin-bottom: 14px;">
+                  <tr>
+                    <td style="padding: 10px 14px; color: #3730a3; font-size: 13px; font-weight: 600;">
+                      🧪 <strong>TEST NOTIFICATION PREVIEW:</strong> Your email alert configuration is verified and functioning normally.
+                    </td>
+                  </tr>
+                </table>
+              ` : ''}
 
-    <!-- Footer -->
-    <div style="background: #ffffff; padding: 20px 24px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 12px; color: #64748b; line-height: 1.5;">
-      <p style="margin: 0 0 8px 0;">
-        You received this email because you subscribed to custom job alerts on <a href="${portalUrl}" style="color: #b30000; text-decoration: none; font-weight: 600;">sarkari hith</a>.
-      </p>
-      <p style="margin: 0;">
-        Always verify exam fees, eligibility, and age limit from the official advertisement before applying.
-      </p>
-    </div>
+              ${isConfirmation ? `
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ecfdf5; border: 1px solid #86efac; border-radius: 8px; margin-bottom: 14px;">
+                  <tr>
+                    <td style="padding: 12px 14px; color: #166534; font-size: 13px; line-height: 1.45;">
+                      <div style="font-weight: 800; margin-bottom: 2px;">🎉 SUBSCRIPTION ACTIVATED SUCCESSFULLY</div>
+                      You are now subscribed to Sarkari Job Alerts! You will automatically receive verified alerts as new eligible vacancies are officially announced.
+                    </td>
+                  </tr>
+                </table>
+              ` : ''}
 
-  </div>
+              <div style="font-size: 14px; color: #1e293b; line-height: 1.5; margin-bottom: 10px;">
+                <strong>Namaste ${candidateName},</strong><br>
+                ${isConfirmation 
+                  ? 'Your notification preferences are active. Below are currently open recruitment notifications matching your profile:' 
+                  : `We identified <strong>${jobs.length} government vacancies</strong> aligned with your educational qualifications:`}
+              </div>
+
+              <!-- Filter Tags -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td>
+                    <span style="display: inline-block; background-color: #ffffff; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #334155; margin-right: 6px; margin-bottom: 6px;">
+                      <strong>Stream:</strong> ${escapeHtml(degreeText)}
+                    </span>
+                    <span style="display: inline-block; background-color: #ffffff; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #334155; margin-right: 6px; margin-bottom: 6px;">
+                      <strong>Qualification:</strong> ${escapeHtml(qualText)}
+                    </span>
+                    <span style="display: inline-block; background-color: #ecfdf5; border: 1px solid #86efac; padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #166534; font-weight: 700; margin-bottom: 6px;">
+                      ✓ Status: Active &amp; Verified
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Jobs List Content -->
+          <tr>
+            <td style="padding: 22px 24px; background-color: #f1f5f9;">
+              ${jobsListHtml || `
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 32px 20px; text-align: center;">
+                  <tr>
+                    <td align="center">
+                      <div style="font-size: 32px; margin-bottom: 8px;">🔔</div>
+                      <div style="font-size: 15px; font-weight: 700; color: #334155; margin-bottom: 4px;">No New Vacancies Today</div>
+                      <div style="font-size: 13px; color: #64748b; max-width: 420px; margin: 0 auto; line-height: 1.5;">
+                        We are continuously monitoring official commissions and boards. You will receive an alert as soon as fresh matching vacancies are announced!
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              `}
+
+              <!-- Candidate Verification Advisory Notice -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; margin-top: 10px;">
+                <tr>
+                  <td style="padding: 14px 16px; font-size: 12px; color: #92400e; line-height: 1.5;">
+                    ⚠️ <strong>Candidate Advisory:</strong> Always verify the official notification PDF, reservation rules, exam fee deadlines, and educational eligibility criteria on the official commission/board website before submitting application forms or fee payments.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Portal Quick Links Bar -->
+          <tr>
+            <td style="background-color: #ffffff; padding: 16px 24px; border-top: 1px solid #e2e8f0; text-align: center;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" style="font-size: 12px; font-weight: 600; color: #475569;">
+                    <a href="${cleanPortalUrl}" style="color: #b30000; text-decoration: none; padding: 0 6px;">Home</a> &bull;
+                    <a href="${cleanPortalUrl}" style="color: #b30000; text-decoration: none; padding: 0 6px;">Latest Jobs</a> &bull;
+                    <a href="${cleanPortalUrl}" style="color: #b30000; text-decoration: none; padding: 0 6px;">Admit Cards</a> &bull;
+                    <a href="${cleanPortalUrl}" style="color: #b30000; text-decoration: none; padding: 0 6px;">Answer Keys</a> &bull;
+                    <a href="${cleanPortalUrl}" style="color: #b30000; text-decoration: none; padding: 0 6px;">Results</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Professional Footer -->
+          <tr>
+            <td style="background-color: #f8fafc; padding: 20px 24px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 12px; color: #64748b; line-height: 1.6;">
+              <p style="margin: 0 0 6px 0; font-weight: 600; color: #334155;">
+                Sarkari Hith &bull; National Employment &amp; Examination Information Portal
+              </p>
+              <p style="margin: 0 0 8px 0;">
+                You received this notification because you subscribed to custom recruitment alerts on <a href="${cleanPortalUrl}" style="color: #b30000; text-decoration: none; font-weight: 700;">sarkari hith</a>.
+              </p>
+              <p style="margin: 0; font-size: 11px; color: #94a3b8;">
+                Free Candidate Welfare &amp; Notification Service &bull; 100% Free &amp; Open Access &bull; All Rights Reserved
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
-</html>
-  `;
+</html>`;
 }
 
 /**
@@ -848,9 +995,11 @@ function getActiveReminderTimers(filterEmail = null) {
  */
 function buildJobReminderEmailHtml({ track, daysLeft, isConfirmation = false, isTestReminder = false }) {
   const portalUrl = process.env.PORTAL_URL || 'http://localhost:3000';
-  const applyLink = track.link || portalUrl;
-  const deadlineFormatted = track.lastDateFormatted || track.lastDate || 'Check official advertisement';
-  const org = track.organization || 'Government of India';
+  const applyLink = escapeHtml(safeHttpUrl(track.link, portalUrl));
+  const deadlineFormatted = escapeHtml(track.lastDateFormatted || track.lastDate || 'Check official advertisement');
+  const org = escapeHtml(track.organization || 'Government of India');
+  const jobTitle = escapeHtml(track.jobTitle || 'Government Recruitment');
+  const cleanPortalUrl = escapeHtml(safeHttpUrl(portalUrl, 'https://www.sarkariresult.com'));
 
   const emailParam = encodeURIComponent(track.email || '');
   const jobParam = encodeURIComponent(track.jobId || track.jobTitle || '');
@@ -863,157 +1012,252 @@ function buildJobReminderEmailHtml({ track, daysLeft, isConfirmation = false, is
   let badgeText = '';
   let badgeBg = '#dbeafe';
   let badgeColor = '#1e40af';
+  let bannerBg = '#eff6ff';
+  let bannerBorder = '#bfdbfe';
 
   if (isTestReminder) {
     headline = '1-Minute Test Reminder: ' + (daysLeft !== null && daysLeft > 0 ? `${daysLeft} Days Remaining` : 'Deadline Countdown Alert');
-    subheadline = `This is a test notification for your tracked recruitment deadline. Reminders are fully active and will be delivered daily until you submit your form.`;
+    subheadline = 'This confirms your deadline countdown alerts are fully active. You will receive scheduled daily updates every morning until you submit your form.';
     badgeText = daysLeft !== null && daysLeft > 0 ? `${daysLeft} Days Left (Test Passed)` : '1-Min Test Passed';
     badgeBg = '#dcfce7';
     badgeColor = '#15803d';
+    bannerBg = '#f0fdf4';
+    bannerBorder = '#bbf7d0';
   } else if (isConfirmation) {
     headline = 'Application Reminders Activated';
-    subheadline = `You are successfully subscribed to daily deadline countdown reminders for this recruitment.`;
+    subheadline = 'You are successfully subscribed to daily deadline countdown reminders for this recruitment.';
     badgeText = daysLeft !== null && daysLeft >= 0 ? `${daysLeft} Days Remaining` : 'Active Recruitment';
+    bannerBg = '#ecfdf5';
+    bannerBorder = '#86efac';
   } else if (daysLeft === 0) {
     headline = 'FINAL DAY TO APPLY TODAY';
-    subheadline = `Application window closes TONIGHT. Please submit your online form immediately.`;
+    subheadline = 'The application window closes TONIGHT. Please submit your online form and fees before the deadline expires.';
     badgeText = 'Closes Today';
     badgeBg = '#fee2e2';
     badgeColor = '#b91c1c';
+    bannerBg = '#fef2f2';
+    bannerBorder = '#fecaca';
   } else if (daysLeft === 1) {
     headline = '1 DAY REMAINING: Deadline Tomorrow';
-    subheadline = `Only 1 day left before the application form closes. Complete your submission soon.`;
+    subheadline = 'Only 1 day left before the application portal closes. Complete and submit your registration promptly.';
     badgeText = '1 Day Left';
     badgeBg = '#fef3c7';
     badgeColor = '#b45309';
+    bannerBg = '#fffbeb';
+    bannerBorder = '#fde68a';
   } else if (daysLeft !== null && daysLeft > 1) {
     headline = `${daysLeft} DAYS LEFT: Please Fill The Form`;
-    subheadline = `Daily deadline countdown reminder for your tracked government recruitment.`;
+    subheadline = 'Daily deadline countdown reminder for your tracked government recruitment.';
     badgeText = `${daysLeft} Days Left`;
     badgeBg = '#fef3c7';
     badgeColor = '#b45309';
+    bannerBg = '#fffbeb';
+    bannerBorder = '#fde68a';
   } else {
     headline = 'Application Deadline Notification';
-    subheadline = `Please check closing dates and complete your application promptly before the deadline.`;
+    subheadline = 'Please verify closing dates and complete your application promptly before the deadline.';
     badgeText = 'Check Closing Date';
     badgeBg = '#e0f2fe';
     badgeColor = '#0369a1';
+    bannerBg = '#f0f9ff';
+    bannerBorder = '#bae6fd';
   }
 
-  return `
-<!DOCTYPE html>
-<html>
+  return `<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sarkari Hith Job Reminder</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1e293b;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f1f5f9; padding: 24px 12px;">
+<body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; color: #1e293b;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f1f5f9; padding: 24px 8px;">
     <tr>
       <td align="center">
-        <table width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);">
-          <!-- Top Red Header -->
+        <!-- Main Container (600px max) -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08); border: 1px solid #e2e8f0;">
+          
+          <!-- Indian Tricolor Accent Top Bar -->
           <tr>
-            <td style="background-color: #b30000; padding: 20px 24px;">
-              <span style="font-size: 20px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px;">SARKARI HITH</span>
-              <p style="margin: 3px 0 0 0; color: #fecaca; font-size: 12px; font-weight: 500;">Candidate Deadline Tracking & Notification Service</p>
+            <td style="line-height: 0; font-size: 0; padding: 0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="height: 4px;">
+                <tr>
+                  <td width="33%" style="background-color: #ff9933; height: 4px;"></td>
+                  <td width="34%" style="background-color: #ffffff; height: 4px;"></td>
+                  <td width="33%" style="background-color: #138808; height: 4px;"></td>
+                </tr>
+              </table>
             </td>
           </tr>
 
-          <!-- Main Content -->
+          <!-- Header Masthead -->
           <tr>
-            <td style="padding: 24px;">
-              ${isTestReminder ? `
-              <div style="background-color: #ecfdf5; border: 1px solid #86efac; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px;">
-                <div style="font-weight: 700; color: #15803d; font-size: 14px; margin-bottom: 4px;">
-                  ⏱️ 1-Minute Scheduled Test Reminder Delivered Successfully!
-                </div>
-                <div style="font-size: 12px; color: #166534; line-height: 1.4;">
-                  This confirms your email notification system is working perfectly. You will receive daily deadline countdown updates for this post until you apply.
-                </div>
-              </div>
-              ` : ''}
+            <td style="background-color: #990000; padding: 22px 26px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td>
+                    <div style="display: inline-block; background-color: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 20px; padding: 3px 12px; margin-bottom: 8px;">
+                      <span style="color: #fef08a; font-size: 11px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase;">
+                        ⏱️ CANDIDATE DEADLINE TRACKER
+                      </span>
+                    </div>
+                    <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #ffffff; letter-spacing: 0.5px; line-height: 1.2;">
+                      SARKARI HITH
+                    </h1>
+                    <p style="margin: 4px 0 0 0; color: #fecaca; font-size: 12px; font-weight: 500;">
+                      Candidate Deadline Tracking &amp; Application Countdown Service
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-              <div style="display: inline-block; background-color: ${badgeBg}; color: ${badgeColor}; font-size: 12px; font-weight: 700; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; letter-spacing: 0.5px; margin-bottom: 12px;">
-                ${badgeText}
-              </div>
+          <!-- Main Body Content -->
+          <tr>
+            <td style="padding: 24px 26px;">
+              
+              <!-- Urgency Hero / Status Banner -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: ${bannerBg}; border: 1px solid ${bannerBorder}; border-radius: 8px; margin-bottom: 20px;">
+                <tr>
+                  <td style="padding: 16px 18px;">
+                    <div style="display: inline-block; background-color: ${badgeBg}; color: ${badgeColor}; font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; letter-spacing: 0.5px; margin-bottom: 8px;">
+                      ${badgeText}
+                    </div>
+                    <h2 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #0f172a; line-height: 1.3;">
+                      ${headline}
+                    </h2>
+                    <p style="margin: 0; font-size: 13px; color: #475569; line-height: 1.5;">
+                      ${subheadline}
+                    </p>
+                  </td>
+                </tr>
+              </table>
 
-              <h2 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 800; color: #0f172a; line-height: 1.3;">
-                ${headline}
-              </h2>
-              <p style="margin: 0 0 20px 0; font-size: 14px; color: #475569; line-height: 1.5;">
-                ${subheadline}
-              </p>
+              <!-- Tracked Job Details Card -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 22px; overflow: hidden;">
+                <tr>
+                  <td style="padding: 18px 20px;">
+                    <div style="font-size: 11px; font-weight: 800; color: #991b1b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
+                      🏛️ ${org}
+                    </div>
+                    <h3 style="margin: 0 0 14px 0; font-size: 17px; font-weight: 700; color: #0f172a; line-height: 1.4;">
+                      ${jobTitle}
+                    </h3>
 
-              <!-- Job Details Card -->
-              <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px; margin-bottom: 24px;">
-                <div style="font-size: 11px; font-weight: 700; color: #b91c1c; text-transform: uppercase; margin-bottom: 6px;">
-                  ${org}
-                </div>
-                <h3 style="margin: 0 0 10px 0; font-size: 16px; font-weight: 700; color: #0f172a; line-height: 1.4;">
-                  ${track.jobTitle}
-                </h3>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
-                  <span style="font-size: 13px; color: #475569;">
-                    <strong>Application Deadline:</strong> <span style="color: #b91c1c; font-weight: 700;">${deadlineFormatted}</span>
-                  </span>
-                  ${daysLeft !== null && daysLeft >= 0 ? `<span style="font-size: 13px; color: #0369a1; font-weight: 700;">(${daysLeft} days remaining)</span>` : ''}
-                </div>
-                <a href="${applyLink}" style="display: inline-block; background-color: #b30000; color: #ffffff; text-decoration: none; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 6px;" target="_blank">
-                  Apply Online &amp; View Official Details &rarr;
-                </a>
-              </div>
+                    <!-- Deadline Specs Grid -->
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border: 1px solid #edf2f7; border-radius: 6px; margin-bottom: 16px;">
+                      <tr>
+                        <td style="padding: 12px 14px; font-size: 13px; color: #334155; line-height: 1.5;">
+                          <div style="margin-bottom: 4px;">
+                            <span style="color: #64748b; font-weight: 600;">📅 Application Deadline:</span>
+                            <strong style="color: #b91c1c; font-size: 14px; margin-left: 4px;">${deadlineFormatted}</strong>
+                          </div>
+                          ${daysLeft !== null && daysLeft >= 0 ? `
+                            <div>
+                              <span style="color: #64748b; font-weight: 600;">⏱️ Time Remaining:</span>
+                              <strong style="color: #0369a1; margin-left: 4px;">${daysLeft} calendar day(s) left</strong>
+                            </div>
+                          ` : ''}
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Official Apply CTA Button -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td style="border-radius: 6px; background-color: #b30000;">
+                          <a href="${applyLink}" target="_blank" rel="noopener noreferrer" style="border: 1px solid #b30000; border-radius: 6px; display: inline-block; padding: 10px 22px; font-size: 13px; font-weight: 700; color: #ffffff; text-decoration: none; letter-spacing: 0.2px;">
+                            Apply Online &amp; Official Notification &rarr;
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
 
               <!-- Interactive Application Status Check -->
-              <div style="background-color: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 20px;">
-                <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 700; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
-                  Have you submitted your application for this post?
-                </h4>
-                <p style="margin: 0 0 16px 0; font-size: 12px; color: #64748b; line-height: 1.4;">
-                  Please update your status below. If you have applied, we will stop sending reminders for this post.
-                </p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border: 2px dashed #cbd5e1; border-radius: 10px; margin-bottom: 20px;">
+                <tr>
+                  <td style="padding: 22px 20px; text-align: center;">
+                    <div style="display: inline-block; background-color: #eff6ff; color: #1e40af; font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px;">
+                      1-TAP STATUS UPDATE
+                    </div>
+                    <h4 style="margin: 0 0 6px 0; font-size: 15px; font-weight: 800; color: #0f172a;">
+                      Have you submitted your application for this post?
+                    </h4>
+                    <p style="margin: 0 0 18px 0; font-size: 13px; color: #64748b; line-height: 1.45; max-width: 440px; margin-left: auto; margin-right: auto;">
+                      Click an option below to update your status instantly with one tap (no password required):
+                    </p>
 
-                <table width="100%" cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td align="center" style="padding-bottom: 10px;">
-                      <a href="${appliedUrl}" style="display: block; max-width: 320px; background-color: #16a34a; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 13px; padding: 11px 18px; border-radius: 6px;">
-                        [Yes, I Have Applied] &mdash; Stop Reminders
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td align="center">
-                      <a href="${pendingUrl}" style="display: block; max-width: 320px; background-color: #ffffff; color: #475569; text-decoration: none; font-weight: 600; font-size: 12px; padding: 9px 18px; border-radius: 6px; border: 1px solid #cbd5e1;">
-                        Not Yet Applied &mdash; Remind Me Tomorrow
-                      </a>
-                    </td>
-                  </tr>
-                </table>
+                    <!-- Green Applied Button -->
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 10px;">
+                      <tr>
+                        <td align="center">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 360px;">
+                            <tr>
+                              <td align="center" style="background-color: #16a34a; border-radius: 8px;">
+                                <a href="${appliedUrl}" style="display: block; padding: 12px 18px; font-size: 13px; font-weight: 700; color: #ffffff; text-decoration: none; border-radius: 8px; border: 1px solid #16a34a; text-align: center;">
+                                  ✓ Yes, I Have Applied &mdash; Stop Reminders
+                                </a>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
 
-                <p style="margin: 12px 0 0 0; font-size: 11px; color: #94a3b8;">
-                  If no option is selected, we will continue sending daily countdown updates until the deadline closes.
-                </p>
-              </div>
+                    <!-- White / Gray Pending Button -->
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td align="center">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 360px;">
+                            <tr>
+                              <td align="center" style="background-color: #ffffff; border-radius: 8px;">
+                                <a href="${pendingUrl}" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 600; color: #475569; text-decoration: none; border-radius: 8px; border: 1px solid #cbd5e1; text-align: center;">
+                                  ⏳ Not Yet Applied &mdash; Remind Me Tomorrow
+                                </a>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
 
-              <p style="font-size: 12px; color: #94a3b8; text-align: center; margin: 0;">
-                You received this email because you asked to track <strong>${track.jobTitle}</strong> on Sarkari Hith.
+                    <p style="margin: 14px 0 0 0; font-size: 11px; color: #94a3b8; line-height: 1.4;">
+                      If no option is clicked, we will continue delivering daily countdown alerts until the closing date.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Advisory Notice -->
+              <p style="font-size: 12px; color: #94a3b8; text-align: center; margin: 0; line-height: 1.5;">
+                You received this tracking reminder because you enabled deadline countdown alerts for <strong>${jobTitle}</strong> on Sarkari Hith.
               </p>
+
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
-            <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 14px 24px; text-align: center; font-size: 11px; color: #94a3b8;">
-              Sarkari Hith &bull; Official Indian Government Employment &amp; Examination Portal &bull; Free Candidate Alerts
+            <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 18px 24px; text-align: center; font-size: 11px; color: #94a3b8; line-height: 1.6;">
+              <p style="margin: 0 0 4px 0; font-weight: 600; color: #475569;">
+                Sarkari Hith &bull; Official Indian Government Employment &amp; Examination Portal
+              </p>
+              <p style="margin: 0;">
+                <a href="${cleanPortalUrl}" style="color: #b30000; text-decoration: none; font-weight: 600;">Visit Sarkari Hith Portal</a> &bull; Free Candidate Welfare Alert Service
+              </p>
             </td>
           </tr>
+
         </table>
       </td>
     </tr>
   </table>
 </body>
-</html>
-  `;
+</html>`;
 }
 
 /**
