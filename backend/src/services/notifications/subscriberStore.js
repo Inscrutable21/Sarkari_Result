@@ -1,20 +1,9 @@
-const fs = require('node:fs/promises');
+const { isValidEmail } = require('./constants');
 const {
-  DATA_DIR,
-  SUBSCRIBERS_FILE,
-  JOBS_FILE,
-  isValidEmail
-} = require('./constants');
-const {
-  isGoogleSheetEnabled,
-  appendSubscriberToSheet,
-  getSubscribersFromSheet
-} = require('../googleSheetService');
-const {
-  isMongoEnabled,
   getSubscribersFromMongo,
   upsertSubscriberInMongo,
-  unsubscribeUserInMongo
+  unsubscribeUserInMongo,
+  getPortalDatasetFromMongo
 } = require('../mongoService');
 const {
   getSentJobHistory,
@@ -22,119 +11,32 @@ const {
 } = require('./sentHistoryStore');
 
 /**
- * Loads current list of subscribers (from MongoDB Atlas if enabled, or Google Sheets / local JSON)
+ * Loads current list of subscribers exclusively from MongoDB Atlas
  */
 async function getSubscribers() {
   const sentHistory = await getSentJobHistory();
+  const mongoSubs = await getSubscribersFromMongo();
+  const list = Array.isArray(mongoSubs) ? mongoSubs : [];
 
-  // 1. Try MongoDB Atlas (Primary cloud store)
-  if (isMongoEnabled()) {
-    try {
-      const mongoSubs = await getSubscribersFromMongo();
-      if (Array.isArray(mongoSubs) && mongoSubs.length > 0) {
-        return mongoSubs.map(s => {
-          const email = (s.email || '').trim().toLowerCase();
-          const historyIds = sentHistory[email]?.jobIds || [];
-          return {
-            ...s,
-            email,
-            notifiedJobIds: Array.from(new Set([...(s.notifiedJobIds || []), ...historyIds]))
-          };
-        });
-      }
-    } catch (err) {
-      console.warn('[MongoDB] getSubscribers fallback:', err.message);
-    }
-  }
-
-  // 2. Fallback to local subscribers.json
-  let localSubs = [];
-  try {
-    const raw = await fs.readFile(SUBSCRIBERS_FILE, 'utf-8');
-    const parsed = JSON.parse(raw);
-    localSubs = Array.isArray(parsed) ? parsed : (parsed.subscribers || []);
-  } catch {
-    localSubs = [];
-  }
-
-  const localMap = new Map();
-  for (const s of localSubs) {
-    const em = (s.email || '').trim().toLowerCase();
-    if (em) localMap.set(em, s);
-  }
-
-  // 3. Fallback to Google Sheets if configured
-  if (isGoogleSheetEnabled()) {
-    try {
-      const sheetSubs = await getSubscribersFromSheet();
-      if (Array.isArray(sheetSubs) && sheetSubs.length > 0) {
-        return sheetSubs.map(s => {
-          const email = (s.Email || s.email || '').trim().toLowerCase();
-          const localMatch = localMap.get(email);
-          const historyIds = sentHistory[email]?.jobIds || [];
-          const localNotified = localMatch?.notifiedJobIds || [];
-          const combinedNotified = Array.from(new Set([...localNotified, ...historyIds]));
-
-          return {
-            id: s.ID || s.id || localMatch?.id || ('sub_' + Math.random().toString(36).slice(2, 7)),
-            email,
-            name: s.Name || s.name || localMatch?.name || 'Job Aspirant',
-            qualification: s.Qualification || s.qualification || localMatch?.qualification || 'all',
-            disciplines: typeof s.Disciplines === 'string'
-              ? s.Disciplines.split(',').map(d => d.trim())
-              : (Array.isArray(s.Disciplines) ? s.Disciplines : (localMatch?.disciplines || ['all'])),
-            state: s.State || s.state || localMatch?.state || 'all',
-            sector: s.Sector || s.sector || localMatch?.sector || 'all',
-            subscribedAt: s.SubscribedAt || s.subscribedAt || localMatch?.subscribedAt || new Date().toISOString(),
-            notifiedJobIds: combinedNotified,
-            active: s.Active !== false && String(s.Active).toLowerCase() !== 'false'
-          };
-        });
-      }
-    } catch (err) {
-      console.warn('[Google Sheets] getSubscribers fallback to local:', err.message);
-    }
-  }
-
-  return localSubs.map(s => {
+  return list.map(s => {
     const email = (s.email || '').trim().toLowerCase();
     const historyIds = sentHistory[email]?.jobIds || [];
     return {
       ...s,
+      email,
       notifiedJobIds: Array.from(new Set([...(s.notifiedJobIds || []), ...historyIds]))
     };
   });
 }
 
 /**
- * Persists subscribers to local file, MongoDB Atlas, and Google Sheets
+ * Persists subscribers exclusively to MongoDB Atlas
  */
 async function saveSubscribers(subscribers) {
-  try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-    await fs.writeFile(SUBSCRIBERS_FILE, JSON.stringify(subscribers, null, 2), 'utf-8');
-  } catch (fsErr) {
-    // On serverless environments filesystem may be read-only; log and continue
-    console.warn('[Storage] Local write notice:', fsErr.message);
-  }
-
-  // Sync to MongoDB Atlas
-  if (isMongoEnabled() && subscribers.length > 0) {
-    const latest = subscribers[subscribers.length - 1];
-    if (latest) {
-      upsertSubscriberInMongo(latest).catch(err => {
-        console.warn('[MongoDB] Subscriber sync error:', err.message);
-      });
-    }
-  }
-
-  // Sync to Google Sheet if configured
-  if (isGoogleSheetEnabled() && subscribers.length > 0) {
-    const latest = subscribers[subscribers.length - 1];
-    if (latest) {
-      appendSubscriberToSheet(latest).catch(err => {
-        console.warn('[Google Sheets] Async subscriber append error:', err.message);
-      });
+  if (!Array.isArray(subscribers) || subscribers.length === 0) return;
+  for (const sub of subscribers) {
+    if (sub.email) {
+      await upsertSubscriberInMongo(sub);
     }
   }
 }
@@ -202,7 +104,7 @@ function matchJobsForSubscriber(subscriber, allJobs) {
 }
 
 /**
- * Subscribes a user with their degree, qualification, and alert preferences
+ * Subscribes a user with their degree, qualification, and alert preferences (Exclusively MongoDB Atlas)
  */
 async function subscribeUser({ email, name, qualification, disciplines, state, sector, frequency = 'instant' }) {
   if (!isValidEmail(email)) {
@@ -235,7 +137,6 @@ async function subscribeUser({ email, name, qualification, disciplines, state, s
       updatedAt: now,
       active: true
     };
-    subscribers[index] = subscriber;
   } else {
     isNew = true;
     subscriber = {
@@ -252,21 +153,19 @@ async function subscribeUser({ email, name, qualification, disciplines, state, s
       notifiedJobIds: [],
       active: true
     };
-    subscribers.push(subscriber);
   }
 
-  await saveSubscribers(subscribers);
+  // Persist directly into MongoDB Atlas
+  await upsertSubscriberInMongo(subscriber);
 
   // Lazy import dispatcher to avoid circular dependency
   const { sendJobAlertEmail } = require('./dispatcher');
 
-  // Always dispatch immediate subscription confirmation email
+  // Dispatch immediate subscription confirmation email with jobs from database
   let emailDispatched = false;
   let matchedCount = 0;
   try {
-    const rawJobs = await fs.readFile(JOBS_FILE, 'utf-8');
-    const parsedJobs = JSON.parse(rawJobs);
-    const jobs = Array.isArray(parsedJobs) ? parsedJobs : (parsedJobs.data || []);
+    const jobs = (await getPortalDatasetFromMongo('jobs')) || [];
     const matchingJobs = matchJobsForSubscriber(subscriber, jobs);
     matchedCount = matchingJobs.length;
     // Send matching jobs or top active vacancies so candidate immediately gets active opportunities
@@ -276,7 +175,7 @@ async function subscribeUser({ email, name, qualification, disciplines, state, s
     if (emailDispatched) {
       await recordSentJobsForSubscriber(cleanEmail, jobsToSend);
     }
-    console.log(`[Job Alerts] Confirmation alert email sent to ${subscriber.email} (${jobsToSend.length} jobs)`);
+    console.log(`[Job Alerts] Confirmation alert email sent to ${subscriber.email} (${jobsToSend.length} jobs from database)`);
   } catch (emailErr) {
     console.warn(`[Job Alerts] Could not send confirmation alert email: ${emailErr.message}`);
   }
@@ -290,27 +189,14 @@ async function subscribeUser({ email, name, qualification, disciplines, state, s
 }
 
 /**
- * Unsubscribes a user by email
+ * Unsubscribes a user by email (Exclusively MongoDB Atlas)
  */
 async function unsubscribeUser(email) {
   if (!email) throw new Error('Email is required to unsubscribe');
   const cleanEmail = email.trim().toLowerCase();
 
-  if (isMongoEnabled()) {
-    await unsubscribeUserInMongo(cleanEmail).catch(err => {
-      console.warn('[MongoDB] unsubscribe error:', err.message);
-    });
-  }
-
-  const subscribers = await getSubscribers();
-  const index = subscribers.findIndex(s => s.email.toLowerCase() === cleanEmail);
-  if (index === -1) {
-    return { found: false, message: 'Email address not found in alert list' };
-  }
-  subscribers[index].active = false;
-  subscribers[index].unsubscribedAt = new Date().toISOString();
-  await saveSubscribers(subscribers);
-  return { found: true, message: 'Successfully unsubscribed from job alerts' };
+  await unsubscribeUserInMongo(cleanEmail);
+  return { found: true, message: 'Successfully unsubscribed from job alerts in database' };
 }
 
 module.exports = {

@@ -3,8 +3,7 @@ const path = require('node:path');
 const { scrapeHomepage, scrapeCategoryArchive, scrapePostingDetails } = require('./sarkariScraper');
 const { categorizeCollection, DEGREE_DISCIPLINES, isFillableJob } = require('./classifier');
 const { dispatchAllNotifications } = require('../notificationService');
-const { batchUploadAllDataToSheet, isGoogleSheetEnabled } = require('../googleSheetService');
-const { saveAllPortalDataToMongo, saveCategorySummaryToMongo, isMongoEnabled } = require('../mongoService');
+const { saveAllPortalDataToMongo, saveCategorySummaryToMongo } = require('../mongoService');
 
 const DATA_DIR = path.resolve(__dirname, '../../data');
 
@@ -213,78 +212,22 @@ async function run() {
     ];
     const categorySummary = buildCategorySummary(allItems);
 
-    // Step 4: Write structured data files
-    console.log(`\n[Storage] Persisting datasets to ${DATA_DIR}...`);
-
-    await fs.writeFile(
-      path.join(DATA_DIR, 'allData.json'),
-      JSON.stringify(data, null, 2),
-      'utf-8'
-    );
-
-    await fs.writeFile(
-      path.join(DATA_DIR, 'trending.json'),
-      JSON.stringify({ success: true, data: data.trending }, null, 2),
-      'utf-8'
-    );
-
-    await fs.writeFile(
-      path.join(DATA_DIR, 'results.json'),
-      JSON.stringify({ success: true, data: data.results }, null, 2),
-      'utf-8'
-    );
-
-    await fs.writeFile(
-      path.join(DATA_DIR, 'admitCards.json'),
-      JSON.stringify({ success: true, data: data.admitCards }, null, 2),
-      'utf-8'
-    );
-
-    await fs.writeFile(
-      path.join(DATA_DIR, 'jobs.json'),
-      JSON.stringify({ success: true, data: data.latestJobs }, null, 2),
-      'utf-8'
-    );
-
-    await fs.writeFile(
-      path.join(DATA_DIR, 'categories.json'),
-      JSON.stringify({ success: true, data: categorySummary }, null, 2),
-      'utf-8'
-    );
+    // Step 4: Persist structured datasets directly to MongoDB Atlas database
+    console.log('\n[Storage] Persisting all datasets directly to MongoDB Atlas database...');
+    await saveAllPortalDataToMongo(data);
+    await saveCategorySummaryToMongo(categorySummary);
+    console.log('[Storage] All portal collections updated in MongoDB Atlas!');
 
     console.log('[Pipeline] Completed successfully!');
-    console.log(`   Processed ${allItems.length} items with rich multi-tier categorization.`);
+    console.log(`   Processed ${allItems.length} items with rich multi-tier categorization in database.`);
     console.log('   Available Sectors:', categorySummary.sectors.map(s => `${s.name} (${s.count})`).join(', '));
     console.log('====================================================\n');
 
-    // Automatically check & dispatch job alerts to subscribed candidates
+    // Automatically check & dispatch job alerts to subscribed candidates from database
     try {
       await dispatchAllNotifications();
     } catch (notifErr) {
       console.warn('[Notification Warning]:', notifErr.message);
-    }
-
-    // Automatically sync freshly scraped data to MongoDB Atlas
-    if (isMongoEnabled()) {
-      console.log('[Pipeline] Syncing newly scraped data to MongoDB Atlas...');
-      try {
-        await saveAllPortalDataToMongo(data);
-        await saveCategorySummaryToMongo(categorySummary);
-        console.log('[Pipeline] MongoDB Atlas collections updated successfully!');
-      } catch (mongoErr) {
-        console.warn('[MongoDB Sync Warning]:', mongoErr.message);
-      }
-    }
-
-    // Automatically sync freshly scraped data to live Google Sheet
-    if (isGoogleSheetEnabled()) {
-      console.log('[Pipeline] Syncing newly scraped data to live Google Sheet...');
-      try {
-        await batchUploadAllDataToSheet();
-        console.log('[Pipeline] Live Google Sheet updated successfully!');
-      } catch (sheetErr) {
-        console.warn('[Google Sheet Sync Warning]:', sheetErr.message);
-      }
     }
 
     return {

@@ -1,6 +1,5 @@
-const fs = require('node:fs/promises');
 const nodemailer = require('nodemailer');
-const { JOBS_FILE } = require('./constants');
+const { getPortalDatasetFromMongo } = require('../mongoService');
 const { getTransporter, logEmailDispatch } = require('./emailTransporter');
 const { buildJobAlertEmailHtml, buildJobReminderEmailHtml } = require('./emailTemplates');
 const {
@@ -93,14 +92,16 @@ async function sendTestNotification({ email, name, qualification, disciplines, s
     throw new Error('Valid email address is required');
   }
 
-  // Load all jobs
+  // Load all jobs from MongoDB Atlas
   let allJobs = [];
   try {
-    const raw = await fs.readFile(JOBS_FILE, 'utf-8');
-    const parsed = JSON.parse(raw);
-    allJobs = Array.isArray(parsed) ? parsed : (parsed.data || []);
+    const jobsFromDb = await getPortalDatasetFromMongo('jobs');
+    allJobs = Array.isArray(jobsFromDb) ? jobsFromDb : [];
+    if (allJobs.length === 0) {
+      throw new Error('No jobs available in MongoDB Atlas database.');
+    }
   } catch (err) {
-    throw new Error('Jobs dataset not found. Please run scraper first: ' + err.message);
+    throw new Error('Jobs dataset not accessible from database: ' + err.message);
   }
 
   const dummySubscriber = {
@@ -145,11 +146,10 @@ async function dispatchAllNotifications() {
 
   let allJobs = [];
   try {
-    const raw = await fs.readFile(JOBS_FILE, 'utf-8');
-    const parsed = JSON.parse(raw);
-    allJobs = Array.isArray(parsed) ? parsed : (parsed.data || []);
+    const jobsFromDb = await getPortalDatasetFromMongo('jobs');
+    allJobs = Array.isArray(jobsFromDb) ? jobsFromDb : [];
   } catch (err) {
-    console.error('Cannot dispatch notifications: jobs.json not found:', err.message);
+    console.error('Cannot dispatch notifications: failed to load jobs from database:', err.message);
     return { error: err.message };
   }
 

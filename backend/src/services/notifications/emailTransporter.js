@@ -1,6 +1,8 @@
-const fs = require('node:fs/promises');
 const nodemailer = require('nodemailer');
-const { DATA_DIR, LOGS_FILE } = require('./constants');
+const {
+  insertEmailLogIntoMongo,
+  getEmailLogsFromMongo
+} = require('../mongoService');
 
 let cachedTransporter = null;
 
@@ -60,38 +62,16 @@ async function getTransporter() {
   }
 }
 
-const {
-  isMongoEnabled,
-  insertEmailLogIntoMongo,
-  getEmailLogsFromMongo
-} = require('../mongoService');
-
 /**
- * Loads recent email dispatch history (from MongoDB Atlas or local JSON)
+ * Loads recent email dispatch history exclusively from MongoDB Atlas
  */
 async function getEmailLogs() {
-  if (isMongoEnabled()) {
-    try {
-      const mongoLogs = await getEmailLogsFromMongo(200);
-      if (Array.isArray(mongoLogs) && mongoLogs.length > 0) {
-        return mongoLogs;
-      }
-    } catch (err) {
-      console.warn('[MongoDB] getEmailLogs fallback:', err.message);
-    }
-  }
-
-  try {
-    const raw = await fs.readFile(LOGS_FILE, 'utf-8');
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
+  const mongoLogs = await getEmailLogsFromMongo(200);
+  return Array.isArray(mongoLogs) ? mongoLogs : [];
 }
 
 /**
- * Records an email dispatch in history (MongoDB Atlas & local JSON)
+ * Records an email dispatch in history exclusively in MongoDB Atlas
  */
 async function logEmailDispatch(entry) {
   const logItem = {
@@ -100,23 +80,10 @@ async function logEmailDispatch(entry) {
     ...entry
   };
 
-  // Sync to MongoDB Atlas
-  if (isMongoEnabled()) {
-    insertEmailLogIntoMongo(logItem).catch(err => {
-      console.warn('[MongoDB] Failed to log email dispatch:', err.message);
-    });
-  }
-
   try {
-    const logs = await getEmailLogs();
-    logs.push(logItem);
-    // Keep last 1000 logs
-    const trimmed = logs.slice(-1000);
-    await fs.mkdir(DATA_DIR, { recursive: true });
-    await fs.writeFile(LOGS_FILE, JSON.stringify(trimmed, null, 2), 'utf-8');
+    await insertEmailLogIntoMongo(logItem);
   } catch (err) {
-    // Non-blocking in serverless environments
-    console.warn('[Storage] Local log write notice:', err.message);
+    console.warn('[MongoDB] Failed to log email dispatch:', err.message);
   }
 }
 

@@ -1,23 +1,13 @@
-const fs = require('node:fs/promises');
 const {
-  DATA_DIR,
-  TRACKED_JOBS_FILE,
-  JOBS_FILE,
   isValidEmail,
   safeHttpUrl,
   generateStableTrackId
 } = require('./constants');
 const {
-  isGoogleSheetEnabled,
-  getTrackedJobsFromSheet,
-  appendTrackedJobToSheet,
-  updateTrackedJobStatusInSheet
-} = require('../googleSheetService');
-const {
-  isMongoEnabled,
   getTrackedJobsFromMongo,
   upsertTrackedJobInMongo,
-  updateTrackedJobStatusInMongo
+  updateTrackedJobStatusInMongo,
+  getPortalDatasetFromMongo
 } = require('../mongoService');
 
 /**
@@ -60,159 +50,28 @@ function getActiveReminderTimers(filterEmail = null) {
 }
 
 /**
- * Loads all currently tracked jobs across candidates (Google Sheet or local)
+ * Loads all currently tracked jobs across candidates exclusively from MongoDB Atlas
  */
 async function getTrackedJobs() {
-  // 0. Primary: check MongoDB Atlas
-  if (isMongoEnabled()) {
-    try {
-      const mongoTracked = await getTrackedJobsFromMongo();
-      if (Array.isArray(mongoTracked) && mongoTracked.length > 0) {
-        return mongoTracked.map(t => ({
-          ...t,
-          reminderCount: t.reminderCount ? Number(t.reminderCount) : 0,
-          applied: t.applied === true || String(t.applied).toLowerCase() === 'true',
-          active: t.applied !== true && String(t.applied).toLowerCase() !== 'true'
-        }));
-      }
-    } catch (err) {
-      console.warn('[MongoDB] getTrackedJobs fallback:', err.message);
-    }
-  }
+  const mongoTracked = await getTrackedJobsFromMongo();
+  const list = Array.isArray(mongoTracked) ? mongoTracked : [];
 
-  // 1. Load local file first so existing IDs (including legacy trk_sheet_*) are retained
-  let localList = [];
-  try {
-    const raw = await fs.readFile(TRACKED_JOBS_FILE, 'utf-8');
-    const parsed = JSON.parse(raw);
-    localList = Array.isArray(parsed) ? parsed : [];
-  } catch {
-    localList = [];
-  }
-
-  let list = [];
-  if (isGoogleSheetEnabled()) {
-    try {
-      const sheetTracked = await getTrackedJobsFromSheet();
-      if (Array.isArray(sheetTracked) && sheetTracked.length > 0) {
-        list = sheetTracked.map((t, idx) => {
-          const email = (t.Email || t.email || '').trim().toLowerCase();
-          const jobTitle = t.JobTitle || t.jobTitle || '';
-          const jobId = t.JobID || t.jobId || '';
-
-          // Look for an existing local record to keep the exact same ID sent in previous emails
-          const existingLocal = localList.find(loc =>
-            (loc.id && (loc.id === t.ID || loc.id === t.id)) ||
-            (loc.email && loc.email.toLowerCase() === email && (loc.jobTitle === jobTitle || (jobId && loc.jobId === jobId))) ||
-            (loc.id && loc.id.startsWith(`trk_sheet_${idx}_`))
-          );
-
-          const id = t.ID || t.id || (existingLocal && existingLocal.id) || generateStableTrackId(email, jobId || jobTitle);
-
-          return {
-            id,
-            email,
-            name: t.Name || t.name || (existingLocal && existingLocal.name) || 'Job Aspirant',
-            jobId,
-            jobTitle,
-            organization: t.Organization || t.organization || (existingLocal && existingLocal.organization) || 'Government Department',
-            lastDate: t.Deadline || t.lastDate || (existingLocal && existingLocal.lastDate) || null,
-            lastDateFormatted: t.Deadline || t.lastDateFormatted || (existingLocal && existingLocal.lastDateFormatted) || 'Check Notice',
-            link: t.Link || t.link || (existingLocal && existingLocal.link) || '',
-            subscribedAt: t.SubscribedAt || t.subscribedAt || (existingLocal && existingLocal.subscribedAt) || new Date().toISOString(),
-            lastReminderSentAt: t.LastReminderSent || t.lastReminderSentAt || (existingLocal && existingLocal.lastReminderSentAt) || null,
-            reminderCount: t.ReminderCount ? Number(t.ReminderCount) : (existingLocal ? existingLocal.reminderCount || 0 : 0),
-            applied: String(t.Applied).toLowerCase() === 'true' || (existingLocal && existingLocal.applied === true),
-            active: String(t.Applied).toLowerCase() !== 'true' && !(existingLocal && existingLocal.applied === true)
-          };
-        });
-      }
-    } catch (err) {
-      console.warn('[Google Sheets] getTrackedJobs fallback to local:', err.message);
-    }
-  }
-
-  if (list.length === 0) {
-    list = localList;
-  } else {
-    // Merge local entries into list if local has better date or existing ID
-    for (const localItem of localList) {
-      const existingInSheet = list.find(s =>
-        (s.id && localItem.id && s.id === localItem.id) ||
-        (s.email.toLowerCase() === localItem.email.toLowerCase() && (s.jobTitle === localItem.jobTitle || s.jobId === localItem.jobId))
-      );
-      if (existingInSheet) {
-        // ALWAYS keep localItem's ID if present so already dispatched email URLs don't break
-        if (localItem.id) existingInSheet.id = localItem.id;
-        if ((!existingInSheet.lastDate || existingInSheet.lastDate === 'null') && localItem.lastDate) {
-          existingInSheet.lastDate = localItem.lastDate;
-          existingInSheet.lastDateFormatted = localItem.lastDateFormatted;
-        }
-        if (localItem.applied === true) {
-          existingInSheet.applied = true;
-          existingInSheet.active = false;
-        }
-      } else {
-        list.push(localItem);
-      }
-    }
-  }
-
-  // Deduplicate entries by email + job (keeping the one with valid lastDate or latest)
-  const dedupMap = new Map();
-  for (const item of list) {
-    const key = `${(item.email || '').trim().toLowerCase()}_${(item.jobId || item.jobTitle || '').trim().toLowerCase()}`;
-    if (!dedupMap.has(key)) {
-      dedupMap.set(key, item);
-    } else {
-      const existing = dedupMap.get(key);
-      const merged = {
-        ...existing,
-        id: existing.id || item.id,
-        lastDate: ((!existing.lastDate || existing.lastDate === 'null') && item.lastDate) ? item.lastDate : existing.lastDate,
-        lastDateFormatted: (existing.lastDateFormatted === 'Check Notice' && item.lastDateFormatted) ? item.lastDateFormatted : existing.lastDateFormatted,
-        applied: existing.applied || item.applied,
-        active: (existing.applied || item.applied) ? false : (existing.active && item.active)
-      };
-      dedupMap.set(key, merged);
-    }
-  }
-  const cleanList = Array.from(dedupMap.values());
-
-  // Ensure every item has a stable id
-  let needsSave = false;
-  for (let i = 0; i < cleanList.length; i++) {
-    if (!cleanList[i].id) {
-      cleanList[i].id = generateStableTrackId(cleanList[i].email, cleanList[i].jobId || cleanList[i].jobTitle);
-      needsSave = true;
-    }
-  }
-  if (needsSave || cleanList.length !== localList.length) {
-    await saveTrackedJobs(cleanList);
-  }
-
-  return cleanList;
+  return list.map(t => ({
+    ...t,
+    reminderCount: t.reminderCount ? Number(t.reminderCount) : 0,
+    applied: t.applied === true || String(t.applied).toLowerCase() === 'true',
+    active: t.applied !== true && String(t.applied).toLowerCase() !== 'true'
+  }));
 }
 
 /**
- * Persists tracked jobs list to disk
+ * Persists tracked jobs list exclusively to MongoDB Atlas
  */
 async function saveTrackedJobs(tracked) {
-  try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-    await fs.writeFile(TRACKED_JOBS_FILE, JSON.stringify(tracked, null, 2), 'utf-8');
-  } catch (fsErr) {
-    console.warn('[Storage] Local write notice:', fsErr.message);
-  }
-
-  // Sync to MongoDB Atlas
-  if (isMongoEnabled() && Array.isArray(tracked)) {
-    for (const t of tracked) {
-      if (t.email && (t.id || t.jobId)) {
-        upsertTrackedJobInMongo(t).catch(err => {
-          console.warn('[MongoDB] Tracked job update warning:', err.message);
-        });
-      }
+  if (!Array.isArray(tracked)) return;
+  for (const t of tracked) {
+    if (t.email && (t.id || t.jobId)) {
+      await upsertTrackedJobInMongo(t);
     }
   }
 }
@@ -228,7 +87,7 @@ async function scheduleReminderTimer({ trackId, email, delaySeconds = 60 }) {
   );
 
   if (!track) {
-    throw new Error('Tracked job record not found. Please verify your email or tracking ID.');
+    throw new Error('Tracked job record not found in database. Please verify your email or tracking ID.');
   }
 
   const timerKey = `${track.id || track.email}`;
@@ -255,7 +114,7 @@ async function scheduleReminderTimer({ trackId, email, delaySeconds = 60 }) {
       const sendRes = await sendTrackedJobEmail(track, daysLeft, false, true);
       track.lastReminderSentAt = new Date().toISOString();
       track.reminderCount = (track.reminderCount || 0) + 1;
-      await saveTrackedJobs(trackedList);
+      await upsertTrackedJobInMongo(track);
       console.log(`[Timer Success] 1-min test reminder delivered to ${track.email}:`, sendRes.messageId);
     } catch (err) {
       console.error(`[Timer Error] Scheduled reminder dispatch failed for ${track.email}:`, err.message);
@@ -290,7 +149,7 @@ async function sendImmediateReminder({ trackId, email }) {
   );
 
   if (!track) {
-    throw new Error('Tracked job record not found.');
+    throw new Error('Tracked job record not found in database.');
   }
 
   let daysLeft = calculateDaysLeft(track.lastDate);
@@ -302,7 +161,7 @@ async function sendImmediateReminder({ trackId, email }) {
   const sendRes = await sendTrackedJobEmail(track, daysLeft, false, true);
   track.lastReminderSentAt = new Date().toISOString();
   track.reminderCount = (track.reminderCount || 0) + 1;
-  await saveTrackedJobs(trackedList);
+  await upsertTrackedJobInMongo(track);
 
   return {
     success: true,
@@ -314,7 +173,7 @@ async function sendImmediateReminder({ trackId, email }) {
 }
 
 /**
- * Tracks a specific job opening for a user and dispatches immediate confirmation email
+ * Tracks a specific job opening for a user and dispatches immediate confirmation email (Purely MongoDB Atlas)
  */
 async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, lastDateFormatted, link }) {
   if (!isValidEmail(email)) {
@@ -327,12 +186,10 @@ async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, 
   const cleanEmail = email.trim().toLowerCase();
   const trackedList = await getTrackedJobs();
 
-  // Try to enrich from jobs.json if not passed in
+  // Try to enrich from database
   let resolvedJob = null;
   try {
-    const rawJobs = await fs.readFile(JOBS_FILE, 'utf-8');
-    const parsedJobs = JSON.parse(rawJobs);
-    const jobs = Array.isArray(parsedJobs) ? parsedJobs : (parsedJobs.data || []);
+    const jobs = (await getPortalDatasetFromMongo('jobs')) || [];
     resolvedJob = jobs.find(j => j.id === jobId || j.title === jobTitle);
   } catch { }
 
@@ -346,7 +203,7 @@ async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, 
   const daysLeft = calculateDaysLeft(finalLastDate);
 
   // Check if candidate is already tracking this specific job
-  const existingIdx = trackedList.findIndex(t =>
+  const existing = trackedList.find(t =>
     t.email.toLowerCase() === cleanEmail && (t.jobId === jobId || t.jobTitle === finalTitle)
   );
 
@@ -354,10 +211,10 @@ async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, 
   let isNew = false;
   const now = new Date().toISOString();
 
-  if (existingIdx !== -1) {
+  if (existing) {
     trackRecord = {
-      ...trackedList[existingIdx],
-      name: name?.trim() || trackedList[existingIdx].name,
+      ...existing,
+      name: name?.trim() || existing.name,
       jobTitle: finalTitle,
       organization: finalOrg,
       lastDate: finalLastDate,
@@ -368,11 +225,10 @@ async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, 
       active: true,
       updatedAt: now
     };
-    trackedList[existingIdx] = trackRecord;
   } else {
     isNew = true;
     trackRecord = {
-      id: 'trk_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+      id: generateStableTrackId(cleanEmail, jobId || finalTitle),
       email: cleanEmail,
       name: name?.trim() || 'Job Aspirant',
       jobId: jobId || ('job_' + Math.random().toString(36).slice(2, 8)),
@@ -388,24 +244,10 @@ async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, 
       appliedAt: null,
       active: true
     };
-    trackedList.push(trackRecord);
   }
 
-  await saveTrackedJobs(trackedList);
-
-  // Sync to MongoDB Atlas
-  if (isMongoEnabled()) {
-    upsertTrackedJobInMongo(trackRecord).catch(err => {
-      console.warn('[MongoDB] Failed to sync tracked job:', err.message);
-    });
-  }
-
-  // Sync to Google Sheet if enabled
-  if (isGoogleSheetEnabled()) {
-    appendTrackedJobToSheet(trackRecord).catch(err => {
-      console.warn('[Google Sheets] Failed to sync tracked job:', err.message);
-    });
-  }
+  // Persist directly into MongoDB Atlas
+  await upsertTrackedJobInMongo(trackRecord);
 
   // Immediately dispatch confirmation email with countdown
   let emailSent = false;
@@ -428,8 +270,7 @@ async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, 
 }
 
 /**
- * Updates application status from candidate response ("applied" or "pending")
- * Supports multi-strategy matching: direct ID, stable hash, sheet index pattern, or fallback query context
+ * Updates application status from candidate response ("applied" or "pending") exclusively in MongoDB Atlas
  */
 async function updateJobApplicationStatus(trackId, status, fallbackContext = {}) {
   const cleanTrackId = (trackId || '').trim();
@@ -453,26 +294,7 @@ async function updateJobApplicationStatus(trackId, status, fallbackContext = {})
     track = trackedList.find(t => t.id && t.id.toLowerCase() === cleanTrackId.toLowerCase());
   }
 
-  // 3. Match by stable deterministic hash
-  if (!track && cleanTrackId) {
-    track = trackedList.find(t => {
-      const stableId = generateStableTrackId(t.email, t.jobId || t.jobTitle);
-      return stableId.toLowerCase() === cleanTrackId.toLowerCase();
-    });
-  }
-
-  // 4. Legacy index pattern match: "trk_sheet_<index>_<random>" (e.g. "trk_sheet_3_znaiq" -> index 3)
-  if (!track && cleanTrackId) {
-    const sheetMatch = cleanTrackId.match(/^trk_sheet_(\d+)(?:_[a-z0-9]+)?$/i);
-    if (sheetMatch) {
-      const idx = parseInt(sheetMatch[1], 10);
-      if (!isNaN(idx) && idx >= 0 && idx < trackedList.length) {
-        track = trackedList[idx];
-      }
-    }
-  }
-
-  // 5. Fallback match by Email + Job Identifier/Title
+  // 3. Fallback match by Email + Job Identifier/Title
   if (!track && queryEmail) {
     track = trackedList.find(t => {
       const emailMatches = (t.email || '').toLowerCase() === queryEmail;
@@ -485,18 +307,10 @@ async function updateJobApplicationStatus(trackId, status, fallbackContext = {})
     });
   }
 
-  // 6. Match by cleaned Job Title or ID in trackId
-  if (!track && cleanTrackId) {
-    track = trackedList.find(t =>
-      (t.jobId && t.jobId.toLowerCase() === cleanTrackId.toLowerCase()) ||
-      (t.jobTitle && t.jobTitle.toLowerCase().replace(/[^a-z0-9]/g, '') === cleanTrackId.toLowerCase().replace(/[^a-z0-9]/g, ''))
-    );
-  }
-
   if (!track) {
     return {
       found: false,
-      message: 'Tracking record not found'
+      message: 'Tracking record not found in database'
     };
   }
 
@@ -504,31 +318,10 @@ async function updateJobApplicationStatus(trackId, status, fallbackContext = {})
   track.applied = isApplied;
   track.appliedAt = isApplied ? new Date().toISOString() : null;
   track.statusUpdatedAt = new Date().toISOString();
+  track.active = !isApplied;
 
-  // If candidate has applied, stop further reminders for this job
-  if (isApplied) {
-    track.active = false;
-    console.log(`[Job Tracker] Candidate ${track.email} applied for ${track.jobTitle}. Reminders stopped.`);
-  } else {
-    track.active = true;
-    console.log(`[Job Tracker] Candidate ${track.email} pending application for ${track.jobTitle}. Reminders continue.`);
-  }
-
-  await saveTrackedJobs(trackedList);
-
-  // Sync status to MongoDB Atlas
-  if (isMongoEnabled()) {
-    updateTrackedJobStatusInMongo(track.id || cleanTrackId, status, { email: track.email, jobId: track.jobId, jobTitle: track.jobTitle }).catch(err => {
-      console.warn('[MongoDB] Status sync error:', err.message);
-    });
-  }
-
-  // Sync status to Google Sheet
-  if (isGoogleSheetEnabled()) {
-    updateTrackedJobStatusInSheet(track.id || cleanTrackId, status, { email: track.email, jobTitle: track.jobTitle }).catch(err => {
-      console.warn('[Google Sheets] Status sync error:', err.message);
-    });
-  }
+  // Persist status update directly to MongoDB Atlas
+  await updateTrackedJobStatusInMongo(track.id || cleanTrackId, status, { email: track.email, jobId: track.jobId, jobTitle: track.jobTitle });
 
   return {
     found: true,

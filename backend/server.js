@@ -556,55 +556,7 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // 12. Google Sheets Status & Live Refresh
-  if (url.pathname === "/api/google-sheets/status" && request.method === "GET") {
-    const { isGoogleSheetEnabled } = require("./src/services/googleSheetService");
-    response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-    response.end(JSON.stringify({
-      success: true,
-      enabled: isGoogleSheetEnabled(),
-      configured: Boolean(process.env.GOOGLE_SHEET_WEBAPP_URL)
-    }));
-    return;
-  }
-
-  // 13. Force Sync / Reload Data from Google Sheets (Admin Protected)
-  if (url.pathname === "/api/sync-sheets" && (request.method === "GET" || request.method === "POST")) {
-    if (!isAdminAuthorized(request, url)) {
-      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: "401 Unauthorized: Admin API key required" }));
-      return;
-    }
-    try {
-      const { getAllPortalDataFromSheet, isGoogleSheetEnabled } = require("./src/services/googleSheetService");
-      if (!isGoogleSheetEnabled()) {
-        response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
-        response.end(JSON.stringify({ success: false, error: "Google Sheets integration is not configured in .env" }));
-        return;
-      }
-      const data = await getAllPortalDataFromSheet(true); // force refresh
-      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({
-        success: true,
-        message: "Portal data refreshed from Google Sheets",
-        counts: {
-          latestJobs: data?.latestJobs?.length || 0,
-          results: data?.results?.length || 0,
-          admitCards: data?.admitCards?.length || 0,
-          answerKeys: data?.answerKeys?.length || 0,
-          syllabus: data?.syllabus?.length || 0,
-          admissions: data?.admissions?.length || 0,
-          certificates: data?.certificates?.length || 0
-        }
-      }));
-    } catch (err) {
-      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: err.message }));
-    }
-    return;
-  }
-
-  // 14. MongoDB Atlas Status & Collection Telemetry
+  // 12. MongoDB Atlas Status & Collection Telemetry
   if (url.pathname === "/api/mongodb/status" && request.method === "GET") {
     const { getMongoStatus } = require("./src/services/mongoService");
     try {
@@ -618,7 +570,7 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // 15. Force Sync All Local Datasets into MongoDB Atlas (Admin Protected)
+  // 13. Force Sync Local Seed Datasets into MongoDB Atlas (Admin Protected)
   if (url.pathname === "/api/sync-mongo" && (request.method === "GET" || request.method === "POST")) {
     if (!isAdminAuthorized(request, url)) {
       response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
@@ -641,14 +593,14 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // Endpoints to serve scraped SarkariResult datasets (MongoDB Atlas primary, local JSON fallback)
+  // Endpoints to serve scraped SarkariResult datasets exclusively from MongoDB Atlas
   const apiDataMap = {
-    "/api/all": "allData.json",
-    "/api/jobs": "jobs.json",
-    "/api/results": "results.json",
-    "/api/admit-cards": "admitCards.json",
-    "/api/trending": "trending.json",
-    "/api/categories": "categories.json"
+    "/api/all": "all",
+    "/api/jobs": "jobs",
+    "/api/results": "results",
+    "/api/admit-cards": "admitCards",
+    "/api/trending": "trending",
+    "/api/categories": "categories"
   };
 
   if (apiDataMap[url.pathname]) {
@@ -659,74 +611,54 @@ const server = createServer(async (request, response) => {
       getCategorySummaryFromMongo
     } = require("./src/services/mongoService");
 
-    const sectorFilter = url.searchParams.get("sector")?.toLowerCase();
-    const stateFilter = url.searchParams.get("state")?.toLowerCase();
-    const qualFilter = url.searchParams.get("qualification")?.toLowerCase();
-    const disciplineFilter = url.searchParams.get("discipline")?.toLowerCase() || url.searchParams.get("degree")?.toLowerCase();
-    const scopeFilter = url.searchParams.get("scope")?.toLowerCase() || url.searchParams.get("degreeScope")?.toLowerCase();
-    const queryFilter = url.searchParams.get("q")?.toLowerCase();
-    const activeOnly = url.searchParams.get("activeOnly") === "true";
-    const hasFilters = Boolean(sectorFilter || stateFilter || qualFilter || disciplineFilter || scopeFilter || queryFilter || activeOnly);
-
-    // 1. Check MongoDB Atlas first
-    let mongoData = null;
-    let dataSource = "local";
-    if (isMongoEnabled()) {
-      try {
-        if (url.pathname === "/api/all") {
-          const allFromMongo = await getAllPortalDataFromMongo();
-          if (allFromMongo) {
-            response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-            response.end(JSON.stringify(allFromMongo));
-            return;
-          }
-        } else if (url.pathname === "/api/categories") {
-          const catFromMongo = await getCategorySummaryFromMongo();
-          if (catFromMongo) {
-            response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-            response.end(JSON.stringify({ success: true, data: catFromMongo, source: "mongodb" }));
-            return;
-          }
-        } else {
-          const datasetKey = url.pathname.replace(/^\/api\//, '').replace(/-([a-z])/g, (_, c) => c.toUpperCase());
-          const itemsFromMongo = await getPortalDatasetFromMongo(datasetKey);
-          if (Array.isArray(itemsFromMongo) && itemsFromMongo.length > 0) {
-            mongoData = itemsFromMongo;
-            dataSource = "mongodb";
-          }
-        }
-      } catch (mErr) {
-        console.warn("[MongoDB] Data serving fallback notice:", mErr.message);
-      }
+    if (!isMongoEnabled()) {
+      response.writeHead(503, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: "Database not configured. MONGODB_URI is required." }));
+      return;
     }
 
-    // 2. Process items from MongoDB or fallback to local JSON file
-    let items = mongoData;
-    const jsonPath = resolve(dataDir, apiDataMap[url.pathname]);
-
-    if (!items) {
-      try {
-        const fileInfo = await stat(jsonPath);
-        if (fileInfo.isFile()) {
-          // If no filter query params, pipe the raw JSON stream directly for maximum speed
-          if (!hasFilters) {
-            response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-            createReadStream(jsonPath).pipe(response);
-            return;
-          }
-
-          const rawContent = await readFile(jsonPath, "utf-8");
-          const parsed = JSON.parse(rawContent);
-          items = Array.isArray(parsed) ? parsed : (parsed.data || []);
+    try {
+      if (url.pathname === "/api/all") {
+        const allFromMongo = await getAllPortalDataFromMongo();
+        if (allFromMongo) {
+          response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+          response.end(JSON.stringify(allFromMongo));
+          return;
         }
-      } catch {
         response.writeHead(404, { "Content-Type": "application/json; charset=utf-8" });
-        response.end(JSON.stringify({ success: false, error: "Dataset not found. Run scraper or sync:mongo first." }));
+        response.end(JSON.stringify({ success: false, error: "Portal data not found in database. Run sync:mongo or scraper first." }));
         return;
       }
-    }
 
-    if (Array.isArray(items)) {
+      if (url.pathname === "/api/categories") {
+        const catFromMongo = await getCategorySummaryFromMongo();
+        if (catFromMongo) {
+          response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+          response.end(JSON.stringify({ success: true, data: catFromMongo, source: "mongodb" }));
+          return;
+        }
+        response.writeHead(404, { "Content-Type": "application/json; charset=utf-8" });
+        response.end(JSON.stringify({ success: false, error: "Categories metadata not found in database." }));
+        return;
+      }
+
+      const datasetKey = url.pathname.replace(/^\/api\//, '').replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+      let items = await getPortalDatasetFromMongo(datasetKey);
+
+      if (!Array.isArray(items) || items.length === 0) {
+        response.writeHead(404, { "Content-Type": "application/json; charset=utf-8" });
+        response.end(JSON.stringify({ success: false, error: `Dataset ${datasetKey} not found in database.` }));
+        return;
+      }
+
+      const sectorFilter = url.searchParams.get("sector")?.toLowerCase();
+      const stateFilter = url.searchParams.get("state")?.toLowerCase();
+      const qualFilter = url.searchParams.get("qualification")?.toLowerCase();
+      const disciplineFilter = url.searchParams.get("discipline")?.toLowerCase() || url.searchParams.get("degree")?.toLowerCase();
+      const scopeFilter = url.searchParams.get("scope")?.toLowerCase() || url.searchParams.get("degreeScope")?.toLowerCase();
+      const queryFilter = url.searchParams.get("q")?.toLowerCase();
+      const activeOnly = url.searchParams.get("activeOnly") === "true";
+
       const todayIso = new Date().toISOString().split('T')[0];
       if (url.pathname === "/api/jobs" || activeOnly) {
         items = items.filter(it => it.isActive !== false && it.isExpired !== true && (!it.lastDate || it.lastDate >= todayIso));
@@ -763,16 +695,16 @@ const server = createServer(async (request, response) => {
         data: items,
         meta: {
           total: items.length,
-          source: dataSource,
+          source: "mongodb",
           filters: { activeOnly, discipline: disciplineFilter, sector: sectorFilter, state: stateFilter, qualification: qualFilter, q: queryFilter }
         }
       }));
       return;
+    } catch (err) {
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: "Database error: " + err.message }));
+      return;
     }
-
-    response.writeHead(404, { "Content-Type": "application/json; charset=utf-8" });
-    response.end(JSON.stringify({ success: false, error: "Dataset not found." }));
-    return;
   }
 
   const requestedPath = url.pathname === "/" ? "/index.html" : url.pathname;
