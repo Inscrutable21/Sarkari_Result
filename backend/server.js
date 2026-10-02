@@ -52,7 +52,8 @@ const {
   scheduleReminderTimer,
   sendImmediateReminder,
   getActiveReminderTimers,
-  renderStatusPageHtml
+  renderStatusPageHtml,
+  getSentJobHistory
 } = require("./src/services/notificationService");
 
 let isScrapingInProgress = false;
@@ -345,6 +346,28 @@ const server = createServer(async (request, response) => {
     const logs = await getEmailLogs();
     response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
     response.end(JSON.stringify({ success: true, data: logs }));
+    return;
+  }
+
+  // 6a. View candidate sent-job notification history (Rate Limited / Admin Protected)
+  if (url.pathname === "/api/notifications/sent-history" && request.method === "GET") {
+    const email = url.searchParams.get("email");
+    if (!email && !isAdminAuthorized(request, url)) {
+      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: "401 Unauthorized: Candidate email or Admin API key required" }));
+      return;
+    }
+
+    const history = await getSentJobHistory();
+    if (email) {
+      const userHistory = history[email.trim().toLowerCase()] || { jobIds: [], jobLinks: [], jobTitles: [], history: [] };
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: true, email: email.trim().toLowerCase(), data: userHistory }));
+      return;
+    }
+
+    response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+    response.end(JSON.stringify({ success: true, data: history }));
     return;
   }
 

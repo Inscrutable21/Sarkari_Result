@@ -38,6 +38,7 @@ const SUBSCRIBERS_FILE = path.join(DATA_DIR, 'subscribers.json');
 const TRACKED_JOBS_FILE = path.join(DATA_DIR, 'trackedJobs.json');
 const LOGS_FILE = path.join(DATA_DIR, 'emailLogs.json');
 const JOBS_FILE = path.join(DATA_DIR, 'jobs.json');
+const SENT_JOB_HISTORY_FILE = path.join(DATA_DIR, 'sentJobHistory.json');
 
 const {
   isGoogleSheetEnabled,
@@ -95,38 +96,312 @@ function isValidEmail(email) {
 }
 
 /**
- * Loads current list of subscribers (from Google Sheets if enabled, fallback to local file)
+ * Normalizes a job title for robust historical deduplication
+ * Removes extraneous date labels, trailing pipe segments, extra spaces, and punctuation
+ */
+function normalizeJobTitle(rawTitle) {
+  if (!rawTitle || typeof rawTitle !== 'string') return '';
+  return rawTitle
+    .toLowerCase()
+    .replace(/\|\s*last\s*date\s*:\s*[^\s|]+/gi, '')
+    .replace(/\|\s*date\s*extended/gi, '')
+    .replace(/\b(online\s*form|recruitment|apply\s*online|notification)\b/gi, '')
+    .replace(/[^a-z0-9]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Normalizes a job URL to prevent scheme or trailing slash discrepancies
+ */
+function normalizeJobLink(rawLink) {
+  if (!rawLink || typeof rawLink !== 'string') return '';
+  return rawLink
+    .toLowerCase()
+    .trim()
+    .replace(/^https?:\/\//, '')
+    .replace(/^www\./, '')
+    .replace(/\/+$/, '');
+}
+
+/**
+ * Generates a stable deterministic fingerprint from job attributes
+ */
+function getJobFingerprint(job) {
+  if (!job) return '';
+  const id = (job.id || '').trim().toLowerCase();
+  if (id) return id;
+  const linkKey = normalizeJobLink(job.link);
+  if (linkKey) return linkKey;
+  const titleKey = normalizeJobTitle(job.title);
+  return titleKey;
+}
+
+/**
+ * Loads the sent-job history store indexed by subscriber email.
+ * If the file doesn't exist, automatically seeds it from emailLogs.json and subscribers.json
+ */
+async function getSentJobHistory() {
+  try {
+    const raw = await fs.readFile(SENT_JOB_HISTORY_FILE, 'utf-8');
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') {
+      return parsed;
+    }
+  } catch { }
+
+  // Auto-seed from existing subscribers.json and emailLogs.json
+  const seeded = {};
+
+  try {
+    // 1. Seed from subscribers.json
+    if (nodeFs.existsSync(SUBSCRIBERS_FILE)) {
+      const subsRaw = nodeFs.readFileSync(SUBSCRIBERS_FILE, 'utf-8');
+      const subs = JSON.parse(subsRaw);
+      if (Array.isArray(subs)) {
+        for (const s of subs) {
+          const email = (s.email || '').trim().toLowerCase();
+          if (!email) continue;
+          if (!seeded[email]) {
+            seeded[email] = {
+              jobIds: [],
+              jobLinks: [],
+              jobTitles: [],
+              history: [],
+              lastDispatchedAt: s.lastNotifiedAt || null
+            };
+          }
+          if (Array.isArray(s.notifiedJobIds)) {
+            for (const id of s.notifiedJobIds) {
+              if (id && !seeded[email].jobIds.includes(id)) {
+                seeded[email].jobIds.push(id);
+              }
+            }
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('[Sent History] Auto-seed from subscribers.json skipped:', err.message);
+  }
+
+  try {
+    // 2. Seed from emailLogs.json
+    if (nodeFs.existsSync(LOGS_FILE)) {
+      const logsRaw = nodeFs.readFileSync(LOGS_FILE, 'utf-8');
+      const logs = JSON.parse(logsRaw);
+      if (Array.isArray(logs)) {
+        for (const log of logs) {
+          const email = (log.recipient || '').trim().toLowerCase();
+          if (!email) continue;
+          if (!seeded[email]) {
+            seeded[email] = {
+              jobIds: [],
+              jobLinks: [],
+              jobTitles: [],
+              history: [],
+              lastDispatchedAt: log.timestamp || null
+            };
+          }
+          if (Array.isArray(log.jobTitles)) {
+            for (const t of log.jobTitles) {
+              const normT = normalizeJobTitle(t);
+              if (normT && !seeded[email].jobTitles.includes(normT)) {
+                seeded[email].jobTitles.push(normT);
+              }
+            }
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('[Sent History] Auto-seed from emailLogs.json skipped:', err.message);
+  }
+
+  // Save bootstrapped history
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    await fs.writeFile(SENT_JOB_HISTORY_FILE, JSON.stringify(seeded, null, 2), 'utf-8');
+  } catch { }
+
+  return seeded;
+}
+
+/**
+ * Checks whether a given job has already been sent to a subscriber
+ */
+function hasJobBeenSentToSubscriber(email, job, historyMap, notifiedJobIds = []) {
+  if (!email || !job) return false;
+  const cleanEmail = email.trim().toLowerCase();
+  const userHistory = historyMap && historyMap[cleanEmail];
+
+  const jobId = (job.id || '').trim().toLowerCase();
+  if (jobId) {
+    if (userHistory && Array.isArray(userHistory.jobIds) && userHistory.jobIds.includes(jobId)) {
+      return true;
+    }
+    if (Array.isArray(notifiedJobIds) && notifiedJobIds.includes(jobId)) {
+      return true;
+    }
+  }
+
+  const normLink = normalizeJobLink(job.link);
+  if (normLink && userHistory && Array.isArray(userHistory.jobLinks) && userHistory.jobLinks.includes(normLink)) {
+    return true;
+  }
+
+  const normTitle = normalizeJobTitle(job.title);
+  if (normTitle && userHistory && Array.isArray(userHistory.jobTitles)) {
+    const hasMatch = userHistory.jobTitles.some(prev => 
+      prev === normTitle || (prev.length > 12 && normTitle.includes(prev)) || (normTitle.length > 12 && prev.includes(normTitle))
+    );
+    if (hasMatch) return true;
+  }
+
+  return false;
+}
+
+/**
+ * Persists newly dispatched jobs into the user's sent history and subscriber record
+ */
+async function recordSentJobsForSubscriber(email, jobs) {
+  if (!email || !Array.isArray(jobs) || jobs.length === 0) return;
+  const cleanEmail = email.trim().toLowerCase();
+  const historyMap = await getSentJobHistory();
+
+  if (!historyMap[cleanEmail]) {
+    historyMap[cleanEmail] = {
+      jobIds: [],
+      jobLinks: [],
+      jobTitles: [],
+      history: [],
+      lastDispatchedAt: null
+    };
+  }
+
+  const entry = historyMap[cleanEmail];
+  const nowIso = new Date().toISOString();
+  entry.lastDispatchedAt = nowIso;
+
+  const newIds = [];
+  for (const job of jobs) {
+    const id = (job.id || '').trim();
+    if (id && !entry.jobIds.includes(id)) {
+      entry.jobIds.push(id);
+      newIds.push(id);
+    }
+
+    const normLink = normalizeJobLink(job.link);
+    if (normLink && !entry.jobLinks.includes(normLink)) {
+      entry.jobLinks.push(normLink);
+    }
+
+    const normTitle = normalizeJobTitle(job.title);
+    if (normTitle && !entry.jobTitles.includes(normTitle)) {
+      entry.jobTitles.push(normTitle);
+    }
+
+    entry.history.push({
+      id: id || getJobFingerprint(job),
+      title: job.title || '',
+      link: job.link || '',
+      organization: job.organization || '',
+      sentAt: nowIso
+    });
+  }
+
+  // Cap history to last 500 items per user
+  if (entry.history.length > 500) {
+    entry.history = entry.history.slice(-500);
+  }
+
+  // Persist sentJobHistory.json
+  await fs.mkdir(DATA_DIR, { recursive: true });
+  await fs.writeFile(SENT_JOB_HISTORY_FILE, JSON.stringify(historyMap, null, 2), 'utf-8');
+
+  // Also update subscribers.json to keep them aligned
+  try {
+    let localSubs = [];
+    if (nodeFs.existsSync(SUBSCRIBERS_FILE)) {
+      const subsRaw = nodeFs.readFileSync(SUBSCRIBERS_FILE, 'utf-8');
+      localSubs = JSON.parse(subsRaw);
+    }
+    if (Array.isArray(localSubs)) {
+      const idx = localSubs.findIndex(s => (s.email || '').toLowerCase() === cleanEmail);
+      if (idx !== -1) {
+        localSubs[idx].notifiedJobIds = Array.from(new Set([
+          ...(localSubs[idx].notifiedJobIds || []),
+          ...entry.jobIds
+        ]));
+        localSubs[idx].lastNotifiedAt = nowIso;
+        await fs.writeFile(SUBSCRIBERS_FILE, JSON.stringify(localSubs, null, 2), 'utf-8');
+      }
+    }
+  } catch (err) {
+    console.warn('[Sent History] Update subscribers.json warning:', err.message);
+  }
+}
+
+/**
+ * Loads current list of subscribers (from Google Sheets if enabled, merged with local sent history)
  */
 async function getSubscribers() {
+  const sentHistory = await getSentJobHistory();
+  let localSubs = [];
+  try {
+    const raw = await fs.readFile(SUBSCRIBERS_FILE, 'utf-8');
+    const parsed = JSON.parse(raw);
+    localSubs = Array.isArray(parsed) ? parsed : (parsed.subscribers || []);
+  } catch {
+    localSubs = [];
+  }
+
+  const localMap = new Map();
+  for (const s of localSubs) {
+    const em = (s.email || '').trim().toLowerCase();
+    if (em) localMap.set(em, s);
+  }
+
   if (isGoogleSheetEnabled()) {
     try {
       const sheetSubs = await getSubscribersFromSheet();
       if (Array.isArray(sheetSubs) && sheetSubs.length > 0) {
-        return sheetSubs.map(s => ({
-          id: s.ID || s.id || ('sub_' + Math.random().toString(36).slice(2, 7)),
-          email: (s.Email || s.email || '').trim().toLowerCase(),
-          name: s.Name || s.name || 'Job Aspirant',
-          qualification: s.Qualification || s.qualification || 'all',
-          disciplines: typeof s.Disciplines === 'string' ? s.Disciplines.split(',').map(d => d.trim()) : (Array.isArray(s.Disciplines) ? s.Disciplines : ['all']),
-          state: s.State || s.state || 'all',
-          sector: s.Sector || s.sector || 'all',
-          subscribedAt: s.SubscribedAt || s.subscribedAt || new Date().toISOString(),
-          notifiedJobIds: [],
-          active: s.Active !== false && String(s.Active).toLowerCase() !== 'false'
-        }));
+        return sheetSubs.map(s => {
+          const email = (s.Email || s.email || '').trim().toLowerCase();
+          const localMatch = localMap.get(email);
+          const historyIds = sentHistory[email]?.jobIds || [];
+          const localNotified = localMatch?.notifiedJobIds || [];
+          const combinedNotified = Array.from(new Set([...localNotified, ...historyIds]));
+
+          return {
+            id: s.ID || s.id || localMatch?.id || ('sub_' + Math.random().toString(36).slice(2, 7)),
+            email,
+            name: s.Name || s.name || localMatch?.name || 'Job Aspirant',
+            qualification: s.Qualification || s.qualification || localMatch?.qualification || 'all',
+            disciplines: typeof s.Disciplines === 'string'
+              ? s.Disciplines.split(',').map(d => d.trim())
+              : (Array.isArray(s.Disciplines) ? s.Disciplines : (localMatch?.disciplines || ['all'])),
+            state: s.State || s.state || localMatch?.state || 'all',
+            sector: s.Sector || s.sector || localMatch?.sector || 'all',
+            subscribedAt: s.SubscribedAt || s.subscribedAt || localMatch?.subscribedAt || new Date().toISOString(),
+            notifiedJobIds: combinedNotified,
+            active: s.Active !== false && String(s.Active).toLowerCase() !== 'false'
+          };
+        });
       }
     } catch (err) {
       console.warn('[Google Sheets] getSubscribers fallback to local:', err.message);
     }
   }
 
-  try {
-    const raw = await fs.readFile(SUBSCRIBERS_FILE, 'utf-8');
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : (parsed.subscribers || []);
-  } catch {
-    return [];
-  }
+  return localSubs.map(s => {
+    const email = (s.email || '').trim().toLowerCase();
+    const historyIds = sentHistory[email]?.jobIds || [];
+    return {
+      ...s,
+      notifiedJobIds: Array.from(new Set([...(s.notifiedJobIds || []), ...historyIds]))
+    };
+  });
 }
 
 /**
@@ -375,6 +650,9 @@ async function subscribeUser({ email, name, qualification, disciplines, state, s
     const jobsToSend = matchingJobs.length > 0 ? matchingJobs.slice(0, 10) : jobs.slice(0, 5);
     const dispatch = await sendJobAlertEmail(subscriber, jobsToSend, false, true);
     emailDispatched = dispatch.success === true;
+    if (emailDispatched) {
+      await recordSentJobsForSubscriber(cleanEmail, jobsToSend);
+    }
     console.log(`[Job Alerts] Confirmation alert email sent to ${subscriber.email} (${jobsToSend.length} jobs)`);
   } catch (emailErr) {
     console.warn(`[Job Alerts] Could not send confirmation alert email: ${emailErr.message}`);
@@ -816,16 +1094,9 @@ async function sendJobAlertEmail(subscriber, jobs, isTest = false, isConfirmatio
     console.log(`[Email Preview URL]: ${previewUrl}`);
   }
 
-  // Update subscriber history if real dispatch (not test)
+  // Update subscriber history and persistent sent-job history if real dispatch (not test)
   if (!isTest) {
-    const subscribers = await getSubscribers();
-    const idx = subscribers.findIndex(s => s.id === subscriber.id || s.email === subscriber.email);
-    if (idx !== -1) {
-      const newlySentIds = jobs.map(j => j.id).filter(Boolean);
-      subscribers[idx].notifiedJobIds = Array.from(new Set([...(subscribers[idx].notifiedJobIds || []), ...newlySentIds]));
-      subscribers[idx].lastNotifiedAt = new Date().toISOString();
-      await saveSubscribers(subscribers);
-    }
+    await recordSentJobsForSubscriber(subscriber.email, jobs);
   }
 
   // Log dispatch
@@ -916,6 +1187,7 @@ async function dispatchAllNotifications() {
     return { error: err.message };
   }
 
+  const sentHistory = await getSentJobHistory();
   let dispatched = 0;
   let skipped = 0;
   const results = [];
@@ -923,20 +1195,21 @@ async function dispatchAllNotifications() {
   for (const subscriber of activeSubscribers) {
     const matchingJobs = matchJobsForSubscriber(subscriber, allJobs);
 
-    // Filter out jobs that this subscriber was already notified for
-    const notifiedIds = new Set(subscriber.notifiedJobIds || []);
-    const newJobs = matchingJobs.filter(job => !notifiedIds.has(job.id));
+    // Filter out jobs that this subscriber was already notified for (by ID, Link, or Title)
+    const newJobs = matchingJobs.filter(job => !hasJobBeenSentToSubscriber(subscriber.email, job, sentHistory, subscriber.notifiedJobIds));
 
     if (newJobs.length === 0) {
+      console.log(`[Job Alerts] Subscriber ${subscriber.email}: All ${matchingJobs.length} matching jobs were already sent in past dispatches. Skipping duplicate mail.`);
       skipped++;
       continue;
     }
 
     try {
+      console.log(`[Job Alerts] Subscriber ${subscriber.email}: Found ${newJobs.length} NEW jobs to send (${matchingJobs.length - newJobs.length} older jobs filtered out).`);
       const sendResult = await sendJobAlertEmail(subscriber, newJobs.slice(0, 10), false);
       results.push(sendResult);
       dispatched++;
-      console.log(`[Job Alert Sent] Sent notification with ${newJobs.length} jobs to ${subscriber.email}`);
+      console.log(`[Job Alert Sent] Sent notification with ${Math.min(newJobs.length, 10)} new jobs to ${subscriber.email}`);
     } catch (err) {
       console.error(`[Job Alert Failed] Failed to send alert to ${subscriber.email}:`, err.message);
     }
@@ -1899,5 +2172,8 @@ module.exports = {
   sendImmediateReminder,
   getActiveReminderTimers,
   calculateDaysLeft,
-  renderStatusPageHtml
+  renderStatusPageHtml,
+  getSentJobHistory,
+  hasJobBeenSentToSubscriber,
+  recordSentJobsForSubscriber
 };
