@@ -274,29 +274,6 @@ export async function fetchPostingDetails(targetUrl) {
   return result;
 }
 
-/**
- * Checks whether an admin user is already registered in MongoDB Atlas
- */
-export async function fetchAuthStatus() {
-  const response = await fetchWithFallback('/auth/status');
-  return await response.json();
-}
-
-/**
- * Registers an admin account in MongoDB Atlas and returns an initial session token
- */
-export async function registerAdmin(data) {
-  const response = await fetchWithFallback('/auth/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-  const result = await response.json();
-  if (!response.ok) {
-    throw new Error(result.error || 'Admin registration failed');
-  }
-  return result;
-}
 
 /**
  * Logs in with credentials or Master Key and issues a signed session token

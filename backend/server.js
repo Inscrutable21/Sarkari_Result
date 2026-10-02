@@ -247,40 +247,9 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // --- Admin Registration, Tokenization & Rotation Endpoints ---
+  // --- Single Admin Tokenization & Rotation Endpoints ---
 
-  // 1. Check Registration Status (Open vs Registered)
-  if (url.pathname === "/api/auth/status" && request.method === "GET") {
-    try {
-      const isRegistered = await isAdminRegistered();
-      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({
-        success: true,
-        isRegistered,
-        hasMasterKey: Boolean(process.env.ADMIN_API_KEY)
-      }));
-    } catch (err) {
-      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: err.message }));
-    }
-    return;
-  }
-
-  // 2. Register Admin Account
-  if (url.pathname === "/api/auth/register" && request.method === "POST") {
-    try {
-      const body = await parseBody(request);
-      const result = await registerAdmin(body.username, body.password, body.masterKey);
-      response.writeHead(201, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify(result));
-    } catch (err) {
-      response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: err.message }));
-    }
-    return;
-  }
-
-  // 3. Login & Issue Signed Cryptographic Session Token
+  // 1. Authenticate Single Admin Key & Issue Signed Cryptographic Token
   if (url.pathname === "/api/auth/login" && request.method === "POST") {
     const clientMeta = {
       ip: request.headers["x-forwarded-for"]?.split(",")[0].trim() || request.socket.remoteAddress || "unknown",
@@ -289,15 +258,11 @@ const server = createServer(async (request, response) => {
 
     try {
       const body = await parseBody(request);
-      let result;
-      if (body.apiKey) {
-        result = await loginWithMasterKey(body.apiKey, clientMeta);
-      } else if (body.username && body.password) {
-        result = await loginWithCredentials(body.username, body.password, clientMeta);
-      } else {
-        throw new Error("Credentials or Master Key required");
+      const key = (body.apiKey || body.adminKey || body.key || body.password || '').trim();
+      if (!key) {
+        throw new Error("Admin Authorization Key required");
       }
-
+      const result = await loginWithMasterKey(key, clientMeta);
       response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify(result));
     } catch (err) {

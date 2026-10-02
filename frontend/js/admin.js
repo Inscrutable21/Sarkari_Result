@@ -9,8 +9,6 @@ import {
   verifyAdminKey,
   fetchPostingDetails,
   triggerDailyReminders,
-  fetchAuthStatus,
-  registerAdmin,
   loginAdmin,
   rotateAdminToken,
   revokeAllAdminSessions,
@@ -154,60 +152,30 @@ function logout() {
   const dashboardSection = document.getElementById('admin-dashboard-view');
   const logoutBtnEl = document.getElementById('btn-admin-logout');
   const keyField = document.getElementById('admin-key-input');
-  const userField = document.getElementById('admin-login-username');
 
   if (dashboardSection) dashboardSection.style.display = 'none';
   if (loginSection) loginSection.style.display = 'block';
   if (logoutBtnEl) logoutBtnEl.style.display = 'none';
   if (keyField) keyField.value = '';
-  if (userField) userField.value = '';
-
-  checkAuthStatus();
 }
 
-// Check initial registration status
-async function checkAuthStatus() {
-  try {
-    const res = await fetchAuthStatus();
-    const tabRegister = document.getElementById('tab-btn-register');
-    const tabLogin = document.getElementById('tab-btn-login');
-    const formLogin = document.getElementById('admin-login-form');
-    const formRegister = document.getElementById('admin-register-form');
-    const subtitle = document.getElementById('auth-card-subtitle');
-
-    if (!res.isRegistered) {
-      if (subtitle) subtitle.textContent = 'No admin registered yet. Please initialize your administrative account in MongoDB Atlas.';
-      if (tabRegister) {
-        tabRegister.classList.add('is-active');
-        tabLogin?.classList.remove('is-active');
-      }
-      if (formRegister) formRegister.style.display = 'block';
-      if (formLogin) formLogin.style.display = 'none';
-    }
-  } catch (err) {
-    console.debug('[Auth Status]:', err.message);
-  }
-}
-
-// Authentication Handlers
+// Authentication Handler (Single Master Admin Key -> Tokenization)
 async function handleLogin(e) {
   if (e) e.preventDefault();
-  const usernameField = document.getElementById('admin-login-username');
   const keyField = document.getElementById('admin-key-input');
   const remField = document.getElementById('admin-remember-session');
   const errBanner = document.getElementById('admin-login-error');
   const unlockBtn = document.getElementById('btn-unlock-admin');
 
-  const username = (usernameField?.value || '').trim();
-  const password = (keyField?.value || '').trim();
+  const apiKey = (keyField?.value || '').trim();
   const remember = remField ? remField.checked : true;
 
-  if (!username) {
+  if (!apiKey) {
     if (errBanner) {
-      errBanner.textContent = 'Please enter your Admin Username or Master Key';
+      errBanner.textContent = 'Please enter your Admin Authorization Key';
       errBanner.style.display = 'block';
     }
-    usernameField?.focus();
+    keyField?.focus();
     return;
   }
 
@@ -215,30 +183,15 @@ async function handleLogin(e) {
     if (errBanner) errBanner.style.display = 'none';
     if (unlockBtn) {
       unlockBtn.setAttribute('disabled', 'true');
-      unlockBtn.innerHTML = '<span>Issuing secure token...</span>';
+      unlockBtn.innerHTML = '<span>Issuing secure session token...</span>';
     }
 
-    let result;
-    // If only master key or username provided with no password, test as Master API Key
-    if (!password || username.length > 24) {
-      try {
-        result = await loginAdmin({ apiKey: password || username });
-      } catch (keyErr) {
-        if (password) {
-          result = await loginAdmin({ username, password });
-        } else {
-          throw keyErr;
-        }
-      }
-    } else {
-      result = await loginAdmin({ username, password });
-    }
-
+    const result = await loginAdmin({ apiKey });
     unlockDashboard(result.token, result, remember);
   } catch (err) {
     console.error('[Login Error]:', err);
     if (errBanner) {
-      errBanner.textContent = err.message || 'Authentication failed. Please check your credentials.';
+      errBanner.textContent = err.message || 'Authentication failed. Please check your Admin Authorization Key.';
       errBanner.style.display = 'block';
     }
     showToast(err.message || 'Login failed', 'error');
@@ -246,54 +199,6 @@ async function handleLogin(e) {
     if (unlockBtn) {
       unlockBtn.removeAttribute('disabled');
       unlockBtn.innerHTML = '<span>🚀 Generate Secure Session Token</span>';
-    }
-  }
-}
-
-async function handleRegister(e) {
-  if (e) e.preventDefault();
-  const userField = document.getElementById('admin-reg-username');
-  const passField = document.getElementById('admin-reg-password');
-  const keyField = document.getElementById('admin-reg-masterkey');
-  const errBanner = document.getElementById('admin-login-error');
-  const regBtn = document.getElementById('btn-register-admin');
-
-  const username = (userField?.value || '').trim();
-  const password = (passField?.value || '').trim();
-  const masterKey = (keyField?.value || '').trim();
-
-  if (!username || username.length < 3) {
-    showToast('Username must be at least 3 characters', 'error');
-    userField?.focus();
-    return;
-  }
-  if (!password || password.length < 8) {
-    showToast('Password must be at least 8 characters', 'error');
-    passField?.focus();
-    return;
-  }
-
-  try {
-    if (errBanner) errBanner.style.display = 'none';
-    if (regBtn) {
-      regBtn.setAttribute('disabled', 'true');
-      regBtn.innerHTML = '<span>Registering in MongoDB Atlas...</span>';
-    }
-
-    const result = await registerAdmin({ username, password, masterKey });
-    showToast('Admin account registered! Session token created.', 'success');
-    unlockDashboard(result.token, result, true);
-  } catch (err) {
-    console.error('[Registration Error]:', err);
-    if (errBanner) {
-      errBanner.textContent = err.message || 'Registration failed';
-      errBanner.style.display = 'block';
-    }
-    showToast(err.message || 'Registration failed', 'error');
-  } finally {
-    if (regBtn) {
-      regBtn.removeAttribute('disabled');
-      regBtn.innerHTML = '<span>✨ Register & Initialize Token</span>';
     }
   }
 }
@@ -556,24 +461,7 @@ function initAdmin() {
   console.log('[Admin Panel] Initializing tokenized control center...');
 
   // Tab Switchers
-  const tabLogin = document.getElementById('tab-btn-login');
-  const tabRegister = document.getElementById('tab-btn-register');
   const formLogin = document.getElementById('admin-login-form');
-  const formRegister = document.getElementById('admin-register-form');
-
-  tabLogin?.addEventListener('click', () => {
-    tabLogin.classList.add('is-active');
-    tabRegister?.classList.remove('is-active');
-    if (formLogin) formLogin.style.display = 'block';
-    if (formRegister) formRegister.style.display = 'none';
-  });
-
-  tabRegister?.addEventListener('click', () => {
-    tabRegister.classList.add('is-active');
-    tabLogin?.classList.remove('is-active');
-    if (formRegister) formRegister.style.display = 'block';
-    if (formLogin) formLogin.style.display = 'none';
-  });
 
   // Check stored token session
   const storedToken = localStorage.getItem('sarkari_admin_token') || sessionStorage.getItem('sarkari_admin_token');
@@ -588,8 +476,6 @@ function initAdmin() {
       .catch(() => {
         logout();
       });
-  } else {
-    checkAuthStatus();
   }
 
   // Toggle Password Visibility
@@ -609,10 +495,6 @@ function initAdmin() {
   // Login Form Submission
   formLogin?.addEventListener('submit', handleLogin);
   document.getElementById('btn-unlock-admin')?.addEventListener('click', handleLogin);
-
-  // Register Form Submission
-  formRegister?.addEventListener('submit', handleRegister);
-  document.getElementById('btn-register-admin')?.addEventListener('click', handleRegister);
 
   // Token Management
   document.getElementById('btn-rotate-token')?.addEventListener('click', handleTokenRotation);

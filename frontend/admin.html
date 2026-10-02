@@ -49,37 +49,21 @@
 
   <!-- Main Workspace Container -->
   <main class="admin-container">
-    <!-- 1. Authentication Gate Screen (Shown if not authenticated) -->
+    <!-- 1. Authentication Gate Screen (Single Admin) -->
     <section id="admin-login-view" class="admin-auth-card">
       <div class="admin-auth-icon">🔒</div>
       <h2 id="auth-card-title" class="admin-auth-title">Admin Security Console</h2>
       <p id="auth-card-subtitle" class="admin-auth-subtitle">
-        Cryptographic token-based session management and MongoDB Atlas control.
+        Enter your Admin Key to generate a signed cryptographic session token with rotation.
       </p>
 
-      <!-- Auth Mode Tabs -->
-      <div class="admin-auth-tabs">
-        <button type="button" id="tab-btn-login" class="admin-auth-tab is-active">
-          🔑 Secure Login
-        </button>
-        <button type="button" id="tab-btn-register" class="admin-auth-tab">
-          📝 Register Admin
-        </button>
-      </div>
-
       <div id="admin-login-error" class="admin-auth-banner is-error" style="display: none;"></div>
-      <div id="admin-login-success" class="admin-auth-banner" style="display: none; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.28); color: #34d399;"></div>
 
-      <!-- Tab Content: Login Form -->
+      <!-- Single Admin Login Form -->
       <form id="admin-login-form">
         <div class="admin-input-group">
-          <label for="admin-login-username">Admin Username (or Master Key)</label>
-          <input type="text" id="admin-login-username" class="admin-input-control" placeholder="admin or ADMIN_API_KEY" required autocomplete="username">
-        </div>
-
-        <div id="login-password-group" class="admin-input-group">
-          <label for="admin-key-input">Password (leave blank if entering Master Key above)</label>
-          <input type="password" id="admin-key-input" class="admin-input-control" placeholder="Enter password" autocomplete="current-password">
+          <label for="admin-key-input">Admin Authorization Key</label>
+          <input type="password" id="admin-key-input" class="admin-input-control" placeholder="Enter ADMIN_API_KEY" required autocomplete="current-password">
           <button type="button" id="btn-toggle-login-key" class="admin-toggle-pwd" title="Toggle visibility">👁️</button>
         </div>
 
@@ -92,31 +76,6 @@
 
         <button type="submit" id="btn-unlock-admin" class="admin-btn admin-btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem;">
           <span>🚀 Generate Secure Session Token</span>
-        </button>
-      </form>
-
-      <!-- Tab Content: Registration Form -->
-      <form id="admin-register-form" style="display: none;">
-        <div class="admin-input-group">
-          <label for="admin-reg-username">Choose Admin Username</label>
-          <input type="text" id="admin-reg-username" class="admin-input-control" placeholder="e.g. admin" required minlength="3">
-        </div>
-
-        <div class="admin-input-group">
-          <label for="admin-reg-password">Choose Strong Password</label>
-          <input type="password" id="admin-reg-password" class="admin-input-control" placeholder="Min. 8 characters" required minlength="8">
-        </div>
-
-        <div class="admin-input-group">
-          <label for="admin-reg-masterkey">Master Authorization Key</label>
-          <input type="password" id="admin-reg-masterkey" class="admin-input-control" placeholder="Matches ADMIN_API_KEY">
-          <small style="display: block; margin-top: 4px; font-size: 0.72rem; color: #94a3b8;">
-            Required to register administrative accounts into MongoDB Atlas.
-          </small>
-        </div>
-
-        <button type="submit" id="btn-register-admin" class="admin-btn admin-btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-          <span>✨ Register & Initialize Token</span>
         </button>
       </form>
     </section>
