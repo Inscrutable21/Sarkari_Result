@@ -60,29 +60,6 @@ export async function fetchCategories() {
   return await response.json();
 }
 
-export async function triggerLiveScrape() {
-  const response = await fetchWithFallback('/scrape', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' }
-  });
-  const result = await response.json();
-  if (!response.ok) {
-    throw new Error(result.message || 'Scrape failed');
-  }
-  return result;
-}
-
-export async function fetchPostingDetails(url) {
-  if (!url) return null;
-  try {
-    const response = await fetchWithFallback(`/details?url=${encodeURIComponent(url)}`);
-    const json = await response.json();
-    return json.data || null;
-  } catch {
-    return null;
-  }
-}
-
 export async function subscribeToJobAlerts(data) {
   const response = await fetchWithFallback('/subscribe', {
     method: 'POST',

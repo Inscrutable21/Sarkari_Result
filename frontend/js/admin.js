@@ -97,14 +97,23 @@ function showToast(message, type = 'info') {
 
 // Authentication Handlers
 async function authenticate(key, remember = true) {
+  const errBanner = document.getElementById('admin-login-error');
+  const verifyBtn = document.getElementById('btn-unlock-admin');
+  const loginSection = document.getElementById('admin-login-view');
+  const dashboardSection = document.getElementById('admin-dashboard-view');
+  const logoutBtnEl = document.getElementById('btn-admin-logout');
+
   try {
-    if (loginErrorBanner) loginErrorBanner.style.display = 'none';
-    const verifyBtn = document.getElementById('btn-unlock-admin');
+    if (errBanner) {
+      errBanner.style.display = 'none';
+      errBanner.textContent = '';
+    }
     if (verifyBtn) {
       verifyBtn.setAttribute('disabled', 'true');
-      verifyBtn.textContent = 'Verifying key...';
+      verifyBtn.innerHTML = '<span>Verifying key...</span>';
     }
 
+    console.log('[Admin Auth] Verifying admin authorization...');
     await verifyAdminKey(key);
 
     activeAdminKey = key;
@@ -114,23 +123,24 @@ async function authenticate(key, remember = true) {
       sessionStorage.setItem('sarkari_admin_key', key);
     }
 
-    loginView.style.display = 'none';
-    dashboardView.style.display = 'block';
-    logoutBtn.style.display = 'inline-flex';
+    if (loginSection) loginSection.style.display = 'none';
+    if (dashboardSection) dashboardSection.style.display = 'block';
+    if (logoutBtnEl) logoutBtnEl.style.display = 'inline-flex';
 
+    showToast('Admin access granted', 'success');
     logTerminal('Administrator authenticated successfully.', 'success');
     loadTelemetry();
   } catch (err) {
-    if (loginErrorBanner) {
-      loginErrorBanner.textContent = err.message || 'Invalid Admin Key. Please verify your credentials.';
-      loginErrorBanner.style.display = 'block';
+    console.error('[Admin Auth] Error:', err);
+    if (errBanner) {
+      errBanner.textContent = err.message || 'Invalid Admin Key. Please verify your credentials.';
+      errBanner.style.display = 'block';
     }
     showToast(err.message || 'Authentication failed', 'error');
   } finally {
-    const verifyBtn = document.getElementById('btn-unlock-admin');
     if (verifyBtn) {
       verifyBtn.removeAttribute('disabled');
-      verifyBtn.textContent = 'Unlock Admin Panel';
+      verifyBtn.innerHTML = '<span>Unlock Admin Panel</span>';
     }
   }
 }
@@ -139,10 +149,14 @@ function logout() {
   activeAdminKey = '';
   localStorage.removeItem('sarkari_admin_key');
   sessionStorage.removeItem('sarkari_admin_key');
-  dashboardView.style.display = 'none';
-  loginView.style.display = 'block';
-  logoutBtn.style.display = 'none';
-  if (keyInput) keyInput.value = '';
+  const loginSection = document.getElementById('admin-login-view');
+  const dashboardSection = document.getElementById('admin-dashboard-view');
+  const logoutBtnEl = document.getElementById('btn-admin-logout');
+  const keyField = document.getElementById('admin-key-input');
+  if (dashboardSection) dashboardSection.style.display = 'none';
+  if (loginSection) loginSection.style.display = 'block';
+  if (logoutBtnEl) logoutBtnEl.style.display = 'none';
+  if (keyField) keyField.value = '';
 }
 
 // Telemetry & Stats Loader
@@ -314,49 +328,83 @@ async function triggerReminders() {
   }
 }
 
-// Event Listeners
-document.addEventListener('DOMContentLoaded', () => {
-  // Check existing session
+// Login Handler
+function handleLoginSubmit(e) {
+  if (e) e.preventDefault();
+  const keyField = document.getElementById('admin-key-input');
+  const remField = document.getElementById('admin-remember-session');
+  const errBanner = document.getElementById('admin-login-error');
+  const key = (keyField?.value || '').trim();
+  const remember = remField ? remField.checked : true;
+
+  if (!key) {
+    if (errBanner) {
+      errBanner.textContent = 'Please enter your Admin Authorization Key';
+      errBanner.style.display = 'block';
+    }
+    showToast('Please enter your Admin Authorization Key', 'error');
+    keyField?.focus();
+    return;
+  }
+
+  authenticate(key, remember);
+}
+
+// Initializer
+function initAdmin() {
+  console.log('[Admin Panel] Initializing admin controller...');
+
+  // Auto-fill or auto-login with stored session
   const storedKey = localStorage.getItem('sarkari_admin_key') || sessionStorage.getItem('sarkari_admin_key');
-  if (storedKey) {
-    if (keyInput) keyInput.value = storedKey;
+  const keyField = document.getElementById('admin-key-input');
+  if (storedKey && keyField) {
+    keyField.value = storedKey;
     authenticate(storedKey, Boolean(localStorage.getItem('sarkari_admin_key')));
   }
 
   // Toggle Password Visibility
-  toggleKeyBtn?.addEventListener('click', () => {
-    if (!keyInput) return;
-    if (keyInput.type === 'password') {
-      keyInput.type = 'text';
-      toggleKeyBtn.textContent = '🔒';
+  const toggleBtn = document.getElementById('btn-toggle-login-key');
+  toggleBtn?.addEventListener('click', () => {
+    const input = document.getElementById('admin-key-input');
+    if (!input) return;
+    if (input.type === 'password') {
+      input.type = 'text';
+      toggleBtn.textContent = '🔒';
     } else {
-      keyInput.type = 'password';
-      toggleKeyBtn.textContent = '👁️';
+      input.type = 'password';
+      toggleBtn.textContent = '👁️';
     }
   });
 
-  // Login Form
-  loginForm?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const key = (keyInput?.value || '').trim();
-    const remember = rememberCheckbox ? rememberCheckbox.checked : true;
-    if (!key) {
-      showToast('Please enter your Admin Authorization Key', 'error');
-      return;
+  // Login Form Submission
+  const formEl = document.getElementById('admin-login-form');
+  formEl?.addEventListener('submit', handleLoginSubmit);
+
+  // Direct Button Click
+  const unlockBtn = document.getElementById('btn-unlock-admin');
+  unlockBtn?.addEventListener('click', handleLoginSubmit);
+
+  // Enter Key on Password Field
+  keyField?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      handleLoginSubmit(e);
     }
-    authenticate(key, remember);
   });
 
   // Logout
-  logoutBtn?.addEventListener('click', logout);
+  const logoutBtnEl = document.getElementById('btn-admin-logout');
+  logoutBtnEl?.addEventListener('click', logout);
 
   // Scraper Trigger
-  btnTriggerScrape?.addEventListener('click', runScraper);
+  const triggerScrapeBtn = document.getElementById('btn-trigger-scrape');
+  triggerScrapeBtn?.addEventListener('click', runScraper);
 
   // Clear Logs
-  btnClearLogs?.addEventListener('click', () => {
-    if (terminalLogs) {
-      terminalLogs.innerHTML = `
+  const clearLogsBtn = document.getElementById('btn-clear-logs');
+  clearLogsBtn?.addEventListener('click', () => {
+    const termLogs = document.getElementById('admin-terminal-logs');
+    if (termLogs) {
+      termLogs.innerHTML = `
         <div class="log-entry">
           <span class="log-time">[System]</span>
           <span class="log-msg-info">Terminal logs cleared.</span>
@@ -366,14 +414,24 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Refresh Telemetry
-  btnRefreshTelemetry?.addEventListener('click', () => {
+  const refreshTelBtn = document.getElementById('btn-refresh-telemetry');
+  refreshTelBtn?.addEventListener('click', () => {
     loadTelemetry();
     showToast('Database telemetry refreshed', 'info');
   });
 
   // Inspector Form
-  inspectorForm?.addEventListener('submit', inspectUrl);
+  const inspForm = document.getElementById('admin-inspector-form');
+  inspForm?.addEventListener('submit', inspectUrl);
 
   // Manual Reminders
-  btnManualReminders?.addEventListener('click', triggerReminders);
-});
+  const manRemindersBtn = document.getElementById('btn-manual-reminders');
+  manRemindersBtn?.addEventListener('click', triggerReminders);
+}
+
+// Guarantee execution whether script runs before or after DOM readiness
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAdmin);
+} else {
+  initAdmin();
+}
