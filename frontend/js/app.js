@@ -939,7 +939,7 @@ function setupEventListeners() {
   let tapCount = 0;
   let tapTimer = null;
   const TAP_THRESHOLD = 5;
-  const TAP_WINDOW_MS = 2500;
+  const TAP_WINDOW_MS = 5000; // 5-second continuous tapping window
 
   function registerTap(e) {
     // Avoid interfering if user is clicking inside an input, button, select, or link (unless clicking brand header)
