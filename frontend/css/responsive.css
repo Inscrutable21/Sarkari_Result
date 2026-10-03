@@ -177,10 +177,6 @@ object {
     border-bottom: 1px solid var(--border-color);
   }
 
-  [data-theme="dark"] .site-header {
-    background: rgba(15, 23, 42, 0.96);
-  }
-
   .header-inner {
     display: flex;
     flex-wrap: nowrap;
@@ -242,13 +238,6 @@ object {
 
   .btn-tracked-nav span {
     display: none !important;
-  }
-
-  .btn-theme-toggle {
-    width: 34px;
-    height: 34px;
-    flex-shrink: 0;
-    border-radius: 50%;
   }
 
   /* Clean Hero Gateway Card */
@@ -1136,12 +1125,6 @@ object {
     justify-content: space-around;
     padding: 0 0.5rem;
     padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-
-  [data-theme="dark"] .mobile-bottom-nav {
-    background: rgba(16, 22, 35, 0.94);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.35);
   }
 
   .mobile-nav-btn {

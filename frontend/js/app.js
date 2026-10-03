@@ -21,8 +21,7 @@ import {
   state,
   subscribe,
   setFilters,
-  resetFilters,
-  setTheme
+  resetFilters
 } from './state.js';
 import {
   renderTicker,
@@ -53,7 +52,6 @@ const qualSelect = document.getElementById('filter-qualification');
 const searchInput = document.getElementById('search-input');
 const searchClearBtn = document.getElementById('search-clear-btn');
 const resetFiltersBtn = document.getElementById('btn-reset-filters');
-const themeToggleBtn = document.getElementById('btn-theme-toggle');
 const trendingContainer = document.getElementById('trending-container');
 const resultsContainer = document.getElementById('matrix-results-list');
 const admitCardsContainer = document.getElementById('matrix-admitcards-list');
@@ -516,13 +514,7 @@ function setupEventListeners() {
     handleOpenAlertsModal();
   });
 
-  // 6. Theme Toggle Button
-  themeToggleBtn?.addEventListener('click', () => {
-    const newTheme = state.theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-  });
-
-  // 7. Mobile Matrix Tabs Switching
+  // 6. Mobile Matrix Tabs Switching
   document.querySelectorAll('.matrix-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.matrix-tab-btn').forEach(b => b.classList.remove('is-active'));
@@ -951,8 +943,6 @@ function setupEventListeners() {
 
 // Bootstrap
 document.addEventListener('DOMContentLoaded', () => {
-  setTheme(state.theme);
-
   const todayBadge = document.getElementById('filter-current-date-badge');
   if (todayBadge) {
     const today = new Date();

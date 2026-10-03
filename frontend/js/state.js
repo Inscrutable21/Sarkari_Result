@@ -33,9 +33,18 @@ export const state = {
   activeMobileTab: 'latestJobs', // 'latestJobs' | 'admitCards' | 'results'
   activeSecondaryTab: 'answerKeys', // 'answerKeys' | 'syllabus' | 'admissions' | 'certificates'
   isScraping: false,
-  selectedItem: null,
-  theme: localStorage.getItem('sr_theme') || 'light'
+  selectedItem: null
 };
+
+// Cleanup any legacy theme settings
+try {
+  localStorage.removeItem('sr_theme');
+  if (typeof document !== 'undefined' && document.documentElement) {
+    document.documentElement.removeAttribute('data-theme');
+  }
+} catch (e) {
+  // Ignore localStorage errors
+}
 
 const listeners = [];
 
@@ -80,13 +89,6 @@ export function setScraping(status) {
 
 export function setSelectedItem(item) {
   state.selectedItem = item;
-  notify();
-}
-
-export function setTheme(theme) {
-  state.theme = theme;
-  localStorage.setItem('sr_theme', theme);
-  document.documentElement.setAttribute('data-theme', theme);
   notify();
 }
 

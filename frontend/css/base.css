@@ -203,10 +203,6 @@ ol {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
-[data-theme="dark"] .site-header {
-  background-color: rgba(16, 22, 35, 0.88);
-}
-
 .header-inner {
   display: flex;
   align-items: center;
@@ -388,28 +384,6 @@ ol {
   align-items: center;
   gap: 0.75rem;
   flex-shrink: 0;
-}
-
-/* Theme Toggle Button (Reference Pill / Circle) */
-.btn-theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--border-color);
-  background-color: var(--bg-surface);
-  color: var(--text-secondary);
-  box-shadow: var(--shadow-xs);
-  transition: all var(--transition-fast);
-}
-
-.btn-theme-toggle:hover {
-  background-color: var(--bg-surface-soft);
-  color: var(--text-primary);
-  border-color: var(--border-subtle);
-  transform: translateY(-1px);
 }
 
 /* Main Content Area */
