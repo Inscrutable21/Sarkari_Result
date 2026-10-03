@@ -1,6 +1,7 @@
 # 🏛️ Sarkari Hith (sarkari hith 2026)
 
 [![Vercel Deployment](https://img.shields.io/badge/Deployed%20with-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com)
+[![MongoDB Atlas](https://img.shields.io/badge/Database-MongoDB%20Atlas-47A248?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/atlas)
 [![Node.js](https://img.shields.io/badge/Node.js-v20+-339933?style=for-the-badge&logo=nodedotjs)](https://nodejs.org)
 [![Vanilla JS](https://img.shields.io/badge/Frontend-Vanilla%20ES6+-F7DF1E?style=for-the-badge&logo=javascript)](https://developer.mozilla.org)
 [![CSS3](https://img.shields.io/badge/Styling-Modular%20CSS3-1572B6?style=for-the-badge&logo=css3)](https://developer.mozilla.org)
@@ -23,7 +24,7 @@
 - [Environment Configuration](#-environment-configuration)
 - [Automation & Background Services](#-automation--background-services)
   - [Web Scraper Pipeline](#1-web-scraper-pipeline)
-  - [Google Sheets 2-Way Sync](#2-google-sheets-2-way-sync)
+  - [MongoDB Atlas Data Sync](#2-mongodb-atlas-data-sync)
   - [Daily Job Alerts & Deadline Reminders](#3-daily-job-alerts--deadline-reminders)
 - [REST API Reference](#-rest-api-reference)
 - [Vercel Deployment Guide](#-vercel-deployment-guide)
@@ -35,7 +36,7 @@
 
 ## 🌟 Overview
 
-**Sarkari Hith** is designed to solve information fragmentation for millions of government exam candidates. Built with a performance-first mindset, it serves real-time exam notifications, hall tickets, cutoff results, and syllabus PDFs through an ultra-dense, responsive UI backed by lightweight Node.js microservices.
+**Sarkari Hith** is designed to eliminate information fragmentation for millions of government exam candidates. Built with a performance-first mindset, it serves real-time exam notifications, hall tickets, cutoff results, answer keys, and syllabus PDFs through an ultra-dense, responsive UI backed by lightweight Node.js microservices and cloud-native MongoDB Atlas storage.
 
 ---
 
@@ -56,7 +57,7 @@
 - **Search**: Instant debounced full-text search across titles, organizations, and exam tags.
 
 ### 4. Candidate Welfare & Utility Modules
-- **Job Tracker & Deadlines**: Candidates can bookmark vacancies, set their application status (`Interested`, `Applied`, `Admit Card Released`), and track remaining days until submission closes.
+- **Job Tracker & Deadlines**: Candidates can bookmark vacancies, set their application status (`Interested`, `Applied`), and receive countdown notices as deadlines approach.
 - **Degree-Matched Email Alerts**: Aspirants subscribe with their degree and state; the system automatically matches and dispatches notification emails when relevant vacancies open.
 - **Answer Keys & Objection Windows**: Official provisional & final keys with objection raise links.
 - **Syllabus & Scheme**: Direct official PDF links to exam patterns and detailed marking schemes.
@@ -65,7 +66,7 @@
 ### 5. Premium UI / UX
 - **Theme Support**: Seamless toggle between crisp authoritative Light Mode and eye-friendly Dark Slate Mode.
 - **Mobile-First Design**: Optimized for 320px–480px viewports (over 85% of exam aspirants browse on smartphones).
-- **Vercel Web Analytics**: Privacy-first, real-time traffic insights and custom conversion tracking for search queries and alert subscriptions.
+- **Vercel Web Analytics**: Privacy-first, real-time traffic insights and conversion tracking for search queries and alert subscriptions.
 
 ---
 
@@ -77,10 +78,9 @@ graph TD
     VercelEdge -->|Static Assets CSS/JS/HTML| Frontend[Modular Static Frontend]
     VercelEdge -->|/api/* Requests| Serverless[Vercel Serverless Function api/index.js]
     Serverless --> Backend[Node.js HTTP Server backend/server.js]
-    Backend --> DataStore[(JSON Local Data Stores)]
-    Backend --> GoogleSheets[Google Sheets WebApp 2-Way Sync]
+    Backend --> MongoDB[(MongoDB Atlas Cloud Database)]
     Backend --> SMTP[Nodemailer SMTP Email Service]
-    Scraper[Scraper Pipeline Cheerio / Axios] --> DataStore
+    Scraper[Scraper Pipeline Cheerio / Axios] --> MongoDB
     Scraper --> Classifier[Smart Job Classifier]
 ```
 
@@ -92,9 +92,9 @@ graph TD
 | **Client Logic** | Modern Vanilla JavaScript (ES6+ Modules) | Native browser execution without bundler friction (`api.js`, `state.js`, `components.js`, `app.js`). |
 | **Backend Runtime** | Node.js (v20+) | Native HTTP server, zero unnecessary external server bloat. |
 | **Serverless Layer**| Vercel Serverless Functions (`api/index.js`) | Auto-scaling global compute for `/api/*` endpoints. |
+| **Cloud Database**| MongoDB Atlas Cloud | Scalable, persistent cloud collection storage for jobs, results, subscribers, and logs. |
 | **Data Ingestion** | Cheerio, Axios, Puppeteer (Dev) | Resilient web scraping pipeline from official government notification portals. |
-| **Notifications** | Nodemailer | Automated degree-matched vacancy dispatches & deadline reminders. |
-| **Cloud Database**| Google Sheets API / WebApp Apps Script | Free, accessible, real-time admin portal for manual content management and synchronization. |
+| **Notifications** | Nodemailer | Automated degree-matched vacancy dispatches & 6:00 PM deadline reminders. |
 | **Analytics** | `@vercel/analytics` Edge Script | Built-in real-time analytics with zero performance penalty. |
 
 ---
@@ -115,8 +115,6 @@ Sarkari_Result/
 │
 ├── frontend/                       # Client-side Single Page Application (SPA)
 │   ├── index.html                  # Accessible HTML5 semantic shell & analytics scripts
-│   ├── styles.css                  # Legacy/fallback utility styles
-│   ├── app.js                      # Root connection health checker
 │   ├── assets/                     # Branding, logos, and hero imagery
 │   │   └── images/                 # sarkari_hith_logo.jpg, parliament_hero.jpg
 │   ├── css/                        # Modular stylesheet architecture
@@ -138,23 +136,23 @@ Sarkari_Result/
     ├── server.js                   # Node.js HTTP router, rate-limiting & static server
     ├── .env.example                # Template for required environment variables
     └── src/
-        ├── data/                   # JSON storage datasets
-        │   ├── jobs.json           # Latest government job listings
-        │   ├── admitCards.json     # Active exam admit cards & hall tickets
-        │   ├── results.json        # Declared exam results & merit lists
-        │   ├── trending.json       # High-priority spotlight notices
-        │   ├── categories.json     # Category definitions & post counts
-        │   ├── allData.json        # Aggregated catalog
-        │   └── subscribers.json    # Candidate alert subscriptions (git-ignored)
+        ├── data/                   # Fallback local seed files
         └── services/               # Core backend business logic
-            ├── googleSheetService.js # 2-way sync with Google Sheets Apps Script
-            ├── notificationService.js# Degree matcher, email templates & reminders
-            ├── pushAllDataToSheet.js # Utility script to seed Google Sheet
-            ├── sendNotifications.js  # Scheduled job alert dispatcher
-            └── scraper/              # Data extraction & parsing pipeline
-                ├── classifier.js     # NLP/Regex classification for eligibility & qualifications
-                ├── sarkariScraper.js # HTML extractor using Cheerio
-                └── runScraper.js     # Scheduled batch scraper runner
+            ├── mongoService.js     # MongoDB Atlas connection & collection operations
+            ├── notificationService.js# Unified notification facade
+            ├── notifications/      # Modular notification subsystem
+            │   ├── constants.js    # Sanitizers, validation regexes & paths
+            │   ├── dispatcher.js   # Email batch delivery & deadline runners
+            │   ├── emailTemplates.js# High-fidelity responsive HTML email templates
+            │   ├── emailTransporter.js# SMTP transport & dispatch logging
+            │   ├── jobTrackerStore.js# Deadline countdown tracking & status store
+            │   ├── sentHistoryStore.js# Deduplication history store
+            │   ├── subscriberStore.js# Subscriber profiles & degree matching
+            │   └── subscriberStatusService.js # 6:00 PM reminder diagnostic engine
+            └── scraper/            # Data extraction & parsing pipeline
+                ├── classifier.js   # NLP/Regex classification for eligibility & qualifications
+                ├── sarkariScraper.js# HTML extractor using Cheerio
+                └── runScraper.js   # Batch scraper execution pipeline
 ```
 
 ---
@@ -189,7 +187,7 @@ Sarkari_Result/
 ### Running the Application
 
 #### Option A: Start the Integrated Node.js Server (Recommended for Local Dev)
-The Node.js server automatically serves the frontend static files and exposes all `/api/*` endpoints on a single port:
+The Node.js server automatically serves the frontend static files and exposes all public `/api/*` endpoints on a single port:
 
 ```bash
 cd backend
@@ -214,19 +212,22 @@ Create a `.env` file inside the `backend/` directory (or configure these variabl
 # Application Port (defaults to 3000)
 PORT=3000
 
-# Admin Secret Key (protects scraper and sheet sync endpoints)
-ADMIN_SECRET_KEY=your_secure_admin_secret_key
-
-# Google Sheets 2-Way Sync Integration
-GOOGLE_SHEET_WEBAPP_URL=https://script.google.com/macros/s/YOUR_APPS_SCRIPT_ID/exec
-GOOGLE_SHEET_SYNC_SECRET=your_sheet_sync_secret
+# Cloud Database Configuration
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/?retryWrites=true&w=majority
+MONGODB_DB_NAME=sarkari_hith
 
 # SMTP Email Configuration (for Job Alerts & Deadlines)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your_email@gmail.com
-SMTP_PASS=your_app_password
-SMTP_FROM="Sarkari Hith Alerts" <your_email@gmail.com>
+EMAIL_USER=your_email@gmail.com
+EMAIL_APP_PASSWORD=your_gmail_app_password
+NOTIFICATION_FROM_EMAIL="Sarkari Hith Job Alerts" <your_email@gmail.com>
+
+# Automated Daily Reminder Schedule (IST Timezone)
+TIMEZONE=Asia/Kolkata
+REMINDER_TRIGGER_HOUR=18
+REMINDER_TRIGGER_MINUTE=0
+
+# Vercel Cron Secret (for scheduled daily cloud executions)
+CRON_SECRET=your_vercel_cron_secret
 ```
 
 ---
@@ -241,12 +242,12 @@ cd backend
 npm run scrape
 ```
 
-### 2. Google Sheets 2-Way Sync
-Sync all local JSON datasets directly into your connected Google Sheet for easy remote administration:
+### 2. MongoDB Atlas Data Sync
+Synchronize seed datasets and ensure cloud collection indexes are healthy:
 
 ```bash
 cd backend
-npm run sync:sheets
+npm run sync:mongo
 ```
 
 ### 3. Daily Job Alerts & Deadline Reminders
@@ -261,23 +262,29 @@ npm run notify
 
 ## 🔌 REST API Reference
 
-All backend responses return standard JSON envelopes:
+All backend responses return standard JSON envelopes adhering to the project specification:  
 `{ "success": true, "data": [...], "meta": { ... } }`
 
-| Method | Endpoint | Description | Query Parameters / Body |
+### Public Portal & Candidate Endpoints
+
+| Method | Endpoint | Description | Parameters / Payload |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/health` | Healthcheck and service uptime | None |
-| `GET` | `/api/all` | Complete dashboard payload (jobs, admit cards, results, ticker) | None |
-| `GET` | `/api/jobs` | Filtered list of recruitment postings | `?sector=...&state=...&qualification=...&q=...&activeOnly=true` |
-| `GET` | `/api/admit-cards` | Active admit cards & hall tickets | `?q=...` |
+| `GET` | `/api/health` | Healthcheck and service uptime telemetry | None |
+| `GET` | `/api/all` | Complete portal dataset (jobs, admit cards, results, ticker) | None |
+| `GET` | `/api/jobs` | Filtered list of government recruitment postings | `?sector=...&state=...&qualification=...&q=...&activeOnly=true` |
+| `GET` | `/api/admit-cards` | Active examination admit cards & hall tickets | `?q=...` |
 | `GET` | `/api/results` | Declared examination results & merit lists | `?q=...` |
-| `GET` | `/api/categories` | Department categories & vacancy counts | None |
-| `POST` | `/api/alerts/subscribe` | Register candidate for qualification-matched job alerts | Body: `{ email, name, qualification, state, sector }` |
-| `POST` | `/api/track-job/add` | Save job to candidate's personal tracker | Body: `{ email, jobId, jobTitle, lastDate, applyLink }` |
-| `GET` | `/api/track-job/list` | Retrieve tracked jobs for candidate | `?email=user@example.com` |
-| `POST` | `/api/track-job/apply` | Update job application status | Body: `{ trackId, status: "applied" \| "interested" }` |
-| `POST` | `/api/scrape/trigger` | Trigger live scraping run *(Admin protected)* | Header: `x-admin-key: <ADMIN_SECRET_KEY>` |
-| `POST` | `/api/sync-sheets` | Force sync from Google Sheets *(Admin protected)* | Header: `x-admin-key: <ADMIN_SECRET_KEY>` |
+| `GET` | `/api/categories` | Department categories & current vacancy counts | None |
+| `GET` | `/api/details` | Extract deep specifications for a specific recruitment notice | `?url=https://...` |
+| `POST` | `/api/subscribe` | Register candidate for qualification-matched job alerts | Body: `{ email, name, qualification, state, sector }` |
+| `GET` | `/api/subscriptions` | Check candidate subscription status | `?email=candidate@example.com` |
+| `POST` | `/api/unsubscribe` | Unsubscribe from email job alerts | Body: `{ email }` |
+| `POST` | `/api/track-job` | Save job to candidate's personal deadline tracker | Body: `{ email, jobId, jobTitle, lastDate, link }` |
+| `GET` | `/api/track-job/list` | Retrieve tracked job deadlines for candidate | `?email=candidate@example.com` |
+| `POST` | `/api/track-job/apply` | Update job application status (`applied` / `pending`) | Body: `{ trackId, status, email, jobId, jobTitle }` |
+| `GET` | `/api/track-job/status` | Candidate quick-response link from reminder email | `?trackId=...&status=applied&email=...` |
+| `POST` | `/api/track-job/schedule-timer` | Schedule a 1-minute test reminder for validation | Body: `{ email, jobId, jobTitle, lastDate }` |
+| `GET` | `/api/track-job/active-timers` | View active countdown timers for email | `?email=candidate@example.com` |
 
 ---
 
@@ -291,7 +298,7 @@ The repository is configured for **Zero-Config Vercel Deployment**:
    - **Framework Preset**: `Other`
    - **Root Directory**: `./`
    - **Output Directory**: Automatically set to `frontend` via [vercel.json](vercel.json).
-4. **Environment Variables**: Add `ADMIN_SECRET_KEY`, `GOOGLE_SHEET_WEBAPP_URL`, `SMTP_HOST`, etc. in Vercel settings.
+4. **Environment Variables**: Add `MONGODB_URI`, `EMAIL_USER`, `EMAIL_APP_PASSWORD`, `CRON_SECRET`, etc. in Vercel settings.
 5. **Deploy**: Vercel will deploy the static frontend to its global CDN and mount [api/index.js](api/index.js) as a Serverless Function for all `/api/*` traffic.
 6. **Activate Analytics**: In the Vercel Dashboard, navigate to the **Analytics** tab and click **Enable Web Analytics**.
 
@@ -299,10 +306,12 @@ The repository is configured for **Zero-Config Vercel Deployment**:
 
 ## 🛡️ Security Hardening
 
-- **SSRF Prevention**: The scraper URL whitelist strictly restricts scraping to authorized government notification domains.
-- **Formula Injection Defense**: Candidate input fields exported to Google Sheets sanitize dangerous characters (`=`, `+`, `-`, `@`) to eliminate CSV spreadsheet injection vulnerabilities.
+- **Defensive HTTP Headers**: Responses enforce strict headers (`X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`, and `Permissions-Policy`).
+- **IP Rate Limiting**: In-memory rate limiting shields public endpoints against automated spam and denial-of-service attempts.
+- **SSRF Prevention**: The scraper URL engine strictly restricts scraping to authorized government notification domains.
 - **XSS Escaping**: All dynamic DOM renderers in [frontend/js/components.js](frontend/js/components.js) pass data through strict HTML entity encoding.
-- **Fail-Closed Admin Gate**: Admin endpoints reject requests immediately unless a secure `ADMIN_SECRET_KEY` is provided.
+- **PII Protection**: Candidate job tracking and notification logs require candidate email authentication, preventing bulk data scraping.
+- **Cryptographic Timing-Safe Comparison**: All sensitive validation operations utilize `crypto.timingSafeEqual` to thwart timing side-channel attacks.
 
 ---
 
