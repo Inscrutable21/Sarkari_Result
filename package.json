@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "node backend/server.js",
     "start": "node backend/server.js",
+    "scrape": "node backend/src/services/scraper/runScraper.js",
+    "notify": "node backend/src/services/sendNotifications.js",
     "sync:mongo": "node backend/src/services/pushAllDataToMongo.js"
   },
   "dependencies": {

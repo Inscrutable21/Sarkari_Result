@@ -2,7 +2,6 @@
 
 [![Vercel Deployment](https://img.shields.io/badge/Deployment-Vercel%20Edge-black?style=for-the-badge&logo=vercel)](https://vercel.com)
 [![MongoDB Atlas](https://img.shields.io/badge/Database-MongoDB%20Atlas-47A248?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/atlas)
-[![Google Sheets API](https://img.shields.io/badge/Dual%20Sync-Google%20Sheets%20API-34A853?style=for-the-badge&logo=googlesheets)](https://developers.google.com/sheets/api)
 [![Node.js Runtime](https://img.shields.io/badge/Backend-Node.js%20v20+-339933?style=for-the-badge&logo=nodedotjs)](https://nodejs.org)
 [![Vanilla JS](https://img.shields.io/badge/Frontend-Vanilla%20ES6+-F7DF1E?style=for-the-badge&logo=javascript)](https://developer.mozilla.org)
 [![Modular CSS](https://img.shields.io/badge/Styling-Modular%20CSS3-1572B6?style=for-the-badge&logo=css3)](https://developer.mozilla.org)
@@ -50,7 +49,7 @@
 
 Sarkari Hith is an enterprise-grade recruitment aggregation and deadline tracking platform designed to eliminate information asymmetry for millions of government exam candidates across India.
 
-Built with a strict performance-first and zero-bloat standard, the platform delivers instantaneous examination updates, hall tickets, cutoff results, answer keys, and syllabus documents. The frontend runs completely on native ES6+ modules and modular CSS3 without heavy client-side frameworks, while the backend leverages lightweight Node.js native routing, cloud-native MongoDB Atlas document persistence, and dual real-time Google Sheets replication.
+Built with a strict performance-first and zero-bloat standard, the platform delivers instantaneous examination updates, hall tickets, cutoff results, answer keys, and syllabus documents. The frontend runs completely on native ES6+ modules and modular CSS3 without heavy client-side frameworks, while the backend leverages lightweight Node.js native routing and cloud-native MongoDB Atlas document persistence.
 
 ### Primary Metrics
 
@@ -128,7 +127,6 @@ graph TD
 
     subgraph "Persistent Storage & External Integrations"
         NodeServer -->|"Connection Pool"| MongoDB[("MongoDB Atlas Cloud Database")]
-        NodeServer -->|"REST Webhook"| GoogleSheets[("Google Sheets (Apps Script Web App)")]
         NotifyModule -->|"SMTP TLS"| EmailRelay["SMTP Mail Server (Gmail / Custom)"]
         ScraperModule -->|"Targeted Extraction"| ExternalGovPortals["Official Government Notice Portals"]
     end
@@ -193,22 +191,7 @@ flowchart LR
     RBACGate -->|"scrape:run"| ScraperAction["Trigger Live Cheerio Scraper"]
     RBACGate -->|"notifications:dispatch"| BatchReminderAction["Execute Daily 18:00 Reminders"]
     RBACGate -->|"subscribers:read"| DiagnosticsAction["Return Real-time Subscriber Status"]
-    RBACGate -->|"system:sync"| CloudSyncAction["Flush Datasets to Mongo & Google Sheets"]
-```
-
-### Dual-Storage Synchronization Pipeline
-
-```mermaid
-flowchart TD
-    RawNotice["Official Commission HTML Document"] --> Scraper["Cheerio Scraper Pipeline"]
-    Scraper --> Classifier["NLP & Regex Classifier (Eligibility, Dates, Fees, Posts)"]
-    Classifier --> SchemaNormalizer["Normalized Portal Data Contract (JSON)"]
-    
-    SchemaNormalizer --> MongoAdapter["MongoDB Atlas Service"]
-    SchemaNormalizer --> SheetAdapter["Google Sheets Web App Adapter"]
-    
-    MongoAdapter --> MongoCollection["Collections: jobs, results, admitCards, categories"]
-    SheetAdapter --> SheetTabs["Worksheet Tabs: Jobs, Results, AdmitCards, Subscribers"]
+    RBACGate -->|"system:sync"| CloudSyncAction["Flush Datasets to MongoDB Atlas"]
 ```
 
 ---
@@ -223,7 +206,7 @@ flowchart TD
 | **Candidate Utilities** | Integrated job deadline tracker & countdown | Static unstructured link dumps without user state |
 | **Automated Alerts** | Qualification-matched emails & 18:00 IST reminders | Unfiltered blast emails or manual RSS feeds |
 | **Admin Architecture** | Tokenized executive console with RBAC & diagnostics | Vulnerable single-password forms without audit logs |
-| **Data Redundancy** | Cloud MongoDB Atlas paired with real-time Google Sheets | Vulnerable local file storage or single SQLite instances |
+| **Data Redundancy** | Cloud MongoDB Atlas with automatic indexing | Vulnerable local file storage or single SQLite instances |
 
 ---
 
@@ -260,9 +243,6 @@ Sarkari_Result/
 |   |   |-- components.js           # Reusable DOM renderers & detail modal templates
 |   |   |-- app.js                  # Main entry point, event listeners, debounced search
 |   |   `-- admin.js                # Admin console authentication & management logic
-|   `-- data/                       # Fallback static datasets for offline resilience
-|       |-- allData.json            # Master aggregated portal data
-|       `-- categories.json         # Department taxonomy
 |
 `-- backend/                        # Node.js backend services & data management
     |-- package.json                # Backend scripts & runtime dependencies
@@ -274,12 +254,8 @@ Sarkari_Result/
         `-- services/               # Core backend business logic
             |-- authService.js      # Cryptographic admin tokens & RBAC permissions
             |-- mongoService.js     # MongoDB Atlas connection & collection operations
-            |-- googleSheetService.js # Google Apps Script Web App sync operations
             |-- notificationService.js # Unified notification facade
-            |-- setupGoogleSheet.js # Apps Script template generator
             |-- pushAllDataToMongo.js # Batch cloud sync script for MongoDB Atlas
-            |-- pushAllDataToSheet.js # Batch sync script for Google Sheets
-            |-- migrateToGoogleSheet.js # Migration helper for Google Sheets
             |-- sendNotifications.js # CLI runner for daily alerts & deadline reminders
             |-- notifications/      # Modular notification subsystem
             |   |-- constants.js    # Sanitizers, validation regexes & paths
@@ -367,8 +343,6 @@ Configure the following environment variables in `backend/.env` or in your hosti
 | `SMTP_HOST` | String | `smtp.gmail.com` | Custom SMTP relay host. |
 | `SMTP_PORT` | Integer | `465` | SMTP port (`465` for SSL, `587` for TLS). |
 | `NOTIFICATION_FROM_EMAIL` | String | *Optional* | Formatted sender header in candidate email inboxes. |
-| `GOOGLE_SHEET_WEBAPP_URL` | URL | *Optional* | Google Apps Script deployment URL for sheet sync. |
-| `GOOGLE_SHEET_SECRET_KEY` | String | *Optional* | Authentication key for Google Apps Script Web App. |
 | `CRON_SECRET` | String | *Optional* | Bearer secret for Vercel Cron authorization. |
 | `TIMEZONE` | String | `Asia/Kolkata` | Reference timezone for reminder scheduling. |
 | `REMINDER_TRIGGER_HOUR` | Integer | `18` | Hour to trigger daily deadline reminders (18 = 18:00 IST). |
@@ -384,7 +358,6 @@ All background automation tasks can be run directly from the `backend/` director
 | :--- | :--- | :--- | :--- |
 | `npm run scrape` | Web Scraper | In-Memory / File / Cloud | Runs Cheerio extraction on authorized recruitment notices. |
 | `npm run sync:mongo` | Cloud Data Sync | MongoDB Atlas | Upserts normalized JSON documents to Atlas collections. |
-| `npm run sync:sheets` | Spreadsheet Sync | Google Sheets | Pushes current datasets to Google Sheets via Apps Script. |
 | `npm run notify` | Notification Runner | SMTP Dispatcher | Scans deadlines and dispatches degree-matched alerts. |
 
 ---

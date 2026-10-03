@@ -8,8 +8,7 @@
     "dev": "node --watch --watch-path=server.js --watch-path=src/services server.js",
     "scrape": "node src/services/scraper/runScraper.js",
     "notify": "node src/services/sendNotifications.js",
-    "sync:mongo": "node src/services/pushAllDataToMongo.js",
-    "sync:sheets": "node src/services/pushAllDataToSheet.js"
+    "sync:mongo": "node src/services/pushAllDataToMongo.js"
   },
   "dependencies": {
     "axios": "^1.20.0",

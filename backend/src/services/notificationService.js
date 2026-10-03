@@ -8,7 +8,7 @@
  * - notifications/emailTransporter.js -> Nodemailer transport setup, logging & telemetry
  * - notifications/emailTemplates.js   -> High-fidelity HTML email templates & status view
  * - notifications/sentHistoryStore.js -> Persistent deduplication history store
- * - notifications/subscriberStore.js  -> Subscriber CRUD, Google Sheets sync & degree matching
+ * - notifications/subscriberStore.js  -> Subscriber CRUD, MongoDB sync & degree matching
  * - notifications/jobTrackerStore.js  -> Deadline countdown tracking, status management & timers
  * - notifications/dispatcher.js       -> Dispatch workflows, test triggers & batch runners
  */

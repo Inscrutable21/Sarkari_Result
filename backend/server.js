@@ -213,8 +213,6 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  const dataDir = resolve(__dirname, "src/data");
-
   if (url.pathname === "/api/health") {
     response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
     response.end(JSON.stringify({ status: "ok", message: "Node.js is running", isScraping: isScrapingInProgress }));
