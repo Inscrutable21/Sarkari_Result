@@ -16,7 +16,8 @@ import {
   sendIndividualSubscriberReminder,
   dispatchAllPendingReminders,
   deleteSubscriberRecord,
-  clearAllSubscribersRecords
+  clearAllSubscribersRecords,
+  sendAdminTestNotification
 } from './api.js';
 
 // State
@@ -25,8 +26,10 @@ let activeAdminKey = '';
 let sessionData = null;
 let countdownInterval = null;
 let scrapeTimerInterval = null;
+let schedulerCountdownInterval = null;
 let currentSubscribersData = null;
 let currentFilter = 'all';
+let searchQuery = '';
 
 // Terminal Log Helper
 function logTerminal(message, type = 'info') {
@@ -118,6 +121,66 @@ function updateSessionCard(token, session) {
   countdownInterval = setInterval(tickCountdown, 1000);
 }
 
+// Live Real-Time Countdown to the Next 6:00 PM IST Batch
+function startSchedulerCountdown() {
+  clearInterval(schedulerCountdownInterval);
+
+  function tickScheduler() {
+    const hoursEl = document.getElementById('cd-hours');
+    const minsEl = document.getElementById('cd-mins');
+    const secsEl = document.getElementById('cd-secs');
+    const triggerTextEl = document.getElementById('scheduler-next-trigger-text');
+    if (!hoursEl || !minsEl || !secsEl) return;
+
+    try {
+      const now = new Date();
+      // Format current time in Asia/Kolkata timezone
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Kolkata',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: false
+      });
+      const parts = formatter.formatToParts(now);
+      const getVal = (t) => parseInt(parts.find(p => p.type === t)?.value || '0', 10);
+      const curHour = getVal('hour');
+      const curMin = getVal('minute');
+      const curSec = getVal('second');
+
+      const curTotalSecs = curHour * 3600 + curMin * 60 + curSec;
+      const targetHour = 18; // 6:00 PM IST
+      const targetTotalSecs = targetHour * 3600;
+
+      let diffSecs = 0;
+      if (curTotalSecs < targetTotalSecs) {
+        // Earlier today before 6:00 PM IST
+        diffSecs = targetTotalSecs - curTotalSecs;
+        if (triggerTextEl) triggerTextEl.textContent = 'Today, 6:00 PM IST';
+      } else {
+        // Past 6:00 PM IST, target is tomorrow 6:00 PM IST
+        diffSecs = (24 * 3600 - curTotalSecs) + targetTotalSecs;
+        if (triggerTextEl) triggerTextEl.textContent = 'Tomorrow, 6:00 PM IST';
+      }
+
+      const h = Math.floor(diffSecs / 3600);
+      const m = Math.floor((diffSecs % 3600) / 60);
+      const s = diffSecs % 60;
+
+      hoursEl.textContent = String(h).padStart(2, '0');
+      minsEl.textContent = String(m).padStart(2, '0');
+      secsEl.textContent = String(s).padStart(2, '0');
+    } catch {
+      hoursEl.textContent = '--';
+      minsEl.textContent = '--';
+      secsEl.textContent = '--';
+    }
+  }
+
+  tickScheduler();
+  schedulerCountdownInterval = setInterval(tickScheduler, 1000);
+}
+
 // Unlock Dashboard
 function unlockDashboard(token, session, remember = true) {
   activeToken = token;
@@ -142,6 +205,7 @@ function unlockDashboard(token, session, remember = true) {
   updateSessionCard(token, session);
   showToast('Admin session token active', 'success');
   logTerminal(`Authenticated with cryptographic token (Gen #${session?.rotationCount || 0}).`, 'success');
+  startSchedulerCountdown();
   loadTelemetry();
   loadSubscribersMonitor();
 }
@@ -151,6 +215,7 @@ function logout() {
   activeAdminKey = '';
   sessionData = null;
   clearInterval(countdownInterval);
+  clearInterval(schedulerCountdownInterval);
 
   localStorage.removeItem('sarkari_admin_token');
   localStorage.removeItem('sarkari_admin_session');
@@ -426,6 +491,14 @@ async function triggerReminders() {
   }
 }
 
+// Helper to generate initials from name
+function getInitials(name) {
+  if (!name) return 'CA';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
 // Load Subscriber Directory & 6:00 PM Dispatch Status
 async function loadSubscribersMonitor() {
   const tableBody = document.getElementById('subscribers-table-body');
@@ -448,6 +521,24 @@ async function loadSubscribersMonitor() {
     if (statPending) statPending.textContent = summary.pendingCount ?? 0;
     if (statSent) statSent.textContent = summary.sentTodayCount ?? 0;
     if (statApplied) statApplied.textContent = summary.appliedCount ?? 0;
+
+    // Update 6th Stat Card: 6 PM Batch Today
+    const statBatchToday = document.getElementById('stat-count-batch-today');
+    if (statBatchToday) {
+      statBatchToday.textContent = `${summary.sentTodayCount ?? 0} Sent`;
+    }
+
+    // Update Scheduler Hero Widget Today's Badge
+    const schedulerTodayBadge = document.getElementById('scheduler-today-status-badge');
+    if (schedulerTodayBadge) {
+      if ((summary.sentTodayCount || 0) > 0) {
+        schedulerTodayBadge.textContent = `✓ Completed (${summary.sentTodayCount} Dispatched)`;
+        schedulerTodayBadge.style.color = '#34d399';
+      } else {
+        schedulerTodayBadge.textContent = `⏳ ${summary.pendingCount || 0} Pending (6:00 PM Batch)`;
+        schedulerTodayBadge.style.color = '#fbbf24';
+      }
+    }
 
     // Update Filter counts
     const fAll = document.getElementById('filter-count-all');
@@ -477,26 +568,44 @@ async function loadSubscribersMonitor() {
   }
 }
 
-// Render Subscriber Directory Table
+// Render Subscriber Directory Table with Live Search and Avatars
 function renderSubscribersTable() {
   const tableBody = document.getElementById('subscribers-table-body');
   if (!tableBody || !currentSubscribersData) return;
 
   const items = currentSubscribersData.items || [];
   const filtered = items.filter(item => {
-    if (currentFilter === 'all') return true;
-    if (currentFilter === 'pending') return item.status === 'pending';
-    if (currentFilter === 'sent_today') return item.status === 'sent_today';
-    if (currentFilter === 'applied') return item.status === 'applied';
-    if (currentFilter === 'up_to_date') return item.status === 'up_to_date';
+    // 1. Status Filter Pill Match
+    let statusMatch = true;
+    if (currentFilter === 'pending') statusMatch = item.status === 'pending';
+    else if (currentFilter === 'sent_today') statusMatch = item.status === 'sent_today';
+    else if (currentFilter === 'applied') statusMatch = item.status === 'applied';
+    else if (currentFilter === 'up_to_date') statusMatch = item.status === 'up_to_date';
+
+    if (!statusMatch) return false;
+
+    // 2. Search Query Match
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase().trim();
+      const name = (item.name || '').toLowerCase();
+      const email = (item.email || '').toLowerCase();
+      const job = (item.jobTitle || '').toLowerCase();
+      const org = (item.organization || '').toLowerCase();
+      return name.includes(q) || email.includes(q) || job.includes(q) || org.includes(q);
+    }
+
     return true;
   });
 
   if (filtered.length === 0) {
+    const emptyNotice = searchQuery
+      ? `No candidates match "${escapeHtml(searchQuery)}" in "${escapeHtml(currentFilter)}" filter.`
+      : `No candidates or subscribers found in "${escapeHtml(currentFilter)}" view.`;
     tableBody.innerHTML = `
       <tr>
         <td colspan="6" style="text-align: center; color: #94a3b8; padding: 2.5rem;">
-          No candidates or subscribers found in "${escapeHtml(currentFilter)}" view.
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔍</div>
+          <div>${emptyNotice}</div>
         </td>
       </tr>
     `;
@@ -509,7 +618,7 @@ function renderSubscribersTable() {
       : '<span style="color: #64748b;">Never sent</span>';
 
     const deadlineNotice = item.daysLeft !== null 
-      ? `<span style="display: block; font-size: 0.72rem; color: #fbbf24; font-weight: 600;">⏳ ${item.daysLeft} days remaining</span>` 
+      ? `<span style="display: inline-block; font-size: 0.72rem; color: #fbbf24; font-weight: 600; background: rgba(245, 158, 11, 0.12); padding: 1px 6px; border-radius: 4px; margin-top: 3px;">⏳ ${item.daysLeft} days remaining</span>` 
       : '';
 
     const actionHtml = item.canSendNow
@@ -524,11 +633,18 @@ function renderSubscribersTable() {
       </button>
     `;
 
+    const initials = getInitials(item.name);
+
     return `
       <tr>
         <td>
-          <div style="font-weight: 600; color: #fff;">${escapeHtml(item.name || 'Candidate')}</div>
-          <div style="font-size: 0.74rem; color: #94a3b8;">${escapeHtml(item.email)}</div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="candidate-avatar">${escapeHtml(initials)}</div>
+            <div>
+              <div style="font-weight: 600; color: #fff;">${escapeHtml(item.name || 'Candidate')}</div>
+              <div style="font-size: 0.74rem; color: #94a3b8;">${escapeHtml(item.email)}</div>
+            </div>
+          </div>
         </td>
         <td>
           <span class="admin-brand-badge" style="font-size: 0.68rem; padding: 2px 6px;">
@@ -536,7 +652,7 @@ function renderSubscribersTable() {
           </span>
         </td>
         <td>
-          <div style="font-weight: 500; color: #e2e8f0; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+          <div style="font-weight: 500; color: #e2e8f0; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHtml(item.jobTitle)}">
             ${escapeHtml(item.jobTitle)}
           </div>
           <div style="font-size: 0.74rem; color: #94a3b8;">
@@ -668,6 +784,78 @@ async function handleClearAllSubscribers() {
   }
 }
 
+// Export all currently visible or loaded subscribers/candidates to CSV
+function exportSubscribersToCsv() {
+  if (!currentSubscribersData || !Array.isArray(currentSubscribersData.items) || currentSubscribersData.items.length === 0) {
+    showToast('No candidate records available to export', 'warn');
+    return;
+  }
+
+  const items = currentSubscribersData.items;
+  const headers = ['ID', 'Candidate Name', 'Email', 'Type', 'Target Job Title', 'Organization', 'Deadline', 'Days Remaining', '6 PM Status', 'Last Sent Date', 'Total Dispatches'];
+
+  const rows = items.map(i => [
+    i.id || '',
+    `"${(i.name || '').replace(/"/g, '""')}"`,
+    `"${(i.email || '').replace(/"/g, '""')}"`,
+    `"${(i.typeLabel || '').replace(/"/g, '""')}"`,
+    `"${(i.jobTitle || '').replace(/"/g, '""')}"`,
+    `"${(i.organization || '').replace(/"/g, '""')}"`,
+    `"${(i.lastDate || '').replace(/"/g, '""')}"`,
+    i.daysLeft !== null ? i.daysLeft : '',
+    `"${(i.statusLabel || '').replace(/"/g, '""')}"`,
+    `"${(i.lastSentAt || '').replace(/"/g, '""')}"`,
+    i.reminderCount || 0
+  ]);
+
+  const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement('a');
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', `sarkari_hith_candidates_${new Date().toISOString().split('T')[0]}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast('Candidates exported to CSV successfully', 'success');
+}
+
+// Handle dispatching on-demand test email
+async function handleSendTestEmail(e) {
+  if (e) e.preventDefault();
+  const input = document.getElementById('test-email-input');
+  const btn = document.getElementById('btn-send-test-email');
+  const email = (input?.value || '').trim();
+
+  if (!email || !email.includes('@')) {
+    showToast('Please enter a valid recipient email', 'warn');
+    input?.focus();
+    return;
+  }
+
+  const originalText = btn ? btn.textContent : '';
+  if (btn) {
+    btn.setAttribute('disabled', 'true');
+    btn.textContent = 'Sending...';
+  }
+
+  logTerminal(`Sending test alert email notification to ${email}...`, 'info');
+  try {
+    const result = await sendAdminTestNotification(activeToken || activeAdminKey, { email });
+    logTerminal(`Test email sent successfully: ${result.message || 'Delivered to ' + email}`, 'success');
+    showToast(`Test email delivered to ${email}!`, 'success');
+    if (input) input.value = '';
+    loadSubscribersMonitor();
+  } catch (err) {
+    logTerminal(`Test email delivery failed: ${err.message}`, 'error');
+    showToast(`Test failed: ${err.message}`, 'error');
+  } finally {
+    if (btn) {
+      btn.removeAttribute('disabled');
+      btn.textContent = originalText;
+    }
+  }
+}
+
 // Initializer
 function initAdmin() {
   console.log('[Admin Panel] Initializing tokenized control center...');
@@ -740,6 +928,10 @@ function initAdmin() {
 
   // Manual Reminders
   document.getElementById('btn-manual-reminders')?.addEventListener('click', triggerReminders);
+  document.getElementById('btn-hero-force-reminders')?.addEventListener('click', handleForceAllReminders);
+
+  // Quick Test Email Form
+  document.getElementById('admin-test-email-form')?.addEventListener('submit', handleSendTestEmail);
 
   // Subscriber Directory & 6:00 PM Monitor Controls
   document.getElementById('btn-refresh-subscribers')?.addEventListener('click', () => {
@@ -749,6 +941,27 @@ function initAdmin() {
 
   document.getElementById('btn-force-all-reminders')?.addEventListener('click', handleForceAllReminders);
   document.getElementById('btn-clear-all-subscribers')?.addEventListener('click', handleClearAllSubscribers);
+  document.getElementById('btn-export-csv')?.addEventListener('click', exportSubscribersToCsv);
+
+  // Live Candidate Search Input & Clear
+  const searchInput = document.getElementById('subscribers-search-input');
+  const clearSearchBtn = document.getElementById('btn-clear-search');
+
+  searchInput?.addEventListener('input', (e) => {
+    searchQuery = e.target.value;
+    if (clearSearchBtn) {
+      clearSearchBtn.style.display = searchQuery ? 'flex' : 'none';
+    }
+    renderSubscribersTable();
+  });
+
+  clearSearchBtn?.addEventListener('click', () => {
+    if (searchInput) searchInput.value = '';
+    searchQuery = '';
+    clearSearchBtn.style.display = 'none';
+    renderSubscribersTable();
+    searchInput?.focus();
+  });
 
   // Filter Pills
   document.querySelectorAll('.admin-filter-pill').forEach(pill => {
@@ -767,3 +980,4 @@ if (document.readyState === 'loading') {
 } else {
   initAdmin();
 }
+

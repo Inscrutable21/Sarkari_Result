@@ -829,6 +829,29 @@ const server = createServer(async (request, response) => {
     return;
   }
 
+  // 11h. Send Test Notification Email (Admin Protected with RBAC)
+  if (url.pathname === "/api/admin/send-test-notification" && request.method === "POST") {
+    if (!(await enforceAdminPermission(request, response, url, "notifications:dispatch"))) {
+      return;
+    }
+    try {
+      const body = await parseBody(request);
+      const email = body.email;
+      if (!email || !email.includes("@")) {
+        response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+        response.end(JSON.stringify({ success: false, error: "Valid recipient email required" }));
+        return;
+      }
+      const result = await sendTestNotification(email, body.degree || "all");
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: true, ...result }));
+    } catch (err) {
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
   // 12. MongoDB Atlas Status & Collection Telemetry
   if (url.pathname === "/api/mongodb/status" && request.method === "GET") {
     const { getMongoStatus } = require("./src/services/mongoService");

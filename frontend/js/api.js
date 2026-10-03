@@ -447,3 +447,24 @@ export async function clearAllSubscribersRecords(token) {
   return result;
 }
 
+/**
+ * Dispatches an on-demand test email notification to any designated recipient
+ */
+export async function sendAdminTestNotification(token, payload) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const response = await fetchWithFallback('/admin/send-test-notification', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(payload)
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Failed to dispatch test notification');
+  }
+  return result;
+}
+
+

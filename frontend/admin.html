@@ -82,6 +82,50 @@
 
     <!-- 2. Authenticated Dashboard (Shown once authenticated) -->
     <section id="admin-dashboard-view" style="display: none;">
+      <!-- 6:00 PM Automation Status & Live Countdown Hero Card -->
+      <div class="admin-scheduler-hero-card">
+        <div class="scheduler-hero-left">
+          <div class="scheduler-pulse-badge">
+            <span class="scheduler-pulse-dot"></span>
+            <span>6:00 PM AUTOMATED DISPATCH ENGINE: ACTIVE</span>
+          </div>
+          <h2 class="scheduler-hero-title">Daily Application Deadline Reminder Engine</h2>
+          <p class="scheduler-hero-subtitle">
+            Automated daily deadline countdown reminders are scheduled to dispatch at <strong>6:00 PM IST</strong> every day.
+          </p>
+          <div class="scheduler-metrics-pills">
+            <span class="scheduler-pill">
+              <span class="scheduler-pill-label">Next Scheduled Run:</span>
+              <strong id="scheduler-next-trigger-text">Tomorrow, 6:00 PM IST</strong>
+            </span>
+            <span class="scheduler-pill">
+              <span class="scheduler-pill-label">Today's Dispatch:</span>
+              <strong id="scheduler-today-status-badge" style="color: #34d399;">✓ Completed (100% On-Time)</strong>
+            </span>
+            <span class="scheduler-pill">
+              <span class="scheduler-pill-label">Timezone:</span>
+              <strong>Asia/Kolkata (IST)</strong>
+            </span>
+          </div>
+        </div>
+
+        <div class="scheduler-hero-right">
+          <div class="countdown-widget">
+            <span class="countdown-widget-label">COUNTDOWN TO NEXT 6:00 PM BATCH</span>
+            <div id="scheduler-live-countdown" class="countdown-timer-display">
+              <div class="cd-box"><strong id="cd-hours">--</strong><small>HRS</small></div>
+              <span class="cd-sep">:</span>
+              <div class="cd-box"><strong id="cd-mins">--</strong><small>MIN</small></div>
+              <span class="cd-sep">:</span>
+              <div class="cd-box"><strong id="cd-secs">--</strong><small>SEC</small></div>
+            </div>
+          </div>
+          <button type="button" id="btn-hero-force-reminders" class="admin-btn admin-btn-primary" style="margin-top: 10px; width: 100%; justify-content: center; padding: 0.65rem 1rem; font-size: 0.82rem;">
+            <span>⚡ Run 6:00 PM Batch Now</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Telemetry Stats Cards -->
       <div class="admin-stats-grid">
         <div class="admin-stat-card">
@@ -121,6 +165,14 @@
           <div class="admin-stat-info">
             <span class="admin-stat-label">Tracked Applications</span>
             <span id="stat-count-tracked" class="admin-stat-value">--</span>
+          </div>
+        </div>
+
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon-frame" style="background: rgba(234, 88, 12, 0.15); color: #fb923c;">🔔</div>
+          <div class="admin-stat-info">
+            <span class="admin-stat-label">6 PM Batch Today</span>
+            <span id="stat-count-batch-today" class="admin-stat-value">--</span>
           </div>
         </div>
       </div>
@@ -282,16 +334,29 @@
             <div class="admin-card-header">
               <h3 class="admin-card-title">
                 <span>⏰</span>
-                <span>Reminder Engine</span>
+                <span>Reminder & Dispatch Controls</span>
               </h3>
             </div>
-            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0 0 1rem; line-height: 1.5;">
-              The system automatically sends daily deadline countdown emails to tracked candidates at 6:00 PM IST. You can also trigger it manually right now:
+            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0 0 0.85rem; line-height: 1.5;">
+              Automated reminders dispatch daily at 6:00 PM IST with persistent state & catch-up.
             </p>
 
-            <button type="button" id="btn-manual-reminders" class="admin-btn admin-btn-secondary" style="width: 100%; justify-content: center;">
+            <button type="button" id="btn-manual-reminders" class="admin-btn admin-btn-secondary" style="width: 100%; justify-content: center; margin-bottom: 1rem;">
               <span>📬 Dispatch Daily Reminders Now</span>
             </button>
+
+            <!-- Quick On-Demand Test Email Form -->
+            <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.85rem;">
+              <span style="font-size: 0.76rem; font-weight: 600; color: #cbd5e1; display: block; margin-bottom: 6px;">
+                ✉️ Send Immediate Test Notification:
+              </span>
+              <form id="admin-test-email-form" style="display: flex; gap: 6px;">
+                <input type="email" id="test-email-input" class="admin-input-control" placeholder="name@example.com" required style="font-size: 0.78rem; padding: 0.45rem 0.65rem;">
+                <button type="submit" id="btn-send-test-email" class="admin-btn admin-btn-primary" style="flex-shrink: 0; padding: 0.45rem 0.8rem; font-size: 0.76rem;">
+                  Send Test
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -335,6 +400,21 @@
           </div>
           <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); padding: 8px 14px; border-radius: 8px; font-size: 0.78rem;">
             <span style="color: #a5b4fc;">Marked Applied:</span> <strong id="sub-stat-applied" style="color: #a5b4fc; margin-left: 4px;">--</strong>
+          </div>
+        </div>
+
+        <!-- Controls Row: Search Input & CSV Export -->
+        <div class="admin-table-controls-bar">
+          <div class="admin-search-wrapper">
+            <span class="admin-search-icon">🔍</span>
+            <input type="text" id="subscribers-search-input" class="admin-search-input" placeholder="Search candidate name, email, organization, or job title...">
+            <button type="button" id="btn-clear-search" class="admin-clear-search" style="display: none;" title="Clear search">✕</button>
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <button type="button" id="btn-export-csv" class="admin-btn admin-btn-secondary" style="padding: 6px 14px; font-size: 0.78rem;" title="Export all candidate records to a CSV spreadsheet">
+              <span>📥 Export CSV</span>
+            </button>
           </div>
         </div>
 
