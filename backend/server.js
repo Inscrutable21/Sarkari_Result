@@ -55,7 +55,9 @@ const {
   renderStatusPageHtml,
   getSentJobHistory,
   getSubscribersDispatchStatus,
-  sendIndividualReminder
+  sendIndividualReminder,
+  deleteSubscriberOrTrackedJob,
+  clearAllSubscribersAndTracked
 } = require("./src/services/notificationService");
 
 const {
@@ -785,6 +787,39 @@ const server = createServer(async (request, response) => {
         },
         ...updatedStatus
       }));
+    } catch (err) {
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 11f. Delete individual subscriber or tracked job record (Admin Protected with RBAC)
+  if (url.pathname === "/api/admin/subscribers/delete" && request.method === "POST") {
+    if (!(await enforceAdminPermission(request, response, url, "notifications:dispatch"))) {
+      return;
+    }
+    try {
+      const body = await parseBody(request);
+      const result = await deleteSubscriberOrTrackedJob(body.id, body.email);
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify(result));
+    } catch (err) {
+      response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 11g. Clear ALL subscribers and tracked applications (Admin Protected with RBAC)
+  if (url.pathname === "/api/admin/subscribers/clear-all" && request.method === "POST") {
+    if (!(await enforceAdminPermission(request, response, url, "notifications:dispatch"))) {
+      return;
+    }
+    try {
+      const result = await clearAllSubscribersAndTracked();
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify(result));
     } catch (err) {
       response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: false, error: err.message }));

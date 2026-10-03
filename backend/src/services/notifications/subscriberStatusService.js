@@ -9,7 +9,7 @@ const { getTrackedJobs, saveTrackedJobs, calculateDaysLeft } = require('./jobTra
 const { getEmailLogs } = require('./emailTransporter');
 const { getSentJobHistory, hasJobBeenSentToSubscriber } = require('./sentHistoryStore');
 const { matchJobsForSubscriber } = require('./subscriberStore');
-const { getPortalDatasetFromMongo } = require('../mongoService');
+const { getPortalDatasetFromMongo, getDb } = require('../mongoService');
 const { sendTrackedJobEmail, sendJobAlertEmail } = require('./dispatcher');
 
 /**
@@ -279,7 +279,56 @@ async function sendIndividualReminder(targetId, targetEmail) {
   throw new Error(`Recipient with email ${targetEmail} not found in subscriber or tracked candidate database.`);
 }
 
+/**
+ * Deletes an individual subscriber or tracked job record from MongoDB Atlas
+ */
+async function deleteSubscriberOrTrackedJob(targetId, targetEmail) {
+  const db = await getDb();
+  if (!db) throw new Error('Database connection unavailable');
+  const email = (targetEmail || '').trim().toLowerCase();
+  let deletedSub = 0;
+  let deletedTrk = 0;
+
+  if (targetId) {
+    const res1 = await db.collection('subscribers').deleteOne({ id: targetId });
+    const res2 = await db.collection('tracked_jobs').deleteOne({ id: targetId });
+    deletedSub += res1.deletedCount;
+    deletedTrk += res2.deletedCount;
+  }
+  if (email) {
+    const res1 = await db.collection('subscribers').deleteMany({ email });
+    const res2 = await db.collection('tracked_jobs').deleteMany({ email });
+    deletedSub += res1.deletedCount;
+    deletedTrk += res2.deletedCount;
+  }
+
+  return {
+    success: true,
+    message: `Deleted recipient records (${deletedSub} subscriber, ${deletedTrk} tracked applications)`,
+    deletedSubscribers: deletedSub,
+    deletedTracked: deletedTrk
+  };
+}
+
+/**
+ * Clears all subscribers and tracked application records from MongoDB Atlas
+ */
+async function clearAllSubscribersAndTracked() {
+  const db = await getDb();
+  if (!db) throw new Error('Database connection unavailable');
+  const subRes = await db.collection('subscribers').deleteMany({});
+  const trkRes = await db.collection('tracked_jobs').deleteMany({});
+  return {
+    success: true,
+    deletedSubscribers: subRes.deletedCount,
+    deletedTracked: trkRes.deletedCount,
+    message: `Successfully cleared all ${subRes.deletedCount} subscribers and ${trkRes.deletedCount} tracked applications.`
+  };
+}
+
 module.exports = {
   getSubscribersDispatchStatus,
-  sendIndividualReminder
+  sendIndividualReminder,
+  deleteSubscriberOrTrackedJob,
+  clearAllSubscribersAndTracked
 };

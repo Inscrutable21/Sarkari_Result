@@ -57,6 +57,8 @@ const {
   // Subscriber & 6 PM Reminder Status
   getSubscribersDispatchStatus,
   sendIndividualReminder,
+  deleteSubscriberOrTrackedJob,
+  clearAllSubscribersAndTracked,
 
   // Constants & Utilities
   DATA_DIR,
@@ -103,6 +105,8 @@ module.exports = {
   recordSentJobsForSubscriber,
   getSubscribersDispatchStatus,
   sendIndividualReminder,
+  deleteSubscriberOrTrackedJob,
+  clearAllSubscribersAndTracked,
   DATA_DIR,
   SUBSCRIBERS_FILE,
   TRACKED_JOBS_FILE,

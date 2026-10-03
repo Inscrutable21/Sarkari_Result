@@ -14,7 +14,9 @@ import {
   verifySessionToken,
   fetchSubscribersStatus,
   sendIndividualSubscriberReminder,
-  dispatchAllPendingReminders
+  dispatchAllPendingReminders,
+  deleteSubscriberRecord,
+  clearAllSubscribersRecords
 } from './api.js';
 
 // State
@@ -516,6 +518,12 @@ function renderSubscribersTable() {
          </button>`
       : `<span style="font-size: 0.72rem; color: #64748b;">Suppressed</span>`;
 
+    const deleteBtnHtml = `
+      <button type="button" class="admin-btn admin-btn-secondary btn-delete-individual" data-id="${item.id}" data-email="${escapeHtml(item.email)}" style="padding: 4px 8px; font-size: 0.72rem; color: #fca5a5; border-color: rgba(239, 68, 68, 0.25);" title="Delete subscriber record">
+        <span>🗑️</span>
+      </button>
+    `;
+
     return `
       <tr>
         <td>
@@ -548,8 +556,11 @@ function renderSubscribersTable() {
           <div style="font-size: 0.75rem; color: #cbd5e1;">${formattedDate}</div>
           <div style="font-size: 0.7rem; color: #64748b;">Dispatches: ${item.reminderCount || 0}</div>
         </td>
-        <td style="text-align: right;">
-          ${actionHtml}
+        <td style="text-align: right; white-space: nowrap;">
+          <div style="display: inline-flex; gap: 6px; align-items: center;">
+            ${actionHtml}
+            ${deleteBtnHtml}
+          </div>
         </td>
       </tr>
     `;
@@ -561,6 +572,15 @@ function renderSubscribersTable() {
       const id = btn.getAttribute('data-id');
       const email = btn.getAttribute('data-email');
       await handleSendSingleReminder(btn, id, email);
+    });
+  });
+
+  // Attach individual delete handlers
+  tableBody.querySelectorAll('.btn-delete-individual').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.getAttribute('data-id');
+      const email = btn.getAttribute('data-email');
+      await handleDeleteSingleSubscriber(id, email);
     });
   });
 }
@@ -613,6 +633,38 @@ async function handleForceAllReminders() {
       btn.removeAttribute('disabled');
       btn.innerHTML = originalHtml;
     }
+  }
+}
+
+// Handle deleting an individual subscriber
+async function handleDeleteSingleSubscriber(id, email) {
+  if (!confirm(`Are you sure you want to permanently delete subscriber "${email}" from MongoDB Atlas?`)) return;
+
+  logTerminal(`Deleting subscriber ${email}...`, 'warn');
+  try {
+    const result = await deleteSubscriberRecord(activeToken || activeAdminKey, { id, email });
+    logTerminal(`Subscriber deleted: ${result.message || 'Record removed from cloud database.'}`, 'success');
+    showToast(`Deleted ${email}`, 'info');
+    await loadSubscribersMonitor();
+  } catch (err) {
+    logTerminal(`Deletion failed for ${email}: ${err.message}`, 'error');
+    showToast(`Failed: ${err.message}`, 'error');
+  }
+}
+
+// Handle clearing all subscribers
+async function handleClearAllSubscribers() {
+  if (!confirm('WARNING: Are you sure you want to delete ALL subscribers and tracked applications from MongoDB Atlas?')) return;
+
+  logTerminal('Clearing all subscribers and tracked applications from MongoDB Atlas...', 'warn');
+  try {
+    const result = await clearAllSubscribersRecords(activeToken || activeAdminKey);
+    logTerminal(`Database cleared: ${result.message || 'All subscriber records removed.'}`, 'success');
+    showToast('All subscribers successfully deleted!', 'info');
+    await loadSubscribersMonitor();
+  } catch (err) {
+    logTerminal(`Clear all failed: ${err.message}`, 'error');
+    showToast(`Failed to clear: ${err.message}`, 'error');
   }
 }
 
@@ -696,6 +748,7 @@ function initAdmin() {
   });
 
   document.getElementById('btn-force-all-reminders')?.addEventListener('click', handleForceAllReminders);
+  document.getElementById('btn-clear-all-subscribers')?.addEventListener('click', handleClearAllSubscribers);
 
   // Filter Pills
   document.querySelectorAll('.admin-filter-pill').forEach(pill => {

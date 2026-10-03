@@ -408,3 +408,42 @@ export async function dispatchAllPendingReminders(token) {
   return result;
 }
 
+/**
+ * Deletes an individual subscriber or tracked job record
+ */
+export async function deleteSubscriberRecord(token, payload) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const response = await fetchWithFallback('/admin/subscribers/delete', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(payload)
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Failed to delete subscriber record');
+  }
+  return result;
+}
+
+/**
+ * Clears all subscribers and tracked application records from cloud database
+ */
+export async function clearAllSubscribersRecords(token) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const response = await fetchWithFallback('/admin/subscribers/clear-all', {
+    method: 'POST',
+    headers
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Failed to clear subscribers');
+  }
+  return result;
+}
+
