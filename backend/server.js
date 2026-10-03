@@ -57,6 +57,8 @@ const {
 } = require("./src/services/notificationService");
 
 const {
+  ROLE_PERMISSIONS,
+  checkPermission,
   isAdminRegistered,
   registerAdmin,
   loginWithCredentials,
@@ -106,25 +108,76 @@ function isRateLimited(ip, maxRequests = 10, windowMs = 60000) {
   return entry.count > maxRequests;
 }
 
-// Authenticates administrative requests using Tokenization with ADMIN_API_KEY fallback
-async function isAdminAuthorized(request, url) {
+// Authenticates administrative requests and verifies granular RBAC permissions
+async function verifyAdminPermission(request, url, requiredPermission = null) {
   const authHeader = request.headers["authorization"] || "";
   const token = authHeader.replace(/^Bearer\s+/i, "").trim() || url.searchParams.get("token");
 
+  // 1. Bearer Token Verification
   if (token) {
     const validation = await validateSessionToken(token);
     if (validation.valid) {
       request.adminSession = validation;
-      return true;
+      if (requiredPermission) {
+        const allowed = checkPermission(validation.role, validation.permissions, requiredPermission);
+        if (!allowed) {
+          return {
+            authorized: false,
+            reason: "forbidden",
+            permission: requiredPermission,
+            role: validation.role || "unknown"
+          };
+        }
+      }
+      return { authorized: true, session: validation };
     }
   }
 
-  // Master key fallback (for bootstrap / direct pipeline calls)
+  // 2. Direct Master Key Fallback (Always granted superadmin / wildcard permissions)
   const adminKey = process.env.ADMIN_API_KEY;
-  if (!adminKey || !adminKey.trim()) return false;
-  const headerKey = request.headers["x-admin-key"] || authHeader;
-  const queryKey = url.searchParams.get("adminKey");
-  return (headerKey && headerKey === adminKey) || (queryKey && queryKey === adminKey);
+  if (adminKey && adminKey.trim()) {
+    const headerKey = request.headers["x-admin-key"] || authHeader;
+    const queryKey = url.searchParams.get("adminKey");
+    if ((headerKey && headerKey === adminKey) || (queryKey && queryKey === adminKey)) {
+      request.adminSession = {
+        adminId: "master_admin",
+        username: "Master Administrator",
+        role: "superadmin",
+        permissions: ["*"]
+      };
+      return { authorized: true, session: request.adminSession };
+    }
+  }
+
+  return { authorized: false, reason: "unauthorized" };
+}
+
+// Unified middleware helper to enforce authorization and permissions with automated HTTP error responses
+async function enforceAdminPermission(request, response, url, requiredPermission = null) {
+  const check = await verifyAdminPermission(request, url, requiredPermission);
+  if (!check.authorized) {
+    if (check.reason === "forbidden") {
+      response.writeHead(403, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({
+        success: false,
+        error: `403 Forbidden: Account with role '${check.role}' lacks permission '${check.permission}' for this operation.`
+      }));
+    } else {
+      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({
+        success: false,
+        error: "401 Unauthorized: Valid Admin Session Token or Master Authorization Key required."
+      }));
+    }
+    return false;
+  }
+  return true;
+}
+
+// Backward-compatible helper for boolean permission checks
+async function isAdminAuthorized(request, url, requiredPermission = null) {
+  const check = await verifyAdminPermission(request, url, requiredPermission);
+  return check.authorized;
 }
 
 const server = createServer(async (request, response) => {
@@ -218,11 +271,9 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // Trigger live scraping of all data on demand (Admin Protected with Tokenization)
+  // Trigger live scraping of all data on demand (Admin Protected with RBAC)
   if (url.pathname === "/api/scrape") {
-    if (!(await isAdminAuthorized(request, url))) {
-      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: "401 Unauthorized: Valid Admin token or key required" }));
+    if (!(await enforceAdminPermission(request, response, url, "scrape:run"))) {
       return;
     }
 
@@ -445,11 +496,9 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // 5. Trigger batch dispatch for all subscribers (Admin Protected)
+  // 5. Trigger batch dispatch for all subscribers (Admin Protected with RBAC)
   if (url.pathname === "/api/notifications/send" && request.method === "POST") {
-    if (!isAdminAuthorized(request, url)) {
-      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: "401 Unauthorized: Admin API key required" }));
+    if (!(await enforceAdminPermission(request, response, url, "notifications:dispatch"))) {
       return;
     }
 
@@ -464,11 +513,9 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // 6. View recent notification logs (Admin Protected to prevent PII leak)
+  // 6. View recent notification logs (Admin Protected with RBAC)
   if (url.pathname === "/api/notifications/logs" && request.method === "GET") {
-    if (!isAdminAuthorized(request, url)) {
-      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: "401 Unauthorized: Admin API key required to view dispatch logs" }));
+    if (!(await enforceAdminPermission(request, response, url, "notifications:view_logs"))) {
       return;
     }
 
@@ -478,13 +525,13 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // 6a. View candidate sent-job notification history (Rate Limited / Admin Protected)
+  // 6a. View candidate sent-job notification history (Rate Limited / Admin Protected with RBAC)
   if (url.pathname === "/api/notifications/sent-history" && request.method === "GET") {
     const email = url.searchParams.get("email");
-    if (!email && !isAdminAuthorized(request, url)) {
-      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: "401 Unauthorized: Candidate email or Admin API key required" }));
-      return;
+    if (!email) {
+      if (!(await enforceAdminPermission(request, response, url, "notifications:view_logs"))) {
+        return;
+      }
     }
 
     const history = await getSentJobHistory();
@@ -556,13 +603,11 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // 9. List tracked jobs for an email address (Prevents PII dumping without email or admin key)
+  // 9. List tracked jobs for an email address (Prevents PII dumping without email or admin permission)
   if (url.pathname === "/api/track-job/list" && request.method === "GET") {
     const email = url.searchParams.get("email");
     if (!email) {
-      if (!isAdminAuthorized(request, url)) {
-        response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
-        response.end(JSON.stringify({ success: false, error: "Candidate email query parameter is required to view tracked jobs" }));
+      if (!(await enforceAdminPermission(request, response, url, "track_job:view"))) {
         return;
       }
       const trackedList = await getTrackedJobs();
@@ -639,11 +684,9 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // 11. Trigger batch daily job reminders (Admin Protected)
+  // 11. Trigger batch daily job reminders (Admin Protected with RBAC)
   if (url.pathname === "/api/notifications/reminders/send" && request.method === "POST") {
-    if (!isAdminAuthorized(request, url)) {
-      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: "401 Unauthorized: Admin API key required" }));
+    if (!(await enforceAdminPermission(request, response, url, "reminders:dispatch"))) {
       return;
     }
 
@@ -662,9 +705,10 @@ const server = createServer(async (request, response) => {
   if (url.pathname === "/api/cron/reminders" && (request.method === "GET" || request.method === "POST")) {
     const cronSecret = process.env.CRON_SECRET;
     const authHeader = request.headers["authorization"];
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}` && !isAdminAuthorized(request, url)) {
+    const isCronSecretValid = cronSecret && authHeader === `Bearer ${cronSecret}`;
+    if (!isCronSecretValid && !(await isAdminAuthorized(request, url, "reminders:dispatch"))) {
       response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: "Unauthorized cron trigger" }));
+      response.end(JSON.stringify({ success: false, error: "Unauthorized cron or admin trigger" }));
       return;
     }
 
@@ -699,11 +743,9 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // 13. Force Sync Local Seed Datasets into MongoDB Atlas (Admin Protected)
+  // 13. Force Sync Local Seed Datasets into MongoDB Atlas (Admin Protected with RBAC)
   if (url.pathname === "/api/sync-mongo" && (request.method === "GET" || request.method === "POST")) {
-    if (!isAdminAuthorized(request, url)) {
-      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: "401 Unauthorized: Admin API key required" }));
+    if (!(await enforceAdminPermission(request, response, url, "database:sync"))) {
       return;
     }
     try {

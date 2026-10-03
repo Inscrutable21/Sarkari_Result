@@ -67,10 +67,24 @@ function showToast(message, type = 'info') {
 // Update Active Session UI Card
 function updateSessionCard(token, session) {
   const adminUser = document.getElementById('session-admin-user');
+  const adminRole = document.getElementById('session-admin-role');
+  const adminPerms = document.getElementById('session-admin-permissions');
   const countdownEl = document.getElementById('session-expires-countdown');
 
   if (adminUser) {
     adminUser.textContent = session?.username || session?.admin?.username || 'Master Administrator';
+  }
+
+  const role = session?.role || session?.admin?.role || 'superadmin';
+  const perms = session?.permissions || session?.admin?.permissions || ['*'];
+
+  if (adminRole) {
+    adminRole.textContent = role === 'superadmin' ? 'Superadmin (Full Access)' : (role.toUpperCase() + ' (Restricted)');
+  }
+  if (adminPerms) {
+    adminPerms.textContent = Array.isArray(perms) && perms.includes('*') 
+      ? 'All Administrative Capabilities (*)' 
+      : (Array.isArray(perms) ? perms.join(', ') : 'Default Capabilities');
   }
 
   // Start live expiration countdown

@@ -11,6 +11,49 @@ const MASTER_SECRET = process.env.SESSION_SECRET || process.env.ADMIN_API_KEY ||
 const TOKEN_EXPIRY_HOURS = 12;
 
 /**
+ * Role-Based Access Control (RBAC) Permissions Matrix
+ * Standardizes administrative capabilities and safeguards privileged operations.
+ */
+const ROLE_PERMISSIONS = {
+  superadmin: ['*'], // Wildcard access to all administrative capabilities
+  admin: [
+    'scrape:run',
+    'notifications:dispatch',
+    'notifications:view_logs',
+    'reminders:dispatch',
+    'database:status',
+    'track_job:view'
+  ],
+  viewer: [
+    'notifications:view_logs',
+    'database:status',
+    'track_job:view'
+  ]
+};
+
+/**
+ * Resolves all permissions granted to a role and optional custom permissions
+ */
+function getGrantedPermissions(role, customPermissions = []) {
+  const rolePerms = ROLE_PERMISSIONS[role] || [];
+  if (rolePerms.includes('*')) return ['*'];
+  return Array.from(new Set([...rolePerms, ...(customPermissions || [])]));
+}
+
+/**
+ * Verifies if an admin role or custom permission set satisfies a required permission
+ */
+function checkPermission(userRole, userPermissions = [], requiredPermission = null) {
+  if (!requiredPermission) return true;
+  if (userRole === 'superadmin') return true;
+  const perms = Array.isArray(userPermissions) && userPermissions.length > 0
+    ? userPermissions
+    : getGrantedPermissions(userRole);
+  if (perms.includes('*')) return true;
+  return perms.includes(requiredPermission);
+}
+
+/**
  * Generates a cryptographic salt and password hash using scrypt
  */
 function hashPassword(password, existingSalt = null) {
@@ -128,18 +171,21 @@ async function registerAdmin(username, password, masterKey = '') {
   }
 
   const { salt, hash } = hashPassword(password);
+  const role = existingCount === 0 ? 'superadmin' : 'admin';
+  const permissions = getGrantedPermissions(role);
   const adminDoc = {
     username: normalizedUser,
     displayName: username.trim(),
     passwordHash: hash,
     salt,
-    role: existingCount === 0 ? 'superadmin' : 'admin',
+    role,
+    permissions,
     createdAt: new Date().toISOString(),
     lastLoginAt: null
   };
 
   const result = await db.collection('admin_users').insertOne(adminDoc);
-  const session = await createSession(result.insertedId.toString(), normalizedUser, 'initial_registration');
+  const session = await createSession(result.insertedId.toString(), normalizedUser, 'initial_registration', {}, 0, role, permissions);
 
   return {
     success: true,
@@ -147,7 +193,8 @@ async function registerAdmin(username, password, masterKey = '') {
     admin: {
       id: result.insertedId.toString(),
       username: adminDoc.displayName,
-      role: adminDoc.role
+      role: adminDoc.role,
+      permissions
     },
     ...session
   };
@@ -176,13 +223,16 @@ async function loginWithCredentials(username, password, clientMeta = {}) {
     { $set: { lastLoginAt: new Date().toISOString() } }
   );
 
-  const session = await createSession(user._id.toString(), user.displayName || user.username, 'password_login', clientMeta);
+  const role = user.role || 'admin';
+  const permissions = getGrantedPermissions(role, user.permissions || []);
+  const session = await createSession(user._id.toString(), user.displayName || user.username, 'password_login', clientMeta, 0, role, permissions);
   return {
     success: true,
     admin: {
       id: user._id.toString(),
       username: user.displayName || user.username,
-      role: user.role || 'admin'
+      role,
+      permissions
     },
     ...session
   };
@@ -197,13 +247,14 @@ async function loginWithMasterKey(apiKey, clientMeta = {}) {
     throw new Error('Invalid Master Authorization Key');
   }
 
-  const session = await createSession('master_admin', 'Master Administrator', 'master_key', clientMeta);
+  const session = await createSession('master_admin', 'Master Administrator', 'master_key', clientMeta, 0, 'superadmin', ['*']);
   return {
     success: true,
     admin: {
       id: 'master_admin',
       username: 'Master Administrator',
-      role: 'superadmin'
+      role: 'superadmin',
+      permissions: ['*']
     },
     ...session
   };
@@ -212,15 +263,18 @@ async function loginWithMasterKey(apiKey, clientMeta = {}) {
 /**
  * Creates an active session in MongoDB Atlas and returns a signed token
  */
-async function createSession(adminId, username, authMethod = 'credentials', clientMeta = {}, rotationCount = 0) {
+async function createSession(adminId, username, authMethod = 'credentials', clientMeta = {}, rotationCount = 0, role = 'admin', customPermissions = []) {
   const db = await getDb();
   const now = Date.now();
   const expiresAt = now + TOKEN_EXPIRY_HOURS * 60 * 60 * 1000;
   const sessionId = crypto.randomBytes(18).toString('hex');
+  const permissions = getGrantedPermissions(role, customPermissions);
 
   const payload = {
     sub: adminId,
     username,
+    role,
+    permissions,
     sid: sessionId,
     iat: now,
     exp: expiresAt,
@@ -232,6 +286,8 @@ async function createSession(adminId, username, authMethod = 'credentials', clie
     sessionId,
     adminId,
     username,
+    role,
+    permissions,
     tokenHash: hashToken(token),
     authMethod,
     rotationCount,
@@ -254,6 +310,8 @@ async function createSession(adminId, username, authMethod = 'credentials', clie
 
   return {
     token,
+    role,
+    permissions,
     expiresAt,
     expiresAtFormatted: new Date(expiresAt).toLocaleString(),
     rotationCount,
@@ -304,7 +362,9 @@ async function rotateToken(oldToken, clientMeta = {}) {
     payload.username,
     'token_rotation',
     clientMeta,
-    newRotationCount
+    newRotationCount,
+    payload.role || 'admin',
+    payload.permissions || []
   );
 
   return {
@@ -350,10 +410,15 @@ async function validateSessionToken(token) {
     }
   }
 
+  const role = payload.role || 'admin';
+  const permissions = payload.permissions || getGrantedPermissions(role);
+
   return {
     valid: true,
     adminId: payload.sub,
     username: payload.username,
+    role,
+    permissions,
     expiresAt: payload.exp,
     rotationCount: payload.rot || 0,
     sessionId: payload.sid
@@ -387,6 +452,9 @@ async function revokeAllSessions(adminId = null) {
 }
 
 module.exports = {
+  ROLE_PERMISSIONS,
+  getGrantedPermissions,
+  checkPermission,
   isAdminRegistered,
   registerAdmin,
   loginWithCredentials,
