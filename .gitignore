@@ -5,6 +5,8 @@ backend/node_modules/
 *.env
 backend/.env
 backend/.env.*
+!.env.example
+!backend/.env.example
 *.log
 .DS_Store
 
