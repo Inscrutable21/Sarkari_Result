@@ -83,6 +83,49 @@ function isValidEmail(email) {
   return EMAIL_REGEX.test(email.trim());
 }
 
+/**
+ * Returns today's ISO date string (YYYY-MM-DD) in IST timezone
+ */
+function getTodayISTString() {
+  try {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: process.env.TIMEZONE || 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    const parts = formatter.formatToParts(new Date());
+    const getPart = (type) => parts.find(p => p.type === type)?.value;
+    return `${getPart('year')}-${getPart('month')}-${getPart('day')}`;
+  } catch {
+    return new Date().toISOString().split('T')[0];
+  }
+}
+
+/**
+ * Checks if a given timestamp (ISO string or Date) falls on today in IST timezone
+ */
+function isDateTodayIST(timestamp) {
+  if (!timestamp) return false;
+  try {
+    const targetDate = new Date(timestamp);
+    if (isNaN(targetDate.getTime())) return false;
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: process.env.TIMEZONE || 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    const partsTarget = formatter.formatToParts(targetDate);
+    const getPart = (parts, type) => parts.find(p => p.type === type)?.value;
+    const targetStr = `${getPart(partsTarget, 'year')}-${getPart(partsTarget, 'month')}-${getPart(partsTarget, 'day')}`;
+    return targetStr === getTodayISTString();
+  } catch {
+    const today = new Date().toISOString().split('T')[0];
+    return String(timestamp).startsWith(today);
+  }
+}
+
 module.exports = {
   DATA_DIR,
   SUBSCRIBERS_FILE,
@@ -94,5 +137,8 @@ module.exports = {
   safeHttpUrl,
   generateStableTrackId,
   isValidEmail,
-  loadEnv
+  loadEnv,
+  getTodayISTString,
+  isDateTodayIST
 };
+

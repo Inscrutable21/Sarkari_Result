@@ -16,6 +16,10 @@ const {
   saveTrackedJobs,
   calculateDaysLeft
 } = require('./jobTrackerStore');
+const {
+  isDateTodayIST,
+  getTodayISTString
+} = require('./constants');
 
 /**
  * Sends a job alert email to a subscriber
@@ -253,7 +257,6 @@ async function sendDailyJobReminders(force = false) {
   console.log('[Job Reminders] Checking daily deadline reminders for candidates...');
   const trackedList = await getTrackedJobs();
   const now = new Date();
-  const todayStr = now.toISOString().split('T')[0];
 
   let dispatched = 0;
   let skippedApplied = 0;
@@ -283,7 +286,7 @@ async function sendDailyJobReminders(force = false) {
     }
 
     // 3. Prevent duplicate emails on the exact same calendar day unless forced
-    if (!force && track.lastReminderSentAt && track.lastReminderSentAt.startsWith(todayStr)) {
+    if (!force && track.lastReminderSentAt && isDateTodayIST(track.lastReminderSentAt)) {
       skippedAlreadySentToday++;
       continue;
     }

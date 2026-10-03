@@ -57,7 +57,9 @@ const {
   getSubscribersDispatchStatus,
   sendIndividualReminder,
   deleteSubscriberOrTrackedJob,
-  clearAllSubscribersAndTracked
+  clearAllSubscribersAndTracked,
+  getLastReminderTriggerDateFromMongo,
+  setLastReminderTriggerDateInMongo
 } = require("./src/services/notificationService");
 
 const {
@@ -1025,6 +1027,7 @@ server.on("error", (err) => {
 // Automated Background Reminder Scheduler (Configured for 6:00 PM daily trigger)
 let reminderSchedulerInterval = null;
 let lastReminderTriggerDate = null;
+let isReminderDispatchRunning = false;
 
 function getCurrentScheduledTime() {
   try {
@@ -1055,29 +1058,53 @@ function getCurrentScheduledTime() {
   }
 }
 
+async function checkAndTriggerReminderBatch() {
+  if (isReminderDispatchRunning) return;
+  try {
+    // If not loaded in-memory, load last executed date from MongoDB Atlas
+    if (!lastReminderTriggerDate) {
+      lastReminderTriggerDate = await getLastReminderTriggerDateFromMongo().catch(() => null);
+    }
+
+    const timeInfo = getCurrentScheduledTime();
+    const targetHour = Number(process.env.REMINDER_TRIGGER_HOUR) || 18; // 6:00 PM (18:00)
+    const targetMinute = Number(process.env.REMINDER_TRIGGER_MINUTE) || 0;
+
+    // Check if the current time has reached or passed 6:00 PM IST today
+    const isPastTargetTime = timeInfo.hour > targetHour || (timeInfo.hour === targetHour && timeInfo.minute >= targetMinute);
+
+    if (isPastTargetTime && lastReminderTriggerDate !== timeInfo.dateStr) {
+      isReminderDispatchRunning = true;
+      lastReminderTriggerDate = timeInfo.dateStr;
+      console.log(`[Reminder Scheduler] 6:00 PM Daily Trigger reached for ${timeInfo.dateStr} (Current IST: ${timeInfo.hour}:${String(timeInfo.minute).padStart(2, '0')}). Dispatching reminders for tracked jobs and subscriber alerts...`);
+      
+      const reminderSummary = await sendDailyJobReminders();
+      const alertSummary = await dispatchAllNotifications();
+      
+      await setLastReminderTriggerDateInMongo(timeInfo.dateStr, { reminderSummary, alertSummary }).catch(() => {});
+      console.log(`[Reminder Scheduler] 6:00 PM Dispatch complete: ${reminderSummary.dispatched} deadline reminders sent, ${alertSummary.dispatched || 0} job alert digests sent.`);
+    }
+  } catch (err) {
+    console.warn('[Reminder Scheduler] Periodic check error:', err.message);
+  } finally {
+    isReminderDispatchRunning = false;
+  }
+}
+
 function startReminderScheduler() {
   if (reminderSchedulerInterval) return;
   const targetHour = Number(process.env.REMINDER_TRIGGER_HOUR) || 18; // 6:00 PM (18:00)
   const targetMinute = Number(process.env.REMINDER_TRIGGER_MINUTE) || 0;
   console.log(`[Reminder Scheduler] Automated reminder engine active: scheduled to trigger daily at 6:00 PM (${targetHour.toString().padStart(2, '0')}:${targetMinute.toString().padStart(2, '0')} IST)...`);
 
-  // Check every 30 seconds to guarantee the 6:00 PM trigger window is captured
-  reminderSchedulerInterval = setInterval(async () => {
-    try {
-      const timeInfo = getCurrentScheduledTime();
-      // Target trigger: 6:00 PM (window: 18:00 - 18:02)
-      if (timeInfo.hour === targetHour && timeInfo.minute >= targetMinute && timeInfo.minute <= (targetMinute + 2)) {
-        if (lastReminderTriggerDate !== timeInfo.dateStr) {
-          lastReminderTriggerDate = timeInfo.dateStr;
-          console.log(`[Reminder Scheduler] 6:00 PM Daily Trigger reached for ${timeInfo.dateStr}! Dispatching reminders for tracked jobs and subscriber alerts...`);
-          const reminderSummary = await sendDailyJobReminders();
-          const alertSummary = await dispatchAllNotifications();
-          console.log(`[Reminder Scheduler] 6:00 PM Dispatch complete: ${reminderSummary.dispatched} deadline reminders sent, ${alertSummary.dispatched || 0} job alert digests sent.`);
-        }
-      }
-    } catch (err) {
-      console.warn('[Reminder Scheduler] Periodic check error:', err.message);
-    }
+  // Initial check 3 seconds after startup to immediately catch up any missed 6:00 PM dispatch
+  setTimeout(() => {
+    checkAndTriggerReminderBatch();
+  }, 3000);
+
+  // Check every 30 seconds
+  reminderSchedulerInterval = setInterval(() => {
+    checkAndTriggerReminderBatch();
   }, 30 * 1000);
 }
 

@@ -533,6 +533,45 @@ async function getMongoStatus() {
   }
 }
 
+/**
+ * Retrieves the last date string when the 6:00 PM daily batch reminder ran
+ */
+async function getLastReminderTriggerDateFromMongo() {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const doc = await db.collection('system_metadata').findOne({ _id: 'daily_reminder_scheduler' });
+    return doc ? doc.lastTriggerDate : null;
+  } catch (err) {
+    console.warn('[Mongo System Metadata] Could not read reminder trigger date:', err.message);
+    return null;
+  }
+}
+
+/**
+ * Saves the last date string and execution telemetry for the 6:00 PM daily batch reminder
+ */
+async function setLastReminderTriggerDateInMongo(dateStr, meta = {}) {
+  const db = await getDb();
+  if (!db) return;
+  try {
+    await db.collection('system_metadata').updateOne(
+      { _id: 'daily_reminder_scheduler' },
+      {
+        $set: {
+          lastTriggerDate: dateStr,
+          lastTriggerAt: new Date().toISOString(),
+          meta,
+          updatedAt: new Date().toISOString()
+        }
+      },
+      { upsert: true }
+    );
+  } catch (err) {
+    console.warn('[Mongo System Metadata] Could not persist reminder trigger date:', err.message);
+  }
+}
+
 module.exports = {
   isMongoEnabled,
   getMongoClient,
@@ -559,5 +598,8 @@ module.exports = {
   saveCategorySummaryToMongo,
   getCategorySummaryFromMongo,
   // Status
-  getMongoStatus
+  getMongoStatus,
+  // Scheduler Telemetry
+  getLastReminderTriggerDateFromMongo,
+  setLastReminderTriggerDateInMongo
 };

@@ -14,6 +14,11 @@
  */
 
 const {
+  getLastReminderTriggerDateFromMongo,
+  setLastReminderTriggerDateInMongo
+} = require('./mongoService');
+
+const {
   // Subscribers
   getSubscribers,
   saveSubscribers,
@@ -107,6 +112,8 @@ module.exports = {
   sendIndividualReminder,
   deleteSubscriberOrTrackedJob,
   clearAllSubscribersAndTracked,
+  getLastReminderTriggerDateFromMongo,
+  setLastReminderTriggerDateInMongo,
   DATA_DIR,
   SUBSCRIBERS_FILE,
   TRACKED_JOBS_FILE,
@@ -118,3 +125,4 @@ module.exports = {
   isValidEmail,
   generateStableTrackId
 };
+

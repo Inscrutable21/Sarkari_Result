@@ -11,25 +11,7 @@ const { getSentJobHistory, hasJobBeenSentToSubscriber } = require('./sentHistory
 const { matchJobsForSubscriber } = require('./subscriberStore');
 const { getPortalDatasetFromMongo, getDb } = require('../mongoService');
 const { sendTrackedJobEmail, sendJobAlertEmail } = require('./dispatcher');
-
-/**
- * Returns today's ISO date string (YYYY-MM-DD) in IST timezone
- */
-function getTodayISTString() {
-  try {
-    const formatter = new Intl.DateTimeFormat('en-US', {
-      timeZone: process.env.TIMEZONE || 'Asia/Kolkata',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
-    const parts = formatter.formatToParts(new Date());
-    const getPart = (type) => parts.find(p => p.type === type)?.value;
-    return `${getPart('year')}-${getPart('month')}-${getPart('day')}`;
-  } catch {
-    return new Date().toISOString().split('T')[0];
-  }
-}
+const { getTodayISTString, isDateTodayIST } = require('./constants');
 
 /**
  * Compiles a unified diagnostic list of all subscribers and tracked job candidates
@@ -74,7 +56,7 @@ async function getSubscribersDispatchStatus() {
   for (const track of trackedJobs) {
     const email = (track.email || '').toLowerCase().trim();
     const daysLeft = calculateDaysLeft(track.lastDate);
-    const sentToday = Boolean(track.lastReminderSentAt && track.lastReminderSentAt.startsWith(todayStr));
+    const sentToday = Boolean(track.lastReminderSentAt && isDateTodayIST(track.lastReminderSentAt));
     const recipientLogs = logsByEmail.get(email) || [];
     const latestLog = recipientLogs[0] || null;
 
@@ -136,8 +118,8 @@ async function getSubscribersDispatchStatus() {
 
     // Check if an email was sent to this subscriber today
     const sentToday = Boolean(
-      (sub.lastNotifiedAt && sub.lastNotifiedAt.startsWith(todayStr)) ||
-      (latestLog && latestLog.timestamp && latestLog.timestamp.startsWith(todayStr))
+      (sub.lastNotifiedAt && isDateTodayIST(sub.lastNotifiedAt)) ||
+      (latestLog && latestLog.timestamp && isDateTodayIST(latestLog.timestamp))
     );
 
     const matching = matchJobsForSubscriber(sub, portalJobs);
