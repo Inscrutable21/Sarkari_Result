@@ -53,7 +53,9 @@ const {
   sendImmediateReminder,
   getActiveReminderTimers,
   renderStatusPageHtml,
-  getSentJobHistory
+  getSentJobHistory,
+  getSubscribersDispatchStatus,
+  sendIndividualReminder
 } = require("./src/services/notificationService");
 
 const {
@@ -715,14 +717,75 @@ const server = createServer(async (request, response) => {
     try {
       console.log("[Vercel Cron] 6:00 PM IST scheduled reminder job running via Vercel Cron...");
       const summary = await sendDailyJobReminders();
+      const alertSummary = await dispatchAllNotifications();
       response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({
         success: true,
-        message: "Daily 6:00 PM reminders processed successfully via Vercel Cron",
-        summary
+        message: "Daily 6:00 PM reminders and alerts processed successfully via Vercel Cron",
+        summary,
+        alertSummary
       }));
     } catch (err) {
       console.error("[Vercel Cron] Daily reminder execution failed:", err.message);
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 11c. Unified Subscriber & 6:00 PM Reminder Dispatch Status (Admin Protected with RBAC)
+  if (url.pathname === "/api/admin/subscribers-status" && request.method === "GET") {
+    if (!(await enforceAdminPermission(request, response, url, "notifications:view_logs"))) {
+      return;
+    }
+    try {
+      const data = await getSubscribersDispatchStatus();
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: true, ...data }));
+    } catch (err) {
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 11d. Manually dispatch reminder/alert to an individual recipient on demand (Admin Protected with RBAC)
+  if (url.pathname === "/api/admin/subscribers/send-reminder" && request.method === "POST") {
+    if (!(await enforceAdminPermission(request, response, url, "reminders:dispatch"))) {
+      return;
+    }
+    try {
+      const body = await parseBody(request);
+      const result = await sendIndividualReminder(body.id, body.email);
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: true, ...result }));
+    } catch (err) {
+      response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 11e. Force Dispatch Reminders to ALL Pending Recipients Right Now (Admin Protected with RBAC)
+  if (url.pathname === "/api/admin/subscribers/send-all-reminders" && request.method === "POST") {
+    if (!(await enforceAdminPermission(request, response, url, "reminders:dispatch"))) {
+      return;
+    }
+    try {
+      const reminderSummary = await sendDailyJobReminders(true);
+      const alertSummary = await dispatchAllNotifications();
+      const updatedStatus = await getSubscribersDispatchStatus();
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({
+        success: true,
+        message: `Dispatched ${reminderSummary.dispatched} deadline reminders and ${alertSummary.dispatched || 0} job alert digests.`,
+        summary: {
+          reminders: reminderSummary,
+          alerts: alertSummary
+        },
+        ...updatedStatus
+      }));
+    } catch (err) {
       response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: false, error: err.message }));
     }
@@ -971,9 +1034,10 @@ function startReminderScheduler() {
       if (timeInfo.hour === targetHour && timeInfo.minute >= targetMinute && timeInfo.minute <= (targetMinute + 2)) {
         if (lastReminderTriggerDate !== timeInfo.dateStr) {
           lastReminderTriggerDate = timeInfo.dateStr;
-          console.log(`[Reminder Scheduler] 6:00 PM Daily Trigger reached for ${timeInfo.dateStr}! Dispatching reminders for tracked jobs...`);
-          const summary = await sendDailyJobReminders();
-          console.log(`[Reminder Scheduler] 6:00 PM Dispatch complete: ${summary.dispatched} reminders sent (${summary.skippedApplied} applied, ${summary.skippedExpired} expired).`);
+          console.log(`[Reminder Scheduler] 6:00 PM Daily Trigger reached for ${timeInfo.dateStr}! Dispatching reminders for tracked jobs and subscriber alerts...`);
+          const reminderSummary = await sendDailyJobReminders();
+          const alertSummary = await dispatchAllNotifications();
+          console.log(`[Reminder Scheduler] 6:00 PM Dispatch complete: ${reminderSummary.dispatched} deadline reminders sent, ${alertSummary.dispatched || 0} job alert digests sent.`);
         }
       }
     } catch (err) {

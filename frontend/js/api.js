@@ -350,3 +350,61 @@ export async function verifySessionToken(token) {
   return result;
 }
 
+/**
+ * Fetches the 6:00 PM reminder & alert status for all subscribers and tracked jobs
+ */
+export async function fetchSubscribersStatus(token) {
+  const headers = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const response = await fetchWithFallback('/admin/subscribers-status', {
+    method: 'GET',
+    headers
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Failed to fetch subscriber dispatch status');
+  }
+  return result;
+}
+
+/**
+ * Manually sends a reminder or job alert to an individual subscriber/candidate
+ */
+export async function sendIndividualSubscriberReminder(token, payload) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const response = await fetchWithFallback('/admin/subscribers/send-reminder', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(payload)
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Failed to send individual reminder');
+  }
+  return result;
+}
+
+/**
+ * Force dispatches all pending reminders and alerts right now
+ */
+export async function dispatchAllPendingReminders(token) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const response = await fetchWithFallback('/admin/subscribers/send-all-reminders', {
+    method: 'POST',
+    headers
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Failed to dispatch bulk reminders');
+  }
+  return result;
+}
+

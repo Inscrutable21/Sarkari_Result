@@ -11,7 +11,10 @@ import {
   triggerDailyReminders,
   loginAdmin,
   revokeAllAdminSessions,
-  verifySessionToken
+  verifySessionToken,
+  fetchSubscribersStatus,
+  sendIndividualSubscriberReminder,
+  dispatchAllPendingReminders
 } from './api.js';
 
 // State
@@ -20,6 +23,8 @@ let activeAdminKey = '';
 let sessionData = null;
 let countdownInterval = null;
 let scrapeTimerInterval = null;
+let currentSubscribersData = null;
+let currentFilter = 'all';
 
 // Terminal Log Helper
 function logTerminal(message, type = 'info') {
@@ -136,6 +141,7 @@ function unlockDashboard(token, session, remember = true) {
   showToast('Admin session token active', 'success');
   logTerminal(`Authenticated with cryptographic token (Gen #${session?.rotationCount || 0}).`, 'success');
   loadTelemetry();
+  loadSubscribersMonitor();
 }
 
 function logout() {
@@ -406,6 +412,7 @@ async function triggerReminders() {
     const result = await triggerDailyReminders();
     logTerminal(`Reminder engine complete: ${result.dispatched || 0} reminders sent (${result.skippedApplied || 0} already applied).`, 'success');
     showToast(`Dispatched ${result.dispatched || 0} daily reminders!`, 'success');
+    loadSubscribersMonitor();
   } catch (err) {
     logTerminal(`Reminder engine error: ${err.message}`, 'error');
     showToast(`Failed to dispatch reminders: ${err.message}`, 'error');
@@ -413,6 +420,198 @@ async function triggerReminders() {
     if (btnManualReminders) {
       btnManualReminders.removeAttribute('disabled');
       btnManualReminders.textContent = '📬 Dispatch Daily Reminders Now';
+    }
+  }
+}
+
+// Load Subscriber Directory & 6:00 PM Dispatch Status
+async function loadSubscribersMonitor() {
+  const tableBody = document.getElementById('subscribers-table-body');
+  try {
+    const data = await fetchSubscribersStatus(activeToken || activeAdminKey);
+    currentSubscribersData = data;
+
+    const summary = data.summary || {};
+    const items = data.items || [];
+
+    // Update Badges
+    const dateEl = document.getElementById('subscribers-today-date');
+    const statTotal = document.getElementById('sub-stat-total');
+    const statPending = document.getElementById('sub-stat-pending');
+    const statSent = document.getElementById('sub-stat-sent');
+    const statApplied = document.getElementById('sub-stat-applied');
+
+    if (dateEl) dateEl.textContent = summary.todayDate || new Date().toISOString().split('T')[0];
+    if (statTotal) statTotal.textContent = summary.totalRecipients ?? items.length;
+    if (statPending) statPending.textContent = summary.pendingCount ?? 0;
+    if (statSent) statSent.textContent = summary.sentTodayCount ?? 0;
+    if (statApplied) statApplied.textContent = summary.appliedCount ?? 0;
+
+    // Update Filter counts
+    const fAll = document.getElementById('filter-count-all');
+    const fPending = document.getElementById('filter-count-pending');
+    const fSent = document.getElementById('filter-count-sent');
+    const fApplied = document.getElementById('filter-count-applied');
+    const fUptodate = document.getElementById('filter-count-uptodate');
+
+    if (fAll) fAll.textContent = items.length;
+    if (fPending) fPending.textContent = summary.pendingCount ?? 0;
+    if (fSent) fSent.textContent = summary.sentTodayCount ?? 0;
+    if (fApplied) fApplied.textContent = summary.appliedCount ?? 0;
+    if (fUptodate) fUptodate.textContent = items.filter(i => i.status === 'up_to_date').length;
+
+    renderSubscribersTable();
+  } catch (err) {
+    console.warn('[Subscribers Monitor Error]:', err);
+    if (tableBody) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; color: #f87171; padding: 2rem;">
+            Failed to load subscriber reminder status: ${escapeHtml(err.message)}
+          </td>
+        </tr>
+      `;
+    }
+  }
+}
+
+// Render Subscriber Directory Table
+function renderSubscribersTable() {
+  const tableBody = document.getElementById('subscribers-table-body');
+  if (!tableBody || !currentSubscribersData) return;
+
+  const items = currentSubscribersData.items || [];
+  const filtered = items.filter(item => {
+    if (currentFilter === 'all') return true;
+    if (currentFilter === 'pending') return item.status === 'pending';
+    if (currentFilter === 'sent_today') return item.status === 'sent_today';
+    if (currentFilter === 'applied') return item.status === 'applied';
+    if (currentFilter === 'up_to_date') return item.status === 'up_to_date';
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align: center; color: #94a3b8; padding: 2.5rem;">
+          No candidates or subscribers found in "${escapeHtml(currentFilter)}" view.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tableBody.innerHTML = filtered.map(item => {
+    const formattedDate = item.lastSentAt 
+      ? new Date(item.lastSentAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })
+      : '<span style="color: #64748b;">Never sent</span>';
+
+    const deadlineNotice = item.daysLeft !== null 
+      ? `<span style="display: block; font-size: 0.72rem; color: #fbbf24; font-weight: 600;">⏳ ${item.daysLeft} days remaining</span>` 
+      : '';
+
+    const actionHtml = item.canSendNow
+      ? `<button type="button" class="admin-btn admin-btn-secondary btn-send-individual" data-id="${item.id}" data-email="${escapeHtml(item.email)}" style="padding: 4px 10px; font-size: 0.72rem; white-space: nowrap;">
+           <span>📧 Send Now</span>
+         </button>`
+      : `<span style="font-size: 0.72rem; color: #64748b;">Suppressed</span>`;
+
+    return `
+      <tr>
+        <td>
+          <div style="font-weight: 600; color: #fff;">${escapeHtml(item.name || 'Candidate')}</div>
+          <div style="font-size: 0.74rem; color: #94a3b8;">${escapeHtml(item.email)}</div>
+        </td>
+        <td>
+          <span class="admin-brand-badge" style="font-size: 0.68rem; padding: 2px 6px;">
+            ${escapeHtml(item.typeLabel)}
+          </span>
+        </td>
+        <td>
+          <div style="font-weight: 500; color: #e2e8f0; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            ${escapeHtml(item.jobTitle)}
+          </div>
+          <div style="font-size: 0.74rem; color: #94a3b8;">
+            ${escapeHtml(item.organization)} • ${escapeHtml(item.lastDate)}
+          </div>
+          ${deadlineNotice}
+        </td>
+        <td>
+          <span class="admin-status-badge ${item.statusBadge}" title="${escapeHtml(item.statusReason)}">
+            ${escapeHtml(item.statusLabel)}
+          </span>
+          <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 3px; max-width: 200px; line-height: 1.3;">
+            ${escapeHtml(item.statusReason)}
+          </div>
+        </td>
+        <td>
+          <div style="font-size: 0.75rem; color: #cbd5e1;">${formattedDate}</div>
+          <div style="font-size: 0.7rem; color: #64748b;">Dispatches: ${item.reminderCount || 0}</div>
+        </td>
+        <td style="text-align: right;">
+          ${actionHtml}
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  // Attach individual send handlers
+  tableBody.querySelectorAll('.btn-send-individual').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.getAttribute('data-id');
+      const email = btn.getAttribute('data-email');
+      await handleSendSingleReminder(btn, id, email);
+    });
+  });
+}
+
+// Handle sending an individual reminder
+async function handleSendSingleReminder(btn, id, email) {
+  if (!confirm(`Dispatch immediate reminder/alert email to ${email}?`)) return;
+
+  const originalHtml = btn.innerHTML;
+  btn.setAttribute('disabled', 'true');
+  btn.innerHTML = '<span>Sending...</span>';
+
+  logTerminal(`Dispatching on-demand reminder to ${email}...`, 'info');
+  try {
+    const result = await sendIndividualSubscriberReminder(activeToken || activeAdminKey, { id, email });
+    logTerminal(`Reminder delivered: ${result.message || 'Email sent successfully.'}`, 'success');
+    showToast(`Dispatched to ${email}!`, 'success');
+    await loadSubscribersMonitor();
+  } catch (err) {
+    logTerminal(`Reminder failed for ${email}: ${err.message}`, 'error');
+    showToast(`Failed: ${err.message}`, 'error');
+  } finally {
+    btn.removeAttribute('disabled');
+    btn.innerHTML = originalHtml;
+  }
+}
+
+// Handle force dispatching all pending reminders
+async function handleForceAllReminders() {
+  const btn = document.getElementById('btn-force-all-reminders');
+  if (!confirm('This will trigger the 6:00 PM Reminder & Alert Engine right now for all pending subscribers and tracked candidates. Continue?')) return;
+
+  const originalHtml = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.setAttribute('disabled', 'true');
+    btn.innerHTML = '<span>⏳ Dispatching All Pending...</span>';
+  }
+
+  logTerminal('Forcing immediate 6:00 PM dispatch run for all pending candidates and subscribers...', 'warn');
+  try {
+    const result = await dispatchAllPendingReminders(activeToken || activeAdminKey);
+    logTerminal(`Force dispatch complete: ${result.message || 'All pending reminders delivered.'}`, 'success');
+    showToast('6:00 PM Reminder & Alert Engine executed successfully!', 'success');
+    await loadSubscribersMonitor();
+  } catch (err) {
+    logTerminal(`Force dispatch failed: ${err.message}`, 'error');
+    showToast(`Dispatch failed: ${err.message}`, 'error');
+  } finally {
+    if (btn) {
+      btn.removeAttribute('disabled');
+      btn.innerHTML = originalHtml;
     }
   }
 }
@@ -489,6 +688,24 @@ function initAdmin() {
 
   // Manual Reminders
   document.getElementById('btn-manual-reminders')?.addEventListener('click', triggerReminders);
+
+  // Subscriber Directory & 6:00 PM Monitor Controls
+  document.getElementById('btn-refresh-subscribers')?.addEventListener('click', () => {
+    loadSubscribersMonitor();
+    showToast('Subscriber directory refreshed', 'info');
+  });
+
+  document.getElementById('btn-force-all-reminders')?.addEventListener('click', handleForceAllReminders);
+
+  // Filter Pills
+  document.querySelectorAll('.admin-filter-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.admin-filter-pill').forEach(p => p.classList.remove('is-active'));
+      pill.classList.add('is-active');
+      currentFilter = pill.getAttribute('data-filter') || 'all';
+      renderSubscribersTable();
+    });
+  });
 }
 
 // Guarantee execution whether script runs before or after DOM readiness

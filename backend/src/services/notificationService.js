@@ -54,6 +54,10 @@ const {
   hasJobBeenSentToSubscriber,
   recordSentJobsForSubscriber,
 
+  // Subscriber & 6 PM Reminder Status
+  getSubscribersDispatchStatus,
+  sendIndividualReminder,
+
   // Constants & Utilities
   DATA_DIR,
   SUBSCRIBERS_FILE,
@@ -97,6 +101,8 @@ module.exports = {
   getSentJobHistory,
   hasJobBeenSentToSubscriber,
   recordSentJobsForSubscriber,
+  getSubscribersDispatchStatus,
+  sendIndividualReminder,
   DATA_DIR,
   SUBSCRIBERS_FILE,
   TRACKED_JOBS_FILE,

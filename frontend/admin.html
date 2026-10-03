@@ -295,6 +295,78 @@
           </div>
         </div>
       </div>
+
+      <!-- Subscriber & 6:00 PM Reminder Dispatch Monitor (Full Width) -->
+      <div class="admin-panel-card" style="margin-top: 1.5rem;">
+        <div class="admin-card-header" style="flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="admin-card-title" style="margin-bottom: 4px;">
+              <span>👥</span>
+              <span>Subscriber Directory & 6:00 PM Reminder Dispatch Monitor</span>
+            </h3>
+            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0;">
+              Real-time audit of all candidate deadline countdowns and subscriber alerts for today (<span id="subscribers-today-date" style="color: #60a5fa; font-weight: 600;">--</span>).
+            </p>
+          </div>
+
+          <div style="display: flex; gap: 8px; align-items: center; margin-left: auto;">
+            <button type="button" id="btn-force-all-reminders" class="admin-btn admin-btn-primary" style="padding: 6px 12px; font-size: 0.78rem;" title="Dispatches deadline countdowns and alerts to all pending candidates immediately">
+              <span>⚡ Force 6:00 PM Dispatch Now</span>
+            </button>
+            <button type="button" id="btn-refresh-subscribers" class="admin-btn admin-btn-secondary" style="padding: 6px 12px; font-size: 0.78rem;">
+              <span>↻ Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric Badges Row -->
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1.25rem;">
+          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 8px 14px; border-radius: 8px; font-size: 0.78rem;">
+            <span style="color: #94a3b8;">Total Registered:</span> <strong id="sub-stat-total" style="color: #fff; margin-left: 4px;">--</strong>
+          </div>
+          <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); padding: 8px 14px; border-radius: 8px; font-size: 0.78rem;">
+            <span style="color: #fbbf24;">Pending 6:00 PM:</span> <strong id="sub-stat-pending" style="color: #fbbf24; margin-left: 4px;">--</strong>
+          </div>
+          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); padding: 8px 14px; border-radius: 8px; font-size: 0.78rem;">
+            <span style="color: #34d399;">Sent Today:</span> <strong id="sub-stat-sent" style="color: #34d399; margin-left: 4px;">--</strong>
+          </div>
+          <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); padding: 8px 14px; border-radius: 8px; font-size: 0.78rem;">
+            <span style="color: #a5b4fc;">Marked Applied:</span> <strong id="sub-stat-applied" style="color: #a5b4fc; margin-left: 4px;">--</strong>
+          </div>
+        </div>
+
+        <!-- Filter Pills Bar -->
+        <div class="admin-filter-bar">
+          <button type="button" class="admin-filter-pill is-active" data-filter="all">All Candidates & Subscribers (<span id="filter-count-all">0</span>)</button>
+          <button type="button" class="admin-filter-pill" data-filter="pending">⏳ Pending Dispatch (<span id="filter-count-pending">0</span>)</button>
+          <button type="button" class="admin-filter-pill" data-filter="sent_today">✓ Sent Today (<span id="filter-count-sent">0</span>)</button>
+          <button type="button" class="admin-filter-pill" data-filter="applied">✓ Applied / Suppressed (<span id="filter-count-applied">0</span>)</button>
+          <button type="button" class="admin-filter-pill" data-filter="up_to_date">✓ Up to Date (<span id="filter-count-uptodate">0</span>)</button>
+        </div>
+
+        <!-- Interactive Table Container -->
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Recipient / Candidate</th>
+                <th>Type & Scope</th>
+                <th>Target Job / Vacancies</th>
+                <th>Today's 6 PM Dispatch Status</th>
+                <th>Last Email Sent</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="subscribers-table-body">
+              <tr>
+                <td colspan="6" style="text-align: center; color: #94a3b8; padding: 2rem;">
+                  Loading subscriber and reminder statuses...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </section>
   </main>
 

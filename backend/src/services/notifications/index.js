@@ -18,6 +18,7 @@ const sentHistoryStore = require('./sentHistoryStore');
 const subscriberStore = require('./subscriberStore');
 const jobTrackerStore = require('./jobTrackerStore');
 const dispatcher = require('./dispatcher');
+const subscriberStatusService = require('./subscriberStatusService');
 
 module.exports = {
   // Constants & Utilities
@@ -39,5 +40,8 @@ module.exports = {
   ...jobTrackerStore,
 
   // Dispatchers & Reminders
-  ...dispatcher
+  ...dispatcher,
+
+  // Subscriber & 6 PM Reminder Status
+  ...subscriberStatusService
 };
