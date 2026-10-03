@@ -174,7 +174,7 @@ Sarkari_Result/
 │   ├── sitemap.xml                 # Search engine sitemap index
 │   ├── robots.txt                  # Search crawler directives
 │   ├── assets/                     # Branding, logos, and hero imagery
-│   │   └── images/                 # sarkari_hith_logo.jpg, parliament_hero.jpg
+│   │   └── images/                 # sarkari_hith_logo.webp, parliament_hero.webp
 │   ├── css/                        # Modular stylesheet architecture
 │   │   ├── variables.css           # Design tokens, color palette, shadows, typography
 │   │   ├── base.css                # CSS reset, container system, global typography
