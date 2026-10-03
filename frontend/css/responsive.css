@@ -923,17 +923,6 @@ object {
     line-height: 1.4;
   }
 
-  .seo-faq-question {
-    padding: 0.75rem 0.85rem;
-    font-size: 0.82rem;
-  }
-
-  .seo-faq-answer {
-    padding: 0 0.85rem 0.75rem 0.85rem;
-    font-size: 0.78rem;
-    line-height: 1.4;
-  }
-
   /* Footer Layout */
   .footer-top {
     grid-template-columns: 1fr;
