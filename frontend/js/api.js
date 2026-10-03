@@ -254,7 +254,7 @@ export async function verifyAdminKey(adminKey = '') {
     headers['x-admin-key'] = adminKey;
   }
   const query = adminKey ? `?adminKey=${encodeURIComponent(adminKey)}` : '';
-  const response = await fetchWithFallback(`/admin/verify${query}`, {
+  const response = await fetchWithFallback(`/anandapkaproject/verify${query}`, {
     method: 'GET',
     headers
   });
@@ -358,7 +358,7 @@ export async function fetchSubscribersStatus(token) {
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
-  const response = await fetchWithFallback('/admin/subscribers-status', {
+  const response = await fetchWithFallback('/anandapkaproject/subscribers-status', {
     method: 'GET',
     headers
   });
@@ -377,7 +377,7 @@ export async function sendIndividualSubscriberReminder(token, payload) {
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
-  const response = await fetchWithFallback('/admin/subscribers/send-reminder', {
+  const response = await fetchWithFallback('/anandapkaproject/subscribers/send-reminder', {
     method: 'POST',
     headers,
     body: JSON.stringify(payload)
@@ -397,7 +397,7 @@ export async function dispatchAllPendingReminders(token) {
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
-  const response = await fetchWithFallback('/admin/subscribers/send-all-reminders', {
+  const response = await fetchWithFallback('/anandapkaproject/subscribers/send-all-reminders', {
     method: 'POST',
     headers
   });
@@ -416,7 +416,7 @@ export async function deleteSubscriberRecord(token, payload) {
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
-  const response = await fetchWithFallback('/admin/subscribers/delete', {
+  const response = await fetchWithFallback('/anandapkaproject/subscribers/delete', {
     method: 'POST',
     headers,
     body: JSON.stringify(payload)
@@ -436,7 +436,7 @@ export async function clearAllSubscribersRecords(token) {
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
-  const response = await fetchWithFallback('/admin/subscribers/clear-all', {
+  const response = await fetchWithFallback('/anandapkaproject/subscribers/clear-all', {
     method: 'POST',
     headers
   });
@@ -455,7 +455,7 @@ export async function sendAdminTestNotification(token, payload) {
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
-  const response = await fetchWithFallback('/admin/send-test-notification', {
+  const response = await fetchWithFallback('/anandapkaproject/send-test-notification', {
     method: 'POST',
     headers,
     body: JSON.stringify(payload)

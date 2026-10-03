@@ -382,7 +382,7 @@ const server = createServer(async (request, response) => {
   }
 
   // 6. Verify Current Token Session & Lifetime
-  if (url.pathname === "/api/auth/verify" || url.pathname === "/api/admin/verify") {
+  if (url.pathname === "/api/auth/verify" || url.pathname === "/api/anandapkaproject/verify" || url.pathname === "/api/admin/verify") {
     if (!(await isAdminAuthorized(request, url))) {
       response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: false, error: "Invalid Admin Authorization Key or Token" }));
@@ -398,7 +398,7 @@ const server = createServer(async (request, response) => {
   }
 
   // Database Telemetry & Admin Overview Endpoint
-  if (url.pathname === "/api/mongodb/status" || url.pathname === "/api/admin/status") {
+  if (url.pathname === "/api/mongodb/status" || url.pathname === "/api/anandapkaproject/status" || url.pathname === "/api/admin/status") {
     const { getMongoStatus } = require("./src/services/mongoService");
     try {
       const status = await getMongoStatus();
@@ -738,7 +738,7 @@ const server = createServer(async (request, response) => {
   }
 
   // 11c. Unified Subscriber & 6:00 PM Reminder Dispatch Status (Admin Protected with RBAC)
-  if (url.pathname === "/api/admin/subscribers-status" && request.method === "GET") {
+  if ((url.pathname === "/api/anandapkaproject/subscribers-status" || url.pathname === "/api/admin/subscribers-status") && request.method === "GET") {
     if (!(await enforceAdminPermission(request, response, url, "notifications:view_logs"))) {
       return;
     }
@@ -754,7 +754,7 @@ const server = createServer(async (request, response) => {
   }
 
   // 11d. Manually dispatch reminder/alert to an individual recipient on demand (Admin Protected with RBAC)
-  if (url.pathname === "/api/admin/subscribers/send-reminder" && request.method === "POST") {
+  if ((url.pathname === "/api/anandapkaproject/subscribers/send-reminder" || url.pathname === "/api/admin/subscribers/send-reminder") && request.method === "POST") {
     if (!(await enforceAdminPermission(request, response, url, "reminders:dispatch"))) {
       return;
     }
@@ -771,7 +771,7 @@ const server = createServer(async (request, response) => {
   }
 
   // 11e. Force Dispatch Reminders to ALL Pending Recipients Right Now (Admin Protected with RBAC)
-  if (url.pathname === "/api/admin/subscribers/send-all-reminders" && request.method === "POST") {
+  if ((url.pathname === "/api/anandapkaproject/subscribers/send-all-reminders" || url.pathname === "/api/admin/subscribers/send-all-reminders") && request.method === "POST") {
     if (!(await enforceAdminPermission(request, response, url, "reminders:dispatch"))) {
       return;
     }
@@ -797,7 +797,7 @@ const server = createServer(async (request, response) => {
   }
 
   // 11f. Delete individual subscriber or tracked job record (Admin Protected with RBAC)
-  if (url.pathname === "/api/admin/subscribers/delete" && request.method === "POST") {
+  if ((url.pathname === "/api/anandapkaproject/subscribers/delete" || url.pathname === "/api/admin/subscribers/delete") && request.method === "POST") {
     if (!(await enforceAdminPermission(request, response, url, "notifications:dispatch"))) {
       return;
     }
@@ -814,7 +814,7 @@ const server = createServer(async (request, response) => {
   }
 
   // 11g. Clear ALL subscribers and tracked applications (Admin Protected with RBAC)
-  if (url.pathname === "/api/admin/subscribers/clear-all" && request.method === "POST") {
+  if ((url.pathname === "/api/anandapkaproject/subscribers/clear-all" || url.pathname === "/api/admin/subscribers/clear-all") && request.method === "POST") {
     if (!(await enforceAdminPermission(request, response, url, "notifications:dispatch"))) {
       return;
     }
@@ -830,7 +830,7 @@ const server = createServer(async (request, response) => {
   }
 
   // 11h. Send Test Notification Email (Admin Protected with RBAC)
-  if (url.pathname === "/api/admin/send-test-notification" && request.method === "POST") {
+  if ((url.pathname === "/api/anandapkaproject/send-test-notification" || url.pathname === "/api/admin/send-test-notification") && request.method === "POST") {
     if (!(await enforceAdminPermission(request, response, url, "notifications:dispatch"))) {
       return;
     }
@@ -1002,7 +1002,7 @@ const server = createServer(async (request, response) => {
   }
 
   let requestedPath = url.pathname === "/" ? "/index.html" : url.pathname;
-  if (requestedPath === "/admin" || requestedPath === "/admin/") {
+  if (requestedPath === "/anandapkaproject" || requestedPath === "/anandapkaproject/" || requestedPath === "/admin" || requestedPath === "/admin/") {
     requestedPath = "/admin.html";
   }
   const filePath = resolve(frontendRoot, `.${requestedPath}`);

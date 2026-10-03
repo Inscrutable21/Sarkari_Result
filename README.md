@@ -101,7 +101,7 @@ The centerpiece of the portal organizes recruitment updates into three high-cont
 - Automated daily deadline reminders dispatch at **6:00 PM IST (12:30 UTC)** for approaching application closures.
 
 ### 7. Executive Admin Control Center
-Accessible at `/admin` (or `/admin.html`), the dark glassmorphic control center provides system administrators with:
+Accessible at `/anandapkaproject` (or `/admin.html`), the dark glassmorphic control center provides system administrators with:
 - **Role-Based Access Control (RBAC)**: Master API key authentication with signed cryptographic session tokens.
 - **Live Subscriber Diagnostics Engine**: Detailed visibility into subscriber profiles, eligible job counts, and delivery trigger statuses.
 - **Manual & Batch Reminders**: Trigger individual test reminders or batch dispatches with a single click.
@@ -396,12 +396,12 @@ Errors return `{ "success": false, "error": "Descriptive message" }`.
 | `POST` | `/api/auth/rotate` | Rotate active session token | `ADMIN_API_KEY` + Session Token |
 | `POST` | `/api/auth/revoke-all` | Revoke all active administrative sessions | Master API Key |
 | `GET` | `/api/auth/verify` | Verify session token validity and permissions | Bearer Session Token |
-| `GET` | `/api/admin/subscribers-status` | Diagnostic inspection of all subscriber reminder criteria | Admin Token (`subscribers:read`) |
-| `POST` | `/api/admin/subscribers/send-reminder`| Trigger individual reminder dispatch | Admin Token (`notifications:send`) |
-| `POST` | `/api/admin/subscribers/send-all-reminders`| Batch-trigger reminders to all qualified candidates | Admin Token (`notifications:send`) |
-| `POST` | `/api/admin/subscribers/delete` | Delete a specific subscriber or tracked job record | Admin Token (`subscribers:delete`) |
-| `POST` | `/api/admin/subscribers/clear-all` | Purge all subscriber and tracked job records | Admin Token (`subscribers:delete`) |
-| `POST` | `/api/admin/send-test-notification` | Dispatch a live test email to verify SMTP configuration | Admin Token (`notifications:send`) |
+| `GET` | `/api/anandapkaproject/subscribers-status` | Diagnostic inspection of all subscriber reminder criteria | Admin Token (`subscribers:read`) |
+| `POST` | `/api/anandapkaproject/subscribers/send-reminder`| Trigger individual reminder dispatch | Admin Token (`notifications:send`) |
+| `POST` | `/api/anandapkaproject/subscribers/send-all-reminders`| Batch-trigger reminders to all qualified candidates | Admin Token (`notifications:send`) |
+| `POST` | `/api/anandapkaproject/subscribers/delete` | Delete a specific subscriber or tracked job record | Admin Token (`subscribers:delete`) |
+| `POST` | `/api/anandapkaproject/subscribers/clear-all` | Purge all subscriber and tracked job records | Admin Token (`subscribers:delete`) |
+| `POST` | `/api/anandapkaproject/send-test-notification` | Dispatch a live test email to verify SMTP configuration | Admin Token (`notifications:send`) |
 | `GET` / `POST` | `/api/scrape` | Trigger live scraping pipeline on demand | Admin Token (`scrape:run`) |
 | `GET` / `POST` | `/api/sync-mongo` | Synchronize master datasets to MongoDB Atlas | Admin Token (`system:sync`) |
 | `GET` | `/api/mongodb/status` | Check MongoDB Atlas connection and collection counts | Bearer Token / Public status |
@@ -411,7 +411,7 @@ Errors return `{ "success": false, "error": "Descriptive message" }`.
 ## 🎛️ Executive Admin Console Guide
 
 The platform includes a dedicated **Executive Admin Control Center** available at:
-- **URL**: `http://localhost:3000/admin` (or `/admin.html`)
+- **URL**: `http://localhost:3000/anandapkaproject` (or `/admin.html`)
 
 ### Features & Workflow:
 1. **Single-Key Authentication**: Enter your `ADMIN_API_KEY` defined in `.env`. The system authenticates the key and issues a signed, cryptographically verified session token stored in browser session memory.
