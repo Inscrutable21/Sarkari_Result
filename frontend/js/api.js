@@ -312,12 +312,17 @@ export async function rotateAdminToken(token) {
 }
 
 /**
- * Emergency revocation of all active sessions
+ * Emergency revocation of all active sessions (Requires Master Key verification)
  */
-export async function revokeAllAdminSessions() {
+export async function revokeAllAdminSessions(masterKey = '') {
+  const headers = { 'Content-Type': 'application/json' };
+  if (masterKey) {
+    headers['x-admin-key'] = masterKey;
+  }
   const response = await fetchWithFallback('/auth/revoke-all', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' }
+    headers,
+    body: JSON.stringify({ masterKey })
   });
   const result = await response.json();
   if (!response.ok) {

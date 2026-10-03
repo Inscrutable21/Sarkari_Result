@@ -272,15 +272,17 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // 4. Token Rotation (Revokes old token, issues new generation)
+  // 4. Token Rotation (Requires Master Authorization Key to prevent unauthorized session extension)
   if (url.pathname === "/api/auth/rotate" && request.method === "POST") {
-    const authHeader = request.headers["authorization"] || "";
-    let token = authHeader.replace(/^Bearer\s+/i, "").trim();
-
     try {
-      if (!token) {
-        const body = await parseBody(request);
-        token = body.token;
+      const body = await parseBody(request).catch(() => ({}));
+      const authHeader = request.headers["authorization"] || "";
+      const token = authHeader.replace(/^Bearer\s+/i, "").trim() || body.token;
+      const masterKey = body.masterKey || request.headers["x-admin-key"];
+      const expectedKey = process.env.ADMIN_API_KEY;
+
+      if (!expectedKey || masterKey !== expectedKey) {
+        throw new Error("Master Authorization Key required to rotate token");
       }
       if (!token) throw new Error("Active session token required for rotation");
 
@@ -299,15 +301,19 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // 5. Emergency Revocation of All Sessions
+  // 5. Emergency Revocation of All Sessions (Requires Master Authorization Key)
   if (url.pathname === "/api/auth/revoke-all" && request.method === "POST") {
-    if (!(await isAdminAuthorized(request, url))) {
-      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: "401 Unauthorized" }));
-      return;
-    }
-
     try {
+      const body = await parseBody(request).catch(() => ({}));
+      const masterKey = body.masterKey || request.headers["x-admin-key"];
+      const expectedKey = process.env.ADMIN_API_KEY;
+
+      if (!expectedKey || masterKey !== expectedKey) {
+        response.writeHead(403, { "Content-Type": "application/json; charset=utf-8" });
+        response.end(JSON.stringify({ success: false, error: "Master Authorization Key required to revoke all sessions" }));
+        return;
+      }
+
       const result = await revokeAllSessions();
       response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify(result));

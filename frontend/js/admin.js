@@ -10,7 +10,6 @@ import {
   fetchPostingDetails,
   triggerDailyReminders,
   loginAdmin,
-  rotateAdminToken,
   revokeAllAdminSessions,
   verifySessionToken
 } from './api.js';
@@ -67,23 +66,11 @@ function showToast(message, type = 'info') {
 
 // Update Active Session UI Card
 function updateSessionCard(token, session) {
-  const tokenSnippet = document.getElementById('session-token-snippet');
-  const genBadge = document.getElementById('session-gen-badge');
   const adminUser = document.getElementById('session-admin-user');
   const countdownEl = document.getElementById('session-expires-countdown');
 
-  if (tokenSnippet) {
-    tokenSnippet.textContent = token ? `${token.substring(0, 22)}...${token.slice(-10)}` : '--';
-    tokenSnippet.title = token || '';
-  }
-
-  const rot = session?.rotationCount ?? session?.rot ?? 0;
-  if (genBadge) {
-    genBadge.textContent = `GEN #${rot}`;
-  }
-
   if (adminUser) {
-    adminUser.textContent = session?.username || session?.admin?.username || 'Superadmin';
+    adminUser.textContent = session?.username || session?.admin?.username || 'Master Administrator';
   }
 
   // Start live expiration countdown
@@ -93,9 +80,11 @@ function updateSessionCard(token, session) {
     if (!countdownEl) return;
     const diff = expiresAt - Date.now();
     if (diff <= 0) {
-      countdownEl.textContent = 'Expired';
+      countdownEl.textContent = 'Session Expired';
       countdownEl.style.color = '#ef4444';
       clearInterval(countdownInterval);
+      showToast('Admin session has expired. Please re-authenticate.', 'error');
+      logout();
       return;
     }
     const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -203,66 +192,24 @@ async function handleLogin(e) {
   }
 }
 
-// Token Rotation Handler
-async function handleTokenRotation() {
-  const rotateBtn = document.getElementById('btn-rotate-token');
-  if (!activeToken) {
-    showToast('No active session token to rotate', 'error');
+// Emergency Session Revocation (Requires Master Key confirmation)
+async function handleRevokeAll() {
+  const masterKey = prompt('SECURITY VERIFICATION:\nPlease enter the Master Authorization Key to confirm revoking ALL active sessions across all devices:');
+  if (!masterKey || !masterKey.trim()) {
+    showToast('Revocation cancelled: Master Authorization Key is required', 'info');
     return;
   }
 
   try {
-    if (rotateBtn) {
-      rotateBtn.setAttribute('disabled', 'true');
-      rotateBtn.innerHTML = '<span>Rotating cryptographic token...</span>';
-    }
-
-    logTerminal('Initiating token rotation with cloud database session store...', 'info');
-    const result = await rotateAdminToken(activeToken);
-
-    activeToken = result.token;
-    sessionData = { ...sessionData, ...result };
-
-    localStorage.setItem('sarkari_admin_token', activeToken);
-    updateSessionCard(activeToken, sessionData);
-
-    logTerminal(`Token rotated successfully! Active Generation #${result.rotationCount}. Old token invalidated.`, 'success');
-    showToast(`Token Rotated! Generation #${result.rotationCount} active.`, 'success');
-  } catch (err) {
-    console.error('[Rotation Error]:', err);
-    logTerminal(`Token rotation failed: ${err.message}`, 'error');
-    showToast(`Token rotation failed: ${err.message}`, 'error');
-  } finally {
-    if (rotateBtn) {
-      rotateBtn.removeAttribute('disabled');
-      rotateBtn.innerHTML = '<span>🔄 Rotate Token (New Generation)</span>';
-    }
-  }
-}
-
-// Emergency Session Revocation
-async function handleRevokeAll() {
-  const confirmed = confirm('WARNING: This will immediately revoke ALL active admin session tokens in MongoDB Atlas across every device. Continue?');
-  if (!confirmed) return;
-
-  try {
-    logTerminal('Emergency revocation triggered: Revoking all active tokens...', 'warn');
-    await revokeAllAdminSessions();
-    showToast('All active sessions revoked', 'info');
+    logTerminal('Emergency revocation triggered: Verifying Master Key and revoking sessions...', 'warn');
+    const result = await revokeAllAdminSessions(masterKey.trim());
+    logTerminal(`Emergency revocation complete: ${result.message || 'All sessions revoked.'}`, 'info');
+    showToast('All active sessions revoked successfully', 'info');
     logout();
   } catch (err) {
+    logTerminal(`Revocation failed: ${err.message}`, 'error');
     showToast(`Revocation failed: ${err.message}`, 'error');
   }
-}
-
-// Copy Token Helper
-function copyTokenToClipboard() {
-  if (!activeToken) return;
-  navigator.clipboard.writeText(activeToken).then(() => {
-    showToast('Full token copied to clipboard!', 'info');
-  }).catch(() => {
-    showToast('Could not copy to clipboard', 'error');
-  });
 }
 
 // Telemetry & Stats Loader
@@ -496,12 +443,9 @@ function initAdmin() {
   formLogin?.addEventListener('submit', handleLogin);
   document.getElementById('btn-unlock-admin')?.addEventListener('click', handleLogin);
 
-  // Token Management
-  document.getElementById('btn-rotate-token')?.addEventListener('click', handleTokenRotation);
+  // Session Security & Logout Controls
+  document.getElementById('btn-quick-lock')?.addEventListener('click', logout);
   document.getElementById('btn-revoke-all-sessions')?.addEventListener('click', handleRevokeAll);
-  document.getElementById('btn-copy-token')?.addEventListener('click', copyTokenToClipboard);
-
-  // Logout
   document.getElementById('btn-admin-logout')?.addEventListener('click', logout);
 
   // Scraper Trigger

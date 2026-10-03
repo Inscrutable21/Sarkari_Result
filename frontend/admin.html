@@ -200,40 +200,31 @@
 
         <!-- Right Column: Quick Diagnostics & Utilities -->
         <div>
-          <!-- Active Tokenization & Session Management -->
+          <!-- Active Session Security Card -->
           <div class="admin-panel-card">
             <div class="admin-card-header">
               <h3 class="admin-card-title">
-                <span>🔐</span>
-                <span>Security Token & Session</span>
+                <span>🛡️</span>
+                <span>Active Session Security</span>
               </h3>
-              <span id="session-gen-badge" class="admin-brand-badge" style="background: rgba(99, 102, 241, 0.15); color: #818cf8; border-color: rgba(99, 102, 241, 0.3);">
-                GEN #0
+              <span id="session-status-badge" class="admin-brand-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">
+                ● Active
               </span>
             </div>
 
-            <div style="font-size: 0.82rem; line-height: 1.8; color: #cbd5e1; margin-bottom: 1rem;">
-              <div><strong>Admin Identity:</strong> <span id="session-admin-user">Superadmin</span></div>
-              <div><strong>Expires In:</strong> <span id="session-expires-countdown" style="color: #34d399; font-weight: 600;">Active Session</span></div>
-              <div style="margin-top: 6px;">
-                <label style="display: block; font-size: 0.72rem; color: #94a3b8; margin-bottom: 2px;">Signed Cryptographic Token:</label>
-                <div style="display: flex; gap: 6px; align-items: center;">
-                  <code id="session-token-snippet" style="background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; font-size: 0.72rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; border: 1px solid rgba(255,255,255,0.08);">
-                    --
-                  </code>
-                  <button type="button" id="btn-copy-token" class="admin-btn admin-btn-secondary" style="padding: 4px 8px; font-size: 0.7rem;" title="Copy full token to clipboard">
-                    Copy
-                  </button>
-                </div>
-              </div>
+            <div style="font-size: 0.82rem; line-height: 1.8; color: #cbd5e1; margin-bottom: 1.25rem;">
+              <div><strong>Admin Identity:</strong> <span id="session-admin-user">Master Administrator</span></div>
+              <div><strong>Authentication:</strong> <span style="color: #93c5fd;">Single Master Key (Encrypted Bearer)</span></div>
+              <div><strong>Auto-Lock In:</strong> <span id="session-expires-countdown" style="color: #34d399; font-weight: 600;">Active Session</span></div>
+              <div><strong>Token Protection:</strong> <span style="color: #a7f3d0;">✓ Redacted (In-Memory Secure Session)</span></div>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button type="button" id="btn-rotate-token" class="admin-btn admin-btn-primary" style="justify-content: center; width: 100%; padding: 0.6rem; font-size: 0.8rem; background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);">
-                <span>🔄 Rotate Token (New Generation)</span>
+              <button type="button" id="btn-quick-lock" class="admin-btn admin-btn-secondary" style="justify-content: center; width: 100%; padding: 0.55rem; font-size: 0.8rem;">
+                <span>🔒 Lock Session & Sign Out</span>
               </button>
-              <button type="button" id="btn-revoke-all-sessions" class="admin-btn admin-btn-secondary" style="justify-content: center; width: 100%; padding: 0.5rem; font-size: 0.76rem; color: #fca5a5; border-color: rgba(239, 68, 68, 0.25);">
-                <span>🚨 Revoke All Active Sessions</span>
+              <button type="button" id="btn-revoke-all-sessions" class="admin-btn admin-btn-secondary" style="justify-content: center; width: 100%; padding: 0.5rem; font-size: 0.76rem; color: #fca5a5; border-color: rgba(239, 68, 68, 0.25);" title="Requires Master Key verification">
+                <span>🚨 Revoke All Active Sessions Everywhere</span>
               </button>
             </div>
           </div>
