@@ -409,6 +409,52 @@ function setupEventListeners() {
     document.querySelector('.matrix-section')?.scrollIntoView({ behavior: 'smooth' });
   });
 
+  // SEO Tag Chips & Footer Filter Links
+  document.querySelectorAll('[data-filter-query], [data-footer-filter]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      const query = el.getAttribute('data-filter-query') || el.getAttribute('data-footer-filter');
+      if (query && searchInput) {
+        searchInput.value = query;
+        setFilters({ searchQuery: query });
+        document.querySelector('.matrix-section')?.scrollIntoView({ behavior: 'smooth' });
+        showToast(`Filtered for: ${query}`, 'info');
+      }
+    });
+  });
+
+  // State Query Badges in SEO Section
+  document.querySelectorAll('[data-state-query]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      const stateName = el.getAttribute('data-state-query');
+      if (stateName && stateSelect) {
+        stateSelect.value = stateName;
+        setFilters({ state: stateName });
+        document.querySelector('.matrix-section')?.scrollIntoView({ behavior: 'smooth' });
+        showToast(`Filtered for state: ${stateName}`, 'info');
+      }
+    });
+  });
+
+  // SEO Interactive FAQ Accordion
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item?.classList.contains('is-open');
+      document.querySelectorAll('.faq-item').forEach(other => {
+        if (other !== item) {
+          other.classList.remove('is-open');
+          other.querySelector('.faq-question')?.setAttribute('aria-expanded', 'false');
+        }
+      });
+      if (item) {
+        item.classList.toggle('is-open', !isOpen);
+        btn.setAttribute('aria-expanded', String(!isOpen));
+      }
+    });
+  });
+
   // Navigation Links Interaction
   document.querySelectorAll('.nav-tab-link, .dropdown-link').forEach(link => {
     link.addEventListener('click', (e) => {
@@ -941,6 +987,49 @@ function setupEventListeners() {
   });
 }
 
+// Handle URL search parameters for clean SEO crawlable URLs
+function applyUrlParams() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q') || params.get('search');
+    if (q && searchInput) {
+      searchInput.value = q;
+      setFilters({ searchQuery: q });
+    }
+    const category = params.get('category');
+    if (category) {
+      if (category.includes('result')) {
+        document.querySelector('[data-target="results"]')?.click();
+        document.getElementById('matrix-col-results')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (category.includes('admit')) {
+        document.querySelector('[data-target="admitcards"]')?.click();
+        document.getElementById('matrix-col-admitcards')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (category.includes('job')) {
+        document.querySelector('[data-target="latestjobs"]')?.click();
+        document.getElementById('matrix-col-latestjobs')?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    const service = params.get('service');
+    if (service) {
+      if (service.includes('answer')) {
+        state.activeSecondaryTab = 'answerKeys';
+      } else if (service.includes('syllabus')) {
+        state.activeSecondaryTab = 'syllabus';
+      }
+    }
+    const filter = params.get('filter');
+    if (filter) {
+      if (filter.includes('10th')) {
+        setFilters({ searchQuery: '10th' });
+      } else if (filter.includes('12th')) {
+        setFilters({ searchQuery: '12th' });
+      } else if (filter.includes('graduate')) {
+        setFilters({ searchQuery: 'Graduate' });
+      }
+    }
+  } catch { }
+}
+
 // Bootstrap
 document.addEventListener('DOMContentLoaded', () => {
   const todayBadge = document.getElementById('filter-current-date-badge');
@@ -952,5 +1041,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setupEventListeners();
   subscribe(renderAll);
+  applyUrlParams();
   loadPortalData();
 });

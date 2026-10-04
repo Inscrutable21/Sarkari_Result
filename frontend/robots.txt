@@ -1,7 +1,35 @@
-# Robots.txt for Sarkari Hith / sarkari hith Portal
+# Robots.txt for Sarkari Hith (sarkari_hith)
+# India's Top Government Jobs & Sarkari Results Portal
+
 User-agent: *
 Allow: /
+Allow: /css/
+Allow: /js/
+Allow: /assets/
 Disallow: /api/
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /anandapkaproject
 
-# Sitemap location
+User-agent: Googlebot
+Allow: /
+Allow: /css/
+Allow: /js/
+Allow: /assets/
+Disallow: /api/
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /anandapkaproject
+
+User-agent: Bingbot
+Allow: /
+Allow: /css/
+Allow: /js/
+Allow: /assets/
+Disallow: /api/
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /anandapkaproject
+
+# XML Sitemap
 Sitemap: https://sarkarihith.com/sitemap.xml

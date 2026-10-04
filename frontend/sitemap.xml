@@ -1,58 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Homepage & Core Gateway -->
+  <!-- Homepage & Core Gateway: Top Government Jobs & Sarkari Results -->
   <url>
     <loc>https://sarkarihith.com/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-04</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Latest Sarkari Jobs -->
+  <!-- Clean Canonical Query Entrypoints for Search Engines -->
   <url>
-    <loc>https://sarkarihith.com/#matrix-col-latestjobs</loc>
-    <lastmod>2026-09-30</lastmod>
+    <loc>https://sarkarihith.com/?category=latest-jobs</loc>
+    <lastmod>2026-10-04</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- sarkari hiths & Cutoff Lists -->
   <url>
-    <loc>https://sarkarihith.com/#matrix-col-results</loc>
-    <lastmod>2026-09-30</lastmod>
+    <loc>https://sarkarihith.com/?category=sarkari-results</loc>
+    <lastmod>2026-10-04</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Sarkari Admit Cards & Exam Dates -->
   <url>
-    <loc>https://sarkarihith.com/#matrix-col-admitcards</loc>
-    <lastmod>2026-09-30</lastmod>
+    <loc>https://sarkarihith.com/?category=admit-cards</loc>
+    <lastmod>2026-10-04</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Answer Keys & Objections -->
   <url>
-    <loc>https://sarkarihith.com/#secondary-services</loc>
-    <lastmod>2026-09-30</lastmod>
+    <loc>https://sarkarihith.com/?service=answer-keys</loc>
+    <lastmod>2026-10-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Trending Government Vacancy Highlights -->
   <url>
-    <loc>https://sarkarihith.com/#trending-section</loc>
-    <lastmod>2026-09-30</lastmod>
+    <loc>https://sarkarihith.com/?service=syllabus</loc>
+    <lastmod>2026-10-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- SEO Knowledge Base -->
   <url>
-    <loc>https://sarkarihith.com/#seo-guide-section</loc>
-    <lastmod>2026-09-30</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://sarkarihith.com/?filter=10th-pass</loc>
+    <lastmod>2026-10-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://sarkarihith.com/?filter=12th-pass</loc>
+    <lastmod>2026-10-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://sarkarihith.com/?filter=graduate</loc>
+    <lastmod>2026-10-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
