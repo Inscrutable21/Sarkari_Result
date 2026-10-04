@@ -1,11 +1,7 @@
-const fs = require('node:fs/promises');
-const path = require('node:path');
 const { scrapeHomepage, scrapeCategoryArchive, scrapePostingDetails } = require('./sarkariScraper');
 const { categorizeCollection, DEGREE_DISCIPLINES, isFillableJob } = require('./classifier');
 const { dispatchAllNotifications } = require('../notificationService');
 const { saveAllPortalDataToMongo, saveCategorySummaryToMongo } = require('../mongoService');
-
-const DATA_DIR = path.resolve(__dirname, '../../data');
 
 /**
  * Computes frequency counts for sectors, states, qualifications, and degree disciplines
@@ -97,8 +93,6 @@ async function run() {
   console.log('====================================================');
 
   try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-
     // Step 1: Scrape Homepage
     console.log('[Scraper] Fetching homepage listings from SarkariResult.com...');
     const data = await scrapeHomepage();
