@@ -289,7 +289,11 @@ const server = createServer(async (request, response) => {
 
     isScrapingInProgress = true;
     try {
-      const { runScraperPipeline } = require("./src/services/scraper/runScraper");
+      const scraperModule = require("./src/services/scraper/runScraper");
+      const runScraperPipeline = scraperModule.runScraperPipeline || scraperModule.run || (typeof scraperModule === "function" ? scraperModule : scraperModule.default);
+      if (typeof runScraperPipeline !== "function") {
+        throw new Error("Scraper pipeline function could not be loaded from module");
+      }
       const summary = await runScraperPipeline();
       response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: true, message: "Successfully scraped and categorized all data", summary }));

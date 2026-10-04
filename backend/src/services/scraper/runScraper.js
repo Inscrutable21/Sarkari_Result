@@ -247,5 +247,7 @@ if (require.main === module) {
 }
 
 module.exports = {
-  runScraperPipeline: run
+  runScraperPipeline: run,
+  run,
+  default: run
 };

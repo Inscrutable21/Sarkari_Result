@@ -6,7 +6,6 @@
 
 const axios = require('axios');
 const cheerio = require('cheerio');
-const puppeteer = require('puppeteer');
 
 const BASE_URL = 'https://www.sarkariresult.com';
 const DEFAULT_HEADERS = {
@@ -351,6 +350,8 @@ async function scrapePostingDetails(url) {
 async function scrapeWithPuppeteer(url) {
   let browser = null;
   try {
+    const puppeteerModule = await import('puppeteer');
+    const puppeteer = puppeteerModule.default || puppeteerModule;
     browser = await puppeteer.launch({
       headless: 'new',
       args: ['--no-sandbox', '--disable-setuid-sandbox']
