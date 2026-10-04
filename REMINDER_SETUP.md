@@ -1,6 +1,6 @@
-# Daily reminders at 6 PM IST
+# Daily reminders at 7 PM IST
 
-The Vercel cron in `vercel.json` uses `30 12 * * *` (12:30 UTC / 6 PM IST).
+The Vercel cron in `vercel.json` uses `30 13 * * *` (13:30 UTC / 7 PM IST).
 The local server's interval scheduler runs only while `node backend/server.js`
 is running; it does not run automatically inside Vercel functions.
 
@@ -21,9 +21,9 @@ already recorded as sent that day. SMTP acceptance does not prove inbox delivery
 check the sender's bounce messages and the recipient's spam folder as well.
 
 Vercel Hobby cron has timing jitter within the scheduled hour and does not
-guarantee 6:00 PM delivery. For minute-level scheduling, use a Vercel plan with
+guarantee 7:00 PM delivery. For minute-level scheduling, use a Vercel plan with
 minute precision or an external scheduler calling the protected cron endpoint
-at 12:30 UTC, with the same bearer secret and retry policy. Do not make the
+at 13:30 UTC, with the same bearer secret and retry policy. Do not make the
 endpoint public or use a browser timer for production reminders.
 
 Read the affected record without sending email:

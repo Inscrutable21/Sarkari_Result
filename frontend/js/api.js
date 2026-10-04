@@ -351,7 +351,7 @@ export async function verifySessionToken(token) {
 }
 
 /**
- * Fetches the 6:00 PM reminder & alert status for all subscribers and tracked jobs
+ * Fetches the 7:00 PM reminder & alert status for all subscribers and tracked jobs
  */
 export async function fetchSubscribersStatus(token) {
   const headers = {};

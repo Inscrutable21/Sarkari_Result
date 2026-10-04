@@ -741,7 +741,7 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // 11b. Vercel Cron Scheduled Daily Trigger (Triggers automatically every day at 6:00 PM IST / 12:30 UTC)
+  // 11b. Vercel Cron Scheduled Daily Trigger (Triggers automatically every day at 7:00 PM IST / 13:30 UTC)
   if (url.pathname === "/api/cron/reminders" && (request.method === "GET" || request.method === "POST")) {
     const cronSecret = process.env.CRON_SECRET;
     const authHeader = request.headers["authorization"];
@@ -753,13 +753,13 @@ const server = createServer(async (request, response) => {
     }
 
     try {
-      console.log("[Vercel Cron] 6:00 PM IST scheduled reminder job running via Vercel Cron...");
+      console.log("[Vercel Cron] 7:00 PM IST scheduled reminder job running via Vercel Cron...");
       const { summary, alertSummary } = await runScheduledBatch();
       await setLastReminderTriggerDateInMongo(getCurrentScheduledTime().dateStr, { reminderSummary: summary, alertSummary });
       response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({
         success: true,
-        message: "Daily 6:00 PM reminders and alerts processed successfully via Vercel Cron",
+        message: "Daily 7:00 PM reminders and alerts processed successfully via Vercel Cron",
         summary,
         alertSummary
       }));
@@ -771,7 +771,7 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // 11c. Unified Subscriber & 6:00 PM Reminder Dispatch Status (Admin Protected with RBAC)
+  // 11c. Unified Subscriber & 7:00 PM Reminder Dispatch Status (Admin Protected with RBAC)
   if ((url.pathname === "/api/anandapkaproject/subscribers-status" || url.pathname === "/api/admin/subscribers-status") && request.method === "GET") {
     if (!(await enforceAdminPermission(request, response, url, "notifications:view_logs"))) {
       return;
@@ -1081,7 +1081,7 @@ server.on("error", (err) => {
   }
 });
 
-// Automated Background Reminder Scheduler (Configured for 6:00 PM daily trigger)
+// Automated Background Reminder Scheduler (Configured for 7:00 PM daily trigger)
 let reminderSchedulerInterval = null;
 let lastReminderTriggerDate = null;
 let isReminderDispatchRunning = false;
@@ -1125,20 +1125,20 @@ async function checkAndTriggerReminderBatch() {
     }
 
     const timeInfo = getCurrentScheduledTime();
-    const targetHour = Number(process.env.REMINDER_TRIGGER_HOUR) || 18; // 6:00 PM (18:00)
+    const targetHour = Number(process.env.REMINDER_TRIGGER_HOUR) || 19; // 7:00 PM (19:00)
     const targetMinute = Number(process.env.REMINDER_TRIGGER_MINUTE) || 0;
 
-    // Check if the current time has reached or passed 6:00 PM IST today
+    // Check if the current time has reached or passed 7:00 PM IST today
     const isPastTargetTime = timeInfo.hour > targetHour || (timeInfo.hour === targetHour && timeInfo.minute >= targetMinute);
 
     if (isPastTargetTime && lastReminderTriggerDate !== timeInfo.dateStr) {
-      console.log(`[Reminder Scheduler] 6:00 PM Daily Trigger reached for ${timeInfo.dateStr} (Current IST: ${timeInfo.hour}:${String(timeInfo.minute).padStart(2, '0')}). Dispatching reminders for tracked jobs and subscriber alerts...`);
+      console.log(`[Reminder Scheduler] 7:00 PM Daily Trigger reached for ${timeInfo.dateStr} (Current IST: ${timeInfo.hour}:${String(timeInfo.minute).padStart(2, '0')}). Dispatching reminders for tracked jobs and subscriber alerts...`);
       
       const { summary: reminderSummary, alertSummary } = await runScheduledBatch();
       
       await setLastReminderTriggerDateInMongo(timeInfo.dateStr, { reminderSummary, alertSummary });
       lastReminderTriggerDate = timeInfo.dateStr;
-      console.log(`[Reminder Scheduler] 6:00 PM Dispatch complete: ${reminderSummary.dispatched} deadline reminders sent, ${alertSummary.dispatched || 0} job alert digests sent.`);
+      console.log(`[Reminder Scheduler] 7:00 PM Dispatch complete: ${reminderSummary.dispatched} deadline reminders sent, ${alertSummary.dispatched || 0} job alert digests sent.`);
     }
   } catch (err) {
     console.warn('[Reminder Scheduler] Periodic check error:', err.message);
@@ -1149,11 +1149,11 @@ async function checkAndTriggerReminderBatch() {
 
 function startReminderScheduler() {
   if (reminderSchedulerInterval) return;
-  const targetHour = Number(process.env.REMINDER_TRIGGER_HOUR) || 18; // 6:00 PM (18:00)
+  const targetHour = Number(process.env.REMINDER_TRIGGER_HOUR) || 19; // 7:00 PM (19:00)
   const targetMinute = Number(process.env.REMINDER_TRIGGER_MINUTE) || 0;
-  console.log(`[Reminder Scheduler] Automated reminder engine active: scheduled to trigger daily at 6:00 PM (${targetHour.toString().padStart(2, '0')}:${targetMinute.toString().padStart(2, '0')} IST)...`);
+  console.log(`[Reminder Scheduler] Automated reminder engine active: scheduled to trigger daily at 7:00 PM (${targetHour.toString().padStart(2, '0')}:${targetMinute.toString().padStart(2, '0')} IST)...`);
 
-  // Initial check 3 seconds after startup to immediately catch up any missed 6:00 PM dispatch
+  // Initial check 3 seconds after startup to immediately catch up any missed 7:00 PM dispatch
   setTimeout(() => {
     checkAndTriggerReminderBatch();
   }, 3000);

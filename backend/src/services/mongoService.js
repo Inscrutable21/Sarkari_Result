@@ -534,7 +534,7 @@ async function getMongoStatus() {
 }
 
 /**
- * Retrieves the last date string when the 6:00 PM daily batch reminder ran
+ * Retrieves the last date string when the 7:00 PM daily batch reminder ran
  */
 async function getLastReminderTriggerDateFromMongo() {
   const db = await getDb();
@@ -549,7 +549,7 @@ async function getLastReminderTriggerDateFromMongo() {
 }
 
 /**
- * Saves the last date string and execution telemetry for the 6:00 PM daily batch reminder
+ * Saves the last date string and execution telemetry for the 7:00 PM daily batch reminder
  */
 async function setLastReminderTriggerDateInMongo(dateStr, meta = {}) {
   const db = await getDb();

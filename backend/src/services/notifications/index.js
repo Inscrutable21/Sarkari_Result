@@ -42,6 +42,6 @@ module.exports = {
   // Dispatchers & Reminders
   ...dispatcher,
 
-  // Subscriber & 6 PM Reminder Status
+  // Subscriber & 7 PM Reminder Status
   ...subscriberStatusService
 };

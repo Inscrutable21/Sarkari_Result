@@ -121,7 +121,7 @@ function updateSessionCard(token, session) {
   countdownInterval = setInterval(tickCountdown, 1000);
 }
 
-// Live Real-Time Countdown to the Next 6:00 PM IST Batch
+// Live Real-Time Countdown to the Next 7:00 PM IST Batch
 function startSchedulerCountdown() {
   clearInterval(schedulerCountdownInterval);
 
@@ -149,18 +149,18 @@ function startSchedulerCountdown() {
       const curSec = getVal('second');
 
       const curTotalSecs = curHour * 3600 + curMin * 60 + curSec;
-      const targetHour = 18; // 6:00 PM IST
+      const targetHour = 19; // 7:00 PM IST
       const targetTotalSecs = targetHour * 3600;
 
       let diffSecs = 0;
       if (curTotalSecs < targetTotalSecs) {
-        // Earlier today before 6:00 PM IST
+        // Earlier today before 7:00 PM IST
         diffSecs = targetTotalSecs - curTotalSecs;
-        if (triggerTextEl) triggerTextEl.textContent = 'Today, 6:00 PM IST';
+        if (triggerTextEl) triggerTextEl.textContent = 'Today, 7:00 PM IST';
       } else {
-        // Past 6:00 PM IST, target is tomorrow 6:00 PM IST
+        // Past 7:00 PM IST, target is tomorrow 7:00 PM IST
         diffSecs = (24 * 3600 - curTotalSecs) + targetTotalSecs;
-        if (triggerTextEl) triggerTextEl.textContent = 'Tomorrow, 6:00 PM IST';
+        if (triggerTextEl) triggerTextEl.textContent = 'Tomorrow, 7:00 PM IST';
       }
 
       const h = Math.floor(diffSecs / 3600);
@@ -499,7 +499,7 @@ function getInitials(name) {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-// Load Subscriber Directory & 6:00 PM Dispatch Status
+// Load Subscriber Directory & 7:00 PM Dispatch Status
 async function loadSubscribersMonitor() {
   const tableBody = document.getElementById('subscribers-table-body');
   try {
@@ -522,7 +522,7 @@ async function loadSubscribersMonitor() {
     if (statSent) statSent.textContent = summary.sentTodayCount ?? 0;
     if (statApplied) statApplied.textContent = summary.appliedCount ?? 0;
 
-    // Update 6th Stat Card: 6 PM Batch Today
+    // Update 6th Stat Card: 7 PM Batch Today
     const statBatchToday = document.getElementById('stat-count-batch-today');
     if (statBatchToday) {
       statBatchToday.textContent = `${summary.sentTodayCount ?? 0} Sent`;
@@ -535,7 +535,7 @@ async function loadSubscribersMonitor() {
         schedulerTodayBadge.textContent = `✓ Completed (${summary.sentTodayCount} Dispatched)`;
         schedulerTodayBadge.style.color = '#34d399';
       } else {
-        schedulerTodayBadge.textContent = `⏳ ${summary.pendingCount || 0} Pending (6:00 PM Batch)`;
+        schedulerTodayBadge.textContent = `⏳ ${summary.pendingCount || 0} Pending (7:00 PM Batch)`;
         schedulerTodayBadge.style.color = '#fbbf24';
       }
     }
@@ -731,7 +731,7 @@ async function handleSendSingleReminder(btn, id, email) {
 // Handle force dispatching all pending reminders
 async function handleForceAllReminders() {
   const btn = document.getElementById('btn-force-all-reminders');
-  if (!confirm('This will trigger the 6:00 PM Reminder & Alert Engine right now for all pending subscribers and tracked candidates. Continue?')) return;
+  if (!confirm('This will trigger the 7:00 PM Reminder & Alert Engine right now for all pending subscribers and tracked candidates. Continue?')) return;
 
   const originalHtml = btn ? btn.innerHTML : '';
   if (btn) {
@@ -739,11 +739,11 @@ async function handleForceAllReminders() {
     btn.innerHTML = '<span>⏳ Dispatching All Pending...</span>';
   }
 
-  logTerminal('Forcing immediate 6:00 PM dispatch run for all pending candidates and subscribers...', 'warn');
+  logTerminal('Forcing immediate 7:00 PM dispatch run for all pending candidates and subscribers...', 'warn');
   try {
     const result = await dispatchAllPendingReminders(activeToken || activeAdminKey);
     logTerminal(`Force dispatch complete: ${result.message || 'All pending reminders delivered.'}`, 'success');
-    showToast('6:00 PM Reminder & Alert Engine executed successfully!', 'success');
+    showToast('7:00 PM Reminder & Alert Engine executed successfully!', 'success');
     await loadSubscribersMonitor();
   } catch (err) {
     logTerminal(`Force dispatch failed: ${err.message}`, 'error');
@@ -796,7 +796,7 @@ function exportSubscribersToCsv() {
   }
 
   const items = currentSubscribersData.items;
-  const headers = ['ID', 'Candidate Name', 'Email', 'Type', 'Target Job Title', 'Organization', 'Deadline', 'Days Remaining', '6 PM Status', 'Last Sent Date', 'Total Dispatches'];
+  const headers = ['ID', 'Candidate Name', 'Email', 'Type', 'Target Job Title', 'Organization', 'Deadline', 'Days Remaining', '7 PM Status', 'Last Sent Date', 'Total Dispatches'];
 
   const rows = items.map(i => [
     i.id || '',
@@ -937,7 +937,7 @@ function initAdmin() {
   // Quick Test Email Form
   document.getElementById('admin-test-email-form')?.addEventListener('submit', handleSendTestEmail);
 
-  // Subscriber Directory & 6:00 PM Monitor Controls
+  // Subscriber Directory & 7:00 PM Monitor Controls
   document.getElementById('btn-refresh-subscribers')?.addEventListener('click', () => {
     loadSubscribersMonitor();
     showToast('Subscriber directory refreshed', 'info');

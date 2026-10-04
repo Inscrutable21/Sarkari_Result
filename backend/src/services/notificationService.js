@@ -59,7 +59,7 @@ const {
   hasJobBeenSentToSubscriber,
   recordSentJobsForSubscriber,
 
-  // Subscriber & 6 PM Reminder Status
+  // Subscriber & 7 PM Reminder Status
   getSubscribersDispatchStatus,
   sendIndividualReminder,
   deleteSubscriberOrTrackedJob,

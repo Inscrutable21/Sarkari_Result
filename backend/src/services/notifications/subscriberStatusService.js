@@ -1,7 +1,7 @@
 /**
  * Sarkari Hith - Subscriber & Reminder Dispatch Status Service
  * Aggregates subscriber profiles, tracked application deadlines, and email dispatch logs
- * to provide real-time visibility into who received the 6:00 PM reminders and who is pending.
+ * to provide real-time visibility into who received the 7:00 PM reminders and who is pending.
  */
 
 const { getSubscribers, saveSubscribers } = require('./subscriberStore');
@@ -15,7 +15,7 @@ const { getTodayISTString, isDateTodayIST } = require('./constants');
 
 /**
  * Compiles a unified diagnostic list of all subscribers and tracked job candidates
- * with their 6:00 PM reminder dispatch status.
+ * with their 7:00 PM reminder dispatch status.
  */
 async function getSubscribersDispatchStatus() {
   const [subscribers, trackedJobs, emailLogs] = await Promise.all([
@@ -61,9 +61,9 @@ async function getSubscribersDispatchStatus() {
     const latestLog = recipientLogs[0] || null;
 
     let status = 'pending';
-    let statusLabel = '⏳ Pending (6:00 PM Batch)';
+    let statusLabel = '⏳ Pending (7:00 PM Batch)';
     let statusBadge = 'status-pending';
-    let reason = 'Candidate is active. Daily countdown reminder scheduled for 6:00 PM IST.';
+    let reason = 'Candidate is active. Daily countdown reminder scheduled for 7:00 PM IST.';
 
     if (track.applied === true) {
       status = 'applied';
@@ -126,7 +126,7 @@ async function getSubscribersDispatchStatus() {
     const newJobs = matching.filter(job => !hasJobBeenSentToSubscriber(sub.email, job, sentHistory, sub.notifiedJobIds));
 
     let status = 'pending';
-    let statusLabel = '⏳ Pending (6:00 PM Batch)';
+    let statusLabel = '⏳ Pending (7:00 PM Batch)';
     let statusBadge = 'status-pending';
     let reason = `${newJobs.length} new matching vacancies ready for daily digest dispatch.`;
 
@@ -185,7 +185,7 @@ async function getSubscribersDispatchStatus() {
       appliedCount,
       expiredCount,
       todayDate: todayStr,
-      scheduledHour: 18,
+      scheduledHour: 19,
       scheduledMinute: 0,
       currentTime: new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' })
     },

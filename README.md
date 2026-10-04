@@ -132,7 +132,7 @@ graph TD
     end
 
     subgraph "Automated Background Schedulers"
-        VercelCron["Vercel Cron (/api/cron/reminders)"] -->|"Daily at 12:30 UTC (18:00 IST)"| NodeServer
+        VercelCron["Vercel Cron (/api/cron/reminders)"] -->|"Daily at 13:30 UTC (19:00 IST)"| NodeServer
         LocalCLI["CLI Scripts (npm run notify / scrape)"] --> NodeServer
     end
 ```
@@ -165,7 +165,7 @@ sequenceDiagram
     UI->>API: POST /api/track-job { email, jobId, lastDate }
     API->>DB: Store Tracked Job with Countdown Timestamp
     
-    Note over API: Daily Scheduler Fires at 18:00 IST (12:30 UTC)
+    Note over API: Daily Scheduler Fires at 19:00 IST (13:30 UTC)
     API->>DB: Scan Approaching Deadlines (<= 3 Days Left, Status != Applied)
     API->>Mail: Send High-Priority Countdown Alert
     Mail-->>Candidate: Deliver Urgent Deadline Warning with One-Click Actions
@@ -189,7 +189,7 @@ flowchart LR
     TokenValidator -->|"Verified"| RBACGate{"Check Specific Permission"}
     
     RBACGate -->|"scrape:run"| ScraperAction["Trigger Live Cheerio Scraper"]
-    RBACGate -->|"notifications:dispatch"| BatchReminderAction["Execute Daily 18:00 Reminders"]
+    RBACGate -->|"notifications:dispatch"| BatchReminderAction["Execute Daily 19:00 Reminders"]
     RBACGate -->|"subscribers:read"| DiagnosticsAction["Return Real-time Subscriber Status"]
     RBACGate -->|"system:sync"| CloudSyncAction["Flush Datasets to MongoDB Atlas"]
 ```
@@ -204,7 +204,7 @@ flowchart LR
 | **Styling & Assets** | Pure modular CSS3, WebP images, SVGs | Heavy uncompressed JPEGs and external UI toolkits |
 | **Search & Filtering** | Real-time debounced multi-parameter filtering | Full page reloads on every dropdown change |
 | **Candidate Utilities** | Integrated job deadline tracker & countdown | Static unstructured link dumps without user state |
-| **Automated Alerts** | Qualification-matched emails & 18:00 IST reminders | Unfiltered blast emails or manual RSS feeds |
+| **Automated Alerts** | Qualification-matched emails & 19:00 IST reminders | Unfiltered blast emails or manual RSS feeds |
 | **Admin Architecture** | Tokenized executive console with RBAC & diagnostics | Vulnerable single-password forms without audit logs |
 | **Data Redundancy** | Cloud MongoDB Atlas with automatic indexing | Vulnerable local file storage or single SQLite instances |
 
@@ -265,7 +265,7 @@ Sarkari_Result/
             |   |-- jobTrackerStore.js # Deadline countdown tracking & status store
             |   |-- sentHistoryStore.js # Deduplication history store
             |   |-- subscriberStore.js # Subscriber profiles & degree matching
-            |   `-- subscriberStatusService.js # 18:00 reminder diagnostic engine
+            |   `-- subscriberStatusService.js # 19:00 reminder diagnostic engine
             `-- scraper/            # Data extraction & parsing pipeline
                 |-- classifier.js   # NLP/Regex classification for eligibility & qualifications
                 |-- sarkariScraper.js # HTML extractor using Cheerio
@@ -345,7 +345,7 @@ Configure the following environment variables in `backend/.env` or in your hosti
 | `NOTIFICATION_FROM_EMAIL` | String | *Optional* | Formatted sender header in candidate email inboxes. |
 | `CRON_SECRET` | String | *Optional* | Bearer secret for Vercel Cron authorization. |
 | `TIMEZONE` | String | `Asia/Kolkata` | Reference timezone for reminder scheduling. |
-| `REMINDER_TRIGGER_HOUR` | Integer | `18` | Hour to trigger daily deadline reminders (18 = 18:00 IST). |
+| `REMINDER_TRIGGER_HOUR` | Integer | `19` | Hour to trigger daily deadline reminders (19 = 19:00 IST). |
 | `REMINDER_TRIGGER_MINUTE` | Integer | `0` | Minute to trigger daily deadline reminders. |
 
 ---
@@ -419,7 +419,7 @@ On validation failure or runtime error:
 
 | Method | Route | Description | Authorization |
 | :--- | :--- | :--- | :--- |
-| `GET` / `POST` | `/api/cron/reminders` | Triggers daily 18:00 IST deadline reminder execution | `Bearer <CRON_SECRET>` or Admin Token |
+| `GET` / `POST` | `/api/cron/reminders` | Triggers daily 19:00 IST deadline reminder execution | `Bearer <CRON_SECRET>` or Admin Token |
 | `POST` | `/api/notifications/reminders/send`| Manual trigger for daily deadline reminders | Master API Key |
 
 ### Administrative Endpoints
@@ -454,10 +454,10 @@ The dedicated administrative interface is located at:
 1. **Single-Key Authentication**: Enter the `ADMIN_API_KEY` configured in `.env`. The backend validates the key using timing-safe comparisons and returns an HMAC-signed session token.
 2. **Real-time Diagnostic Dashboard**:
    - Live telemetry on MongoDB Atlas connection status and total document counts.
-   - Comprehensive diagnostic table identifying eligibility reasons for every candidate for today's 18:00 reminder run.
+   - Comprehensive diagnostic table identifying eligibility reasons for every candidate for today's 19:00 reminder run.
 3. **One-Click Execution**:
    - **Send Test Reminder**: Validates SMTP connection and template rendering.
-   - **Send All 18:00 Reminders**: Forces the daily deadline delivery job immediately.
+   - **Send All 19:00 Reminders**: Forces the daily deadline delivery job immediately.
    - **Run Scraper Pipeline**: Executes live HTML extraction without restarting processes.
    - **Sync Cloud Database**: Re-indexes and syncs in-memory data with MongoDB Atlas.
 
@@ -483,7 +483,7 @@ The repository includes pre-configured zero-config deployment manifests:
    - `CRON_SECRET`
    - `PORTAL_URL`
 5. Deploy. The static frontend will be hosted on Vercel's Edge CDN, while `/api/*` requests route through the Serverless Function at `api/index.js`.
-6. Automated daily reminders are scheduled in `vercel.json` via Vercel Cron for **12:30 UTC (18:00 IST)**.
+6. Automated daily reminders are scheduled in `vercel.json` via Vercel Cron for **13:30 UTC (19:00 IST)**.
 
 ### Dedicated Linux Server (PM2 / Docker)
 
