@@ -1,6 +1,6 @@
 /* ========================================================
-   sarkari hith - CLAY DESIGN INFLUENCED BASE STYLES
-   High-craft typography, subtle gradients, and micro-borders
+   SARKARI HITH - SARVAM.AI HIGH-TECH BASE STYLES
+   Atmospheric dark surfaces, ambient glows, frosted glass
 ======================================================== */
 
 *,
@@ -20,9 +20,15 @@ html {
 body {
   font-family: var(--font-body);
   background-color: var(--bg-page);
-  /* Clay-style subtle top ambient radial diffusion */
-  background-image: radial-gradient(1000px 500px at 50% -50px, rgba(192, 27, 34, 0.04) 0%, transparent 100%);
-  background-repeat: no-repeat;
+  /* Sarvam.ai Atmospheric Ambient Glow & AI Grid Overlay */
+  background-image:
+    radial-gradient(1100px 550px at 50% -80px, rgba(255, 69, 58, 0.14) 0%, rgba(99, 102, 241, 0.08) 45%, transparent 100%),
+    radial-gradient(800px 400px at 90% 20%, rgba(168, 85, 247, 0.05) 0%, transparent 100%),
+    radial-gradient(600px 300px at 10% 40%, rgba(255, 107, 53, 0.05) 0%, transparent 100%),
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+  background-attachment: fixed;
   color: var(--text-primary);
   line-height: 1.5;
   min-height: 100vh;
@@ -34,7 +40,7 @@ body {
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11', 'tnum';
 }
 
-/* Clay Headings: Tight Tracking & Balanced Weights */
+/* Headings: Sharp Geometric Hierarchy */
 h1,
 h2,
 h3,
@@ -84,15 +90,18 @@ ol {
 }
 
 /* ========================================================
-   TOP ANNOUNCEMENT & TICKER BAR
+   TOP ANNOUNCEMENT & TICKER BAR (Frosted Acrylic)
 ======================================================== */
 .top-announcement-bar {
-  background: linear-gradient(90deg, #881318 0%, #b91c1c 45%, #991b1b 100%);
-  color: #ffffff;
+  background: rgba(12, 15, 23, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #e2e8f0;
   font-size: 0.8125rem;
   font-weight: 500;
-  padding: 0.35rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 69, 58, 0.35);
   letter-spacing: -0.01em;
 }
 
@@ -106,25 +115,26 @@ ol {
 .live-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  background: rgba(0, 0, 0, 0.28);
-  padding: 0.2rem 0.6rem;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.2rem 0.65rem;
   border-radius: var(--radius-full);
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.68rem;
+  font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   flex-shrink: 0;
   border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
 }
 
 .pulse-dot {
   width: 7px;
   height: 7px;
-  background-color: #4ade80;
+  background-color: #22c55e;
   border-radius: 50%;
-  box-shadow: 0 0 8px #4ade80;
-  animation: pulse 1.5s infinite;
+  box-shadow: 0 0 10px #22c55e, 0 0 18px rgba(34, 197, 94, 0.4);
+  animation: pulse 1.6s infinite;
 }
 
 @keyframes pulse {
@@ -132,12 +142,10 @@ ol {
     transform: scale(0.9);
     opacity: 0.8;
   }
-
   50% {
     transform: scale(1.3);
     opacity: 1;
   }
-
   100% {
     transform: scale(0.9);
     opacity: 0.8;
@@ -164,7 +172,6 @@ ol {
   0% {
     transform: translateX(100%);
   }
-
   100% {
     transform: translateX(-100%);
   }
@@ -174,33 +181,34 @@ ol {
   display: inline-flex;
   align-items: center;
   margin-right: 2.5rem;
-  color: #ffffff;
+  color: #cbd5e1;
   font-weight: 500;
-  transition: opacity var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .ticker-item:hover {
+  color: #ffffff;
   text-decoration: underline;
-  opacity: 0.95;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
 }
 
 .ticker-item-separator {
   margin-left: 2.5rem;
-  opacity: 0.35;
+  opacity: 0.25;
 }
 
 /* ========================================================
-   SITE HEADER - CLAY FLOATING GLASS STYLE
+   SITE HEADER - SARVAM.AI FLOATING GLASS
 ======================================================== */
 .site-header {
-  background-color: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-color);
+  background-color: rgba(9, 11, 17, 0.78);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
 .header-inner {
@@ -227,15 +235,16 @@ ol {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 10px rgba(192, 27, 34, 0.25), 0 0 0 1px rgba(212, 175, 55, 0.4);
-  background: #ffffff;
+  box-shadow: 0 0 20px rgba(255, 69, 58, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.15);
+  background: #0f131d;
   overflow: hidden;
   flex-shrink: 0;
-  transition: transform var(--transition-fast);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .brand:hover .brand-logo-frame {
   transform: scale(1.06);
+  box-shadow: 0 0 25px rgba(255, 69, 58, 0.45), 0 0 0 1px rgba(255, 69, 58, 0.5);
 }
 
 .brand-logo-img {
@@ -248,7 +257,7 @@ ol {
 .brand-emblem {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #c01b22 0%, #881318 100%);
+  background: linear-gradient(135deg, #ff453a 0%, #881318 100%);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -258,8 +267,8 @@ ol {
   font-size: 1.15rem;
   font-family: var(--font-heading);
   letter-spacing: -0.5px;
-  box-shadow: 0 2px 8px rgba(192, 27, 34, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  border: 1px solid rgba(192, 27, 34, 0.4);
+  box-shadow: 0 0 20px rgba(255, 69, 58, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -273,7 +282,7 @@ ol {
   font-size: 1.35rem;
   font-weight: 800;
   letter-spacing: -0.035em;
-  color: var(--text-primary);
+  color: #ffffff;
   display: flex;
   align-items: baseline;
   gap: 0.2rem;
@@ -281,7 +290,9 @@ ol {
 }
 
 .brand-title span {
-  color: var(--primary-red);
+  background: var(--sarvam-text-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .brand-subtitle {
@@ -293,47 +304,45 @@ ol {
   margin-top: 1px;
 }
 
-/* Center Navigation Menu from Reference Design */
+/* Center Navigation Menu (Floating Glass Pills) */
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.3rem;
 }
 
 .nav-item {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.45rem 0.75rem;
+  padding: 0.45rem 0.85rem;
   color: var(--text-secondary);
   font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-full);
   transition: all var(--transition-fast);
   position: relative;
   cursor: pointer;
+  border: 1px solid transparent;
 }
 
 .nav-item:hover {
-  color: var(--text-primary);
-  background-color: var(--bg-surface-soft);
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .nav-item.is-active {
-  color: var(--primary-red);
+  color: #ffffff;
   font-weight: 600;
+  background: rgba(255, 69, 58, 0.14);
+  border-color: rgba(255, 69, 58, 0.35);
+  box-shadow: 0 0 15px rgba(255, 69, 58, 0.2);
 }
 
 .nav-item.is-active::after {
-  content: '';
-  position: absolute;
-  bottom: -0.35rem;
-  left: 0.75rem;
-  right: 0.75rem;
-  height: 2.5px;
-  background-color: var(--primary-red);
-  border-radius: var(--radius-full);
+  display: none;
 }
 
 .nav-item-icon {
@@ -349,14 +358,16 @@ ol {
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 190px;
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-color);
+  min-width: 200px;
+  background-color: rgba(15, 19, 29, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
   padding: 0.4rem;
   z-index: 120;
-  margin-top: 0.4rem;
+  margin-top: 0.5rem;
 }
 
 .nav-dropdown:hover .dropdown-menu {
@@ -365,7 +376,7 @@ ol {
 }
 
 .dropdown-link {
-  padding: 0.5rem 0.75rem;
+  padding: 0.55rem 0.85rem;
   font-size: 0.8125rem;
   color: var(--text-secondary);
   text-decoration: none;
@@ -374,8 +385,8 @@ ol {
 }
 
 .dropdown-link:hover {
-  color: var(--text-primary);
-  background-color: var(--bg-surface-soft);
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Header Action Controls */
@@ -393,13 +404,24 @@ main {
 }
 
 /* ========================================================
-   CLAY MINIMAL FOOTER
+   SARVAM.AI FOOTER - DARK LUXE WITH ACCENT BORDERS
 ======================================================== */
 .site-footer {
-  background-color: var(--bg-surface);
-  border-top: 1px solid var(--border-color);
+  background-color: rgba(11, 14, 22, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding: 3.5rem 0 2rem;
   margin-top: auto;
+  position: relative;
+}
+
+.site-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 69, 58, 0.4), rgba(99, 102, 241, 0.4), transparent);
 }
 
 .footer-top {
@@ -433,15 +455,17 @@ main {
 .footer-col ul li a {
   color: var(--text-muted);
   font-size: 0.84rem;
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+  display: inline-block;
 }
 
 .footer-col ul li a:hover {
   color: var(--primary-red);
+  transform: translateX(2px);
 }
 
 .footer-bottom {
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-top: 1.5rem;
   display: flex;
   align-items: center;
