@@ -56,6 +56,10 @@ async function sendJobAlertEmail(subscriber, jobs, isTest = false, isConfirmatio
   };
 
   const info = await transporter.sendMail(mailOptions);
+  if (!Array.isArray(info.accepted) || !info.accepted.some(address =>
+    String(address).toLowerCase() === String(mailOptions.to).toLowerCase())) {
+    throw new Error('SMTP server did not accept the recipient; email remains pending');
+  }
   let previewUrl = null;
 
   if (transporter._isEthereal && nodemailer.getTestMessageUrl) {
@@ -160,6 +164,7 @@ async function dispatchAllNotifications() {
   const sentHistory = await getSentJobHistory();
   let dispatched = 0;
   let skipped = 0;
+  let failed = 0;
   const results = [];
 
   for (const subscriber of activeSubscribers) {
@@ -181,6 +186,7 @@ async function dispatchAllNotifications() {
       dispatched++;
       console.log(`[Job Alert Sent] Sent notification with ${Math.min(newJobs.length, 10)} new jobs to ${subscriber.email}`);
     } catch (err) {
+      failed++;
       console.error(`[Job Alert Failed] Failed to send alert to ${subscriber.email}:`, err.message);
     }
   }
@@ -188,6 +194,7 @@ async function dispatchAllNotifications() {
   console.log(`[Job Alerts Finished] Dispatched ${dispatched}, Skipped ${skipped} (no new matches).`);
   return {
     dispatched,
+    failed,
     skipped,
     totalSubscribers: activeSubscribers.length,
     results
@@ -230,6 +237,10 @@ async function sendTrackedJobEmail(track, daysLeft, isConfirmation = false, isTe
   };
 
   const info = await transporter.sendMail(mailOptions);
+  if (!Array.isArray(info.accepted) || !info.accepted.some(address =>
+    String(address).toLowerCase() === String(mailOptions.to).toLowerCase())) {
+    throw new Error('SMTP server did not accept the recipient; email remains pending');
+  }
 
   await logEmailDispatch({
     recipient: track.email,
@@ -259,6 +270,7 @@ async function sendDailyJobReminders(force = false) {
   const now = new Date();
 
   let dispatched = 0;
+  let failed = 0;
   let skippedApplied = 0;
   let skippedExpired = 0;
   let skippedAlreadySentToday = 0;
@@ -282,7 +294,7 @@ async function sendDailyJobReminders(force = false) {
     }
 
     if (daysLeft === null || daysLeft < 0) {
-      daysLeft = 5; // realistic fallback
+      daysLeft = null; // Unknown deadlines must not invent a countdown.
     }
 
     // 3. Prevent duplicate emails on the exact same calendar day unless forced
@@ -299,6 +311,7 @@ async function sendDailyJobReminders(force = false) {
       results.push(mailRes);
       console.log(`[Job Reminder Sent] Sent ${daysLeft} days-left reminder to ${track.email} for ${track.jobTitle}`);
     } catch (err) {
+      failed++;
       console.error(`[Job Reminder Error] Failed sending reminder to ${track.email}: ${err.message}`);
     }
   }
@@ -308,6 +321,7 @@ async function sendDailyJobReminders(force = false) {
   console.log(`[Job Reminders Complete] Dispatched ${dispatched}, Skipped Applied: ${skippedApplied}, Skipped Expired: ${skippedExpired}, Sent Today: ${skippedAlreadySentToday}`);
   return {
     dispatched,
+    failed,
     skippedApplied,
     skippedExpired,
     skippedAlreadySentToday,

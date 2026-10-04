@@ -1,6 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "outputDirectory": "frontend",
+  "functions": {
+    "api/index.js": { "maxDuration": 300 }
+  },
   "crons": [
     {
       "path": "/api/cron/reminders",

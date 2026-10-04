@@ -268,7 +268,7 @@ function buildJobReminderEmailHtml({ track, daysLeft, isConfirmation = false, is
 
   if (isTestReminder) {
     headline = '1-Minute Test Reminder: ' + (daysLeft !== null && daysLeft > 0 ? `${daysLeft} Days Remaining` : 'Deadline Countdown Alert');
-    subheadline = 'This confirms your deadline countdown alerts are fully active. You will receive scheduled daily updates every morning until you submit your form.';
+    subheadline = 'This confirms your deadline countdown alerts are fully active. You will receive scheduled daily updates at 6:00 PM IST until you submit your form.';
     badgeText = daysLeft !== null && daysLeft > 0 ? `${daysLeft} Days Left (Test Passed)` : '1-Min Test Passed';
     badgeBg = '#dcfce7';
     badgeColor = '#15803d';

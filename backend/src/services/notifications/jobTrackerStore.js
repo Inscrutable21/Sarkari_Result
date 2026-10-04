@@ -54,13 +54,16 @@ function getActiveReminderTimers(filterEmail = null) {
  */
 async function getTrackedJobs() {
   const mongoTracked = await getTrackedJobsFromMongo();
-  const list = Array.isArray(mongoTracked) ? mongoTracked : [];
+  if (!Array.isArray(mongoTracked)) {
+    throw new Error('Reminder database is unavailable; scheduled delivery cannot be completed');
+  }
+  const list = mongoTracked;
 
   return list.map(t => ({
     ...t,
     reminderCount: t.reminderCount ? Number(t.reminderCount) : 0,
     applied: t.applied === true || String(t.applied).toLowerCase() === 'true',
-    active: t.applied !== true && String(t.applied).toLowerCase() !== 'true'
+    active: t.active !== false && t.applied !== true && String(t.applied).toLowerCase() !== 'true'
   }));
 }
 
@@ -71,7 +74,8 @@ async function saveTrackedJobs(tracked) {
   if (!Array.isArray(tracked)) return;
   for (const t of tracked) {
     if (t.email && (t.id || t.jobId)) {
-      await upsertTrackedJobInMongo(t);
+      const saved = await upsertTrackedJobInMongo(t);
+      if (!saved) throw new Error('Reminder delivery status could not be persisted');
     }
   }
 }

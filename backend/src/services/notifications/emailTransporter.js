@@ -7,7 +7,7 @@ const {
 let cachedTransporter = null;
 
 /**
- * Gets or creates the nodemailer transport (SMTP or Ethereal test fallback)
+ * Gets or creates a real SMTP transport. Missing credentials must fail delivery.
  */
 async function getTransporter() {
   if (cachedTransporter) return cachedTransporter;
@@ -21,9 +21,10 @@ async function getTransporter() {
   }
 
   if (emailUser && emailPass) {
-    if (emailUser.toLowerCase().includes('@gmail.com') || !host) {
+    if (!host) {
       cachedTransporter = nodemailer.createTransport({
         service: 'gmail',
+        connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 20000,
         auth: { user: emailUser, pass: emailPass }
       });
       return cachedTransporter;
@@ -31,6 +32,7 @@ async function getTransporter() {
 
     cachedTransporter = nodemailer.createTransport({
       host,
+      connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 20000,
       port,
       secure: port === 465,
       auth: { user: emailUser, pass: emailPass }
@@ -38,28 +40,7 @@ async function getTransporter() {
     return cachedTransporter;
   }
 
-  // If no SMTP credentials provided, try creating an Ethereal test account
-  try {
-    const testAccount = await nodemailer.createTestAccount();
-    cachedTransporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
-      auth: {
-        user: testAccount.user,
-        pass: testAccount.pass
-      }
-    });
-    cachedTransporter._isEthereal = true;
-    return cachedTransporter;
-  } catch {
-    // Local fallback transport that captures messages without internet requirement
-    cachedTransporter = nodemailer.createTransport({
-      jsonTransport: true
-    });
-    cachedTransporter._isJson = true;
-    return cachedTransporter;
-  }
+  throw new Error('Email delivery is not configured: set EMAIL_USER and EMAIL_APP_PASSWORD, or SMTP_USER and SMTP_PASS, in the deployment environment.');
 }
 
 /**

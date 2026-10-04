@@ -23,6 +23,8 @@ function loadEnv() {
 }
 loadEnv();
 
+const { runScheduledBatch } = require("./src/services/notifications/scheduledBatch");
+
 const { secretEquals, clientIp: getClientIp } = require("./src/utils/security");
 
 const frontendRoot = resolve(__dirname, "../frontend");
@@ -752,8 +754,8 @@ const server = createServer(async (request, response) => {
 
     try {
       console.log("[Vercel Cron] 6:00 PM IST scheduled reminder job running via Vercel Cron...");
-      const summary = await sendDailyJobReminders();
-      const alertSummary = await dispatchAllNotifications();
+      const { summary, alertSummary } = await runScheduledBatch();
+      await setLastReminderTriggerDateInMongo(getCurrentScheduledTime().dateStr, { reminderSummary: summary, alertSummary });
       response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({
         success: true,
@@ -1115,6 +1117,7 @@ function getCurrentScheduledTime() {
 
 async function checkAndTriggerReminderBatch() {
   if (isReminderDispatchRunning) return;
+  isReminderDispatchRunning = true;
   try {
     // If not loaded in-memory, load last executed date from MongoDB Atlas
     if (!lastReminderTriggerDate) {
@@ -1129,14 +1132,12 @@ async function checkAndTriggerReminderBatch() {
     const isPastTargetTime = timeInfo.hour > targetHour || (timeInfo.hour === targetHour && timeInfo.minute >= targetMinute);
 
     if (isPastTargetTime && lastReminderTriggerDate !== timeInfo.dateStr) {
-      isReminderDispatchRunning = true;
-      lastReminderTriggerDate = timeInfo.dateStr;
       console.log(`[Reminder Scheduler] 6:00 PM Daily Trigger reached for ${timeInfo.dateStr} (Current IST: ${timeInfo.hour}:${String(timeInfo.minute).padStart(2, '0')}). Dispatching reminders for tracked jobs and subscriber alerts...`);
       
-      const reminderSummary = await sendDailyJobReminders();
-      const alertSummary = await dispatchAllNotifications();
+      const { summary: reminderSummary, alertSummary } = await runScheduledBatch();
       
-      await setLastReminderTriggerDateInMongo(timeInfo.dateStr, { reminderSummary, alertSummary }).catch(() => {});
+      await setLastReminderTriggerDateInMongo(timeInfo.dateStr, { reminderSummary, alertSummary });
+      lastReminderTriggerDate = timeInfo.dateStr;
       console.log(`[Reminder Scheduler] 6:00 PM Dispatch complete: ${reminderSummary.dispatched} deadline reminders sent, ${alertSummary.dispatched || 0} job alert digests sent.`);
     }
   } catch (err) {
