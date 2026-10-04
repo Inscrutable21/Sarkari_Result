@@ -1,11 +1,11 @@
 /* ========================================================
    Sarkari Hith - Admin Control Center Styling
-   Modern dark-themed executive console with glassmorphism
+   Light executive console with subtle glass surfaces
 ======================================================== */
 
 .admin-body {
-  background-color: #0b0f19;
-  color: #f1f5f9;
+  background-color: #f8fafc;
+  color: #0f172a;
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
@@ -14,10 +14,10 @@
 }
 
 .admin-header {
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -38,7 +38,7 @@
   align-items: center;
   gap: 12px;
   text-decoration: none;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .admin-brand-icon {
@@ -118,20 +118,20 @@
 }
 
 .admin-btn-secondary {
-  background: rgba(255, 255, 255, 0.06);
-  color: #cbd5e1;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.06);
+  color: #475569;
+  border: 1px solid rgba(15, 23, 42, 0.12);
 }
 
 .admin-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(15, 23, 42, 0.12);
+  color: var(--text-primary);
+  border-color: rgba(15, 23, 42, 0.2);
 }
 
 .admin-btn-primary {
   background: linear-gradient(135deg, #c01b22 0%, #b91c1c 100%);
-  color: #fff;
+  color: #ffffff;
   box-shadow: 0 4px 14px rgba(192, 27, 34, 0.35);
 }
 
@@ -159,11 +159,11 @@
 .admin-auth-card {
   max-width: 440px;
   margin: 6vh auto;
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(15, 23, 42, 0.1);
   border-radius: 16px;
   padding: 2.2rem;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.08);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   text-align: center;
@@ -180,19 +180,19 @@
   align-items: center;
   justify-content: center;
   font-size: 1.8rem;
-  color: #f87171;
+  color: #b91c1c;
 }
 
 .admin-auth-title {
   font-size: 1.35rem;
   font-weight: 700;
   margin: 0 0 0.5rem;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .admin-auth-subtitle {
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: #64748b;
   margin: 0 0 1.75rem;
   line-height: 1.5;
 }
@@ -207,7 +207,7 @@
   display: block;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #cbd5e1;
+  color: #475569;
   margin-bottom: 0.4rem;
 }
 
@@ -215,10 +215,10 @@
   width: 100%;
   padding: 0.75rem 1rem;
   padding-right: 44px;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(15, 23, 42, 0.15);
   border-radius: 8px;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 0.9rem;
   outline: none;
   transition: all 0.2s;
@@ -236,7 +236,7 @@
   top: 35px;
   background: none;
   border: none;
-  color: #94a3b8;
+  color: #64748b;
   cursor: pointer;
   font-size: 1rem;
   padding: 4px;
@@ -254,11 +254,11 @@
 .admin-auth-tabs {
   display: flex;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(15, 23, 42, 0.04);
   padding: 4px;
   border-radius: 10px;
   margin-bottom: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .admin-auth-tab {
@@ -268,16 +268,16 @@
   font-weight: 600;
   border: none;
   background: none;
-  color: #94a3b8;
+  color: #64748b;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .admin-auth-tab.is-active {
-  background: rgba(255, 255, 255, 0.14);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background: rgba(15, 23, 42, 0.14);
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
 }
 
 /* Telemetry Stats Grid */
@@ -289,8 +289,8 @@
 }
 
 .admin-stat-card {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 12px;
   padding: 1.15rem 1.25rem;
   display: flex;
@@ -302,7 +302,7 @@
 
 .admin-stat-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(15, 23, 42, 0.16);
 }
 
 .admin-stat-icon-frame {
@@ -324,7 +324,7 @@
 .admin-stat-label {
   font-size: 0.78rem;
   font-weight: 500;
-  color: #94a3b8;
+  color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -332,7 +332,7 @@
 .admin-stat-value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
   margin-top: 2px;
 }
 
@@ -350,8 +350,8 @@
 }
 
 .admin-panel-card {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 14px;
   padding: 1.5rem;
   backdrop-filter: blur(12px);
@@ -364,13 +364,13 @@
   justify-content: space-between;
   margin-bottom: 1.25rem;
   padding-bottom: 0.85rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
 }
 
 .admin-card-title {
   font-size: 1.15rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -379,7 +379,7 @@
 
 /* Scraper Trigger Section */
 .admin-scraper-hero {
-  background: linear-gradient(135deg, rgba(192, 27, 34, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%);
+  background: linear-gradient(135deg, rgba(192, 27, 34, 0.1) 0%, rgba(255, 255, 255, 0.8) 100%);
   border: 1px solid rgba(192, 27, 34, 0.25);
   border-radius: 12px;
   padding: 1.5rem;
@@ -394,13 +394,13 @@
 .admin-scraper-hero-text h3 {
   margin: 0 0 0.4rem;
   font-size: 1.2rem;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .admin-scraper-hero-text p {
   margin: 0;
   font-size: 0.85rem;
-  color: #cbd5e1;
+  color: #475569;
   max-width: 580px;
   line-height: 1.5;
 }
@@ -414,20 +414,20 @@
 
 /* Console Terminal Log Box */
 .admin-terminal-window {
-  background: #050811;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #f1f5f9;
+  border: 1px solid rgba(15, 23, 42, 0.1);
   border-radius: 10px;
   overflow: hidden;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 }
 
 .admin-terminal-header {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(15, 23, 42, 0.04);
   padding: 8px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
 }
 
 .admin-terminal-dots {
@@ -443,7 +443,7 @@
 
 .admin-terminal-title {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: #64748b;
 }
 
 .admin-terminal-body {
@@ -452,7 +452,7 @@
   overflow-y: auto;
   font-size: 0.82rem;
   line-height: 1.6;
-  color: #e2e8f0;
+  color: #334155;
 }
 
 .log-entry {
@@ -466,10 +466,10 @@
   flex-shrink: 0;
 }
 
-.log-msg-info { color: #60a5fa; }
-.log-msg-success { color: #34d399; font-weight: 600; }
-.log-msg-warn { color: #fbbf24; }
-.log-msg-error { color: #f87171; font-weight: 600; }
+.log-msg-info { color: #1d4ed8; }
+.log-msg-success { color: #047857; font-weight: 600; }
+.log-msg-warn { color: #92400e; }
+.log-msg-error { color: #b91c1c; font-weight: 600; }
 
 /* Quick Inspector Form */
 .admin-inspector-input {
@@ -479,15 +479,15 @@
 }
 
 .admin-preview-box {
-  background: #050811;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #f1f5f9;
+  border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 8px;
   padding: 12px;
   max-height: 250px;
   overflow-y: auto;
   font-size: 0.78rem;
   font-family: monospace;
-  color: #94a3b8;
+  color: #64748b;
 }
 
 /* Footer */
@@ -496,7 +496,7 @@
   padding: 1.5rem;
   font-size: 0.8rem;
   color: #64748b;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(15, 23, 42, 0.05);
 }
 
 @keyframes pulseDot {
@@ -509,7 +509,7 @@
 .admin-table-container {
   overflow-x: auto;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.08);
   background: rgba(0, 0, 0, 0.2);
 }
 
@@ -521,23 +521,23 @@
 }
 
 .admin-table th {
-  background: rgba(255, 255, 255, 0.04);
-  color: #94a3b8;
+  background: rgba(15, 23, 42, 0.04);
+  color: #64748b;
   font-weight: 600;
   padding: 10px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
   white-space: nowrap;
 }
 
 .admin-table td {
   padding: 12px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  color: #cbd5e1;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+  color: #475569;
   vertical-align: middle;
 }
 
 .admin-table tr:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(15, 23, 42, 0.02);
 }
 
 .admin-status-badge {
@@ -553,31 +553,31 @@
 
 .status-sent {
   background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
+  color: #047857;
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .status-pending {
   background: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
+  color: #92400e;
   border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .status-applied {
   background: rgba(99, 102, 241, 0.15);
-  color: #a5b4fc;
+  color: #4338ca;
   border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
 .status-uptodate {
   background: rgba(148, 163, 184, 0.12);
-  color: #cbd5e1;
+  color: #475569;
   border: 1px solid rgba(148, 163, 184, 0.25);
 }
 
 .status-expired {
   background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
+  color: #b91c1c;
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
@@ -593,26 +593,26 @@
   border-radius: 99px;
   font-size: 0.76rem;
   font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.03);
-  color: #94a3b8;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(15, 23, 42, 0.03);
+  color: #64748b;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .admin-filter-pill:hover,
 .admin-filter-pill.is-active {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(15, 23, 42, 0.12);
+  color: var(--text-primary);
+  border-color: rgba(15, 23, 42, 0.25);
 }
 
 /* ========================================================
    6:00 PM Automation Status & Countdown Hero Widget
 ======================================================== */
 .admin-scheduler-hero-card {
-  background: radial-gradient(120% 120% at 0% 0%, rgba(192, 27, 34, 0.15) 0%, rgba(15, 23, 42, 0.85) 50%, rgba(11, 15, 25, 0.95) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: radial-gradient(120% 120% at 0% 0%, rgba(192, 27, 34, 0.15) 0%, rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0.95) 100%);
+  border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: 14px;
   padding: 1.5rem 1.75rem;
   margin-bottom: 1.5rem;
@@ -620,7 +620,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(15, 23, 42, 0.08);
   position: relative;
   overflow: hidden;
 }
@@ -648,7 +648,7 @@
   border-radius: 99px;
   background: rgba(16, 185, 129, 0.12);
   border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #34d399;
+  color: #047857;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -678,14 +678,14 @@
 .scheduler-hero-title {
   font-size: 1.35rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-primary);
   margin: 0 0 0.35rem;
   letter-spacing: -0.015em;
 }
 
 .scheduler-hero-subtitle {
   font-size: 0.84rem;
-  color: #94a3b8;
+  color: #64748b;
   margin: 0 0 1rem;
   line-height: 1.5;
 }
@@ -700,16 +700,16 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(15, 23, 42, 0.08);
   padding: 5px 12px;
   border-radius: 6px;
   font-size: 0.76rem;
-  color: #e2e8f0;
+  color: #334155;
 }
 
 .scheduler-pill-label {
-  color: #94a3b8;
+  color: #64748b;
 }
 
 .scheduler-hero-right {
@@ -718,7 +718,7 @@
   align-items: center;
   min-width: 260px;
   background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 12px;
   padding: 1rem 1.25rem;
 }
@@ -731,7 +731,7 @@
 .countdown-widget-label {
   font-size: 0.68rem;
   font-weight: 700;
-  color: #94a3b8;
+  color: #64748b;
   letter-spacing: 0.08em;
   display: block;
   margin-bottom: 0.5rem;
@@ -745,8 +745,8 @@
 }
 
 .cd-box {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: 8px;
   padding: 6px 10px;
   min-width: 52px;
@@ -758,14 +758,14 @@
 .cd-box strong {
   font-size: 1.3rem;
   font-weight: 800;
-  color: #fbbf24;
+  color: #92400e;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
 .cd-box small {
   font-size: 0.6rem;
-  color: #94a3b8;
+  color: #64748b;
   font-weight: 600;
   margin-top: 3px;
   letter-spacing: 0.05em;
@@ -809,11 +809,11 @@
 
 .admin-search-input {
   width: 100%;
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: 8px;
   padding: 0.55rem 2rem 0.55rem 2.2rem;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 0.82rem;
   outline: none;
   transition: all 0.2s ease;
@@ -823,7 +823,7 @@
 .admin-search-input:focus {
   border-color: #c01b22;
   box-shadow: 0 0 0 3px rgba(192, 27, 34, 0.2);
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .admin-clear-search {
@@ -831,9 +831,9 @@
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.1);
   border: none;
-  color: #94a3b8;
+  color: #64748b;
   width: 18px;
   height: 18px;
   border-radius: 50%;
@@ -845,8 +845,8 @@
 }
 
 .admin-clear-search:hover {
-  background: rgba(255, 255, 255, 0.25);
-  color: #fff;
+  background: rgba(15, 23, 42, 0.25);
+  color: var(--text-primary);
 }
 
 /* Candidate Row Avatar */
@@ -856,7 +856,7 @@
   border-radius: 8px;
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.25));
   border: 1px solid rgba(168, 85, 247, 0.4);
-  color: #c084fc;
+  color: #7e22ce;
   font-weight: 700;
   font-size: 0.78rem;
   display: flex;

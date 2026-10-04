@@ -1,13 +1,14 @@
 :root {
+  color-scheme: light;
   /* ========================================================
      SARVAM.AI HIGH-TECH INDIAN AI DESIGN SYSTEM TOKENS
-     Deep cosmic dark surfaces, atmospheric ambient glows,
+     Light surfaces, subtle ambient accents,
      luminescent saffron/coral gradients, frosted glassmorphism
   ======================================================== */
 
   /* Brand Accents (Sarvam.ai Radiant Indian AI Palette) */
-  --primary-red: #ff453a;
-  --primary-red-hover: #ff5c52;
+  --primary-red: #b30000;
+  --primary-red-hover: #900000;
   --primary-red-light: rgba(255, 69, 58, 0.14);
   --primary-red-tint: rgba(255, 69, 58, 0.08);
   --primary-navy: #08090e;
@@ -19,64 +20,64 @@
   --brand-indigo: #6366f1;
   --brand-purple: #a855f7;
 
-  /* Surfaces & Backgrounds (Deep Cosmic Obsidian & Glassmorphism) */
-  --bg-page: #08090e;
-  --bg-surface: #0f131d;
-  --bg-surface-elevated: #151a27;
-  --bg-surface-soft: #1a2030;
-  --bg-surface-alt: #222a3f;
-  --bg-input: #0b0e16;
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-subtle: rgba(255, 255, 255, 0.14);
+  /* Surfaces & Backgrounds (Light Mode) */
+  --bg-page: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f1f5f9;
+  --bg-surface-soft: #eef2f6;
+  --bg-surface-alt: #e2e8f0;
+  --bg-input: #ffffff;
+  --border-color: #e2e8f0;
+  --border-subtle: #cbd5e1;
   --border-focus: #ff453a;
   --border-glow: rgba(255, 69, 58, 0.35);
 
   /* Reference Design Surfaces & Matrix Header Gradients */
-  --hero-bg-gradient: linear-gradient(135deg, rgba(21, 26, 38, 0.85) 0%, rgba(12, 15, 23, 0.95) 100%);
-  --hero-border: rgba(255, 255, 255, 0.12);
+  --hero-bg-gradient: linear-gradient(135deg, #ffffff 0%, #fff7f5 100%);
+  --hero-border: #e2e8f0;
   --gradient-results: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #38bdf8 100%);
   --gradient-admitcards: linear-gradient(135deg, #064e3b 0%, #059669 55%, #10b981 100%);
   --gradient-jobs: linear-gradient(135deg, #881318 0%, #dc2626 55%, #f97316 100%);
   --sarvam-glow: radial-gradient(1200px 600px at 50% -80px, rgba(255, 69, 58, 0.16) 0%, rgba(99, 102, 241, 0.1) 45%, transparent 100%);
   --sarvam-text-gradient: linear-gradient(135deg, #ff7a59 0%, #ff3b69 50%, #a855f7 100%);
 
-  /* High-Contrast Luminous Typography Tokens */
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
+  /* High-Contrast Light Mode Typography Tokens */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
   --text-tertiary: #64748b;
-  --text-inverse: #08090e;
+  --text-inverse: #ffffff;
 
-  /* Sector Badge Themes (Soft Luminescent Neon on Dark Glass) */
-  --sector-teaching: #c084fc;
+  /* Sector Badge Themes (Readable Colors on Light Surfaces) */
+  --sector-teaching: #7e22ce;
   --sector-teaching-bg: rgba(192, 132, 252, 0.12);
-  --sector-banking: #38bdf8;
+  --sector-banking: #0369a1;
   --sector-banking-bg: rgba(56, 189, 248, 0.12);
-  --sector-ssc: #fb923c;
+  --sector-ssc: #c2410c;
   --sector-ssc-bg: rgba(251, 146, 60, 0.12);
-  --sector-police: #2dd4bf;
+  --sector-police: #0f766e;
   --sector-police-bg: rgba(45, 212, 191, 0.12);
-  --sector-railway: #f87171;
+  --sector-railway: #b91c1c;
   --sector-railway-bg: rgba(248, 113, 113, 0.12);
-  --sector-defense: #4ade80;
+  --sector-defense: #15803d;
   --sector-defense-bg: rgba(74, 222, 128, 0.12);
-  --sector-civil: #818cf8;
+  --sector-civil: #4338ca;
   --sector-civil-bg: rgba(129, 140, 248, 0.12);
-  --sector-medical: #f472b6;
+  --sector-medical: #be185d;
   --sector-medical-bg: rgba(244, 114, 182, 0.12);
-  --sector-engineering: #22d3ee;
+  --sector-engineering: #0e7490;
   --sector-engineering-bg: rgba(34, 211, 238, 0.12);
-  --sector-state: #fbbf24;
+  --sector-state: #92400e;
   --sector-state-bg: rgba(251, 191, 36, 0.12);
-  --sector-general: #94a3b8;
+  --sector-general: #64748b;
   --sector-general-bg: rgba(148, 163, 184, 0.12);
 
   /* Status Colors */
-  --status-success: #10b981;
+  --status-success: #047857;
   --status-success-bg: rgba(16, 185, 129, 0.15);
-  --status-warning: #f59e0b;
+  --status-warning: #92400e;
   --status-warning-bg: rgba(245, 158, 11, 0.15);
-  --status-info: #3b82f6;
+  --status-info: #1d4ed8;
   --status-info-bg: rgba(59, 130, 246, 0.15);
 
   /* Modern Geometric Typography Stack */
@@ -84,14 +85,14 @@
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
 
-  /* Sarvam Glow & Glass Shadows */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 12px 30px -4px rgba(0, 0, 0, 0.6), 0 4px 12px -2px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 24px 48px -8px rgba(0, 0, 0, 0.7), 0 8px 20px -4px rgba(0, 0, 0, 0.4);
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  --shadow-command: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 8px 30px rgba(0, 0, 0, 0.6);
+  /* Subtle Surface Shadows */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.08);
+  --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 4px 16px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 12px 30px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+  --shadow-xl: 0 24px 48px -8px rgba(15, 23, 42, 0.08), 0 8px 20px -4px rgba(15, 23, 42, 0.08);
+  --shadow-card: 0 4px 24px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-command: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 8px 30px rgba(15, 23, 42, 0.08);
   --shadow-glow-red: 0 0 30px rgba(255, 69, 58, 0.35);
   --shadow-glow-blue: 0 0 30px rgba(37, 99, 235, 0.35);
   --shadow-glow-green: 0 0 30px rgba(16, 185, 129, 0.35);

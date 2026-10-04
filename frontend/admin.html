@@ -69,7 +69,7 @@
 
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem; text-align: left;">
           <input type="checkbox" id="admin-remember-session" checked style="cursor: pointer;">
-          <label for="admin-remember-session" style="font-size: 0.82rem; color: #94a3b8; cursor: pointer; margin: 0;">
+          <label for="admin-remember-session" style="font-size: 0.82rem; color: #64748b; cursor: pointer; margin: 0;">
             Remember session on this device
           </label>
         </div>
@@ -100,7 +100,7 @@
             </span>
             <span class="scheduler-pill">
               <span class="scheduler-pill-label">Today's Dispatch:</span>
-              <strong id="scheduler-today-status-badge" style="color: #34d399;">✓ Completed (100% On-Time)</strong>
+              <strong id="scheduler-today-status-badge" style="color: #047857;">✓ Completed (100% On-Time)</strong>
             </span>
             <span class="scheduler-pill">
               <span class="scheduler-pill-label">Timezone:</span>
@@ -129,7 +129,7 @@
       <!-- Telemetry Stats Cards -->
       <div class="admin-stats-grid">
         <div class="admin-stat-card">
-          <div class="admin-stat-icon-frame" style="background: rgba(192, 27, 34, 0.15); color: #f87171;">💼</div>
+          <div class="admin-stat-icon-frame" style="background: rgba(192, 27, 34, 0.15); color: #b91c1c;">💼</div>
           <div class="admin-stat-info">
             <span class="admin-stat-label">Active Jobs</span>
             <span id="stat-count-jobs" class="admin-stat-value">--</span>
@@ -137,7 +137,7 @@
         </div>
 
         <div class="admin-stat-card">
-          <div class="admin-stat-icon-frame" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">📝</div>
+          <div class="admin-stat-icon-frame" style="background: rgba(59, 130, 246, 0.15); color: #1d4ed8;">📝</div>
           <div class="admin-stat-info">
             <span class="admin-stat-label">Results</span>
             <span id="stat-count-results" class="admin-stat-value">--</span>
@@ -145,7 +145,7 @@
         </div>
 
         <div class="admin-stat-card">
-          <div class="admin-stat-icon-frame" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">🎟️</div>
+          <div class="admin-stat-icon-frame" style="background: rgba(16, 185, 129, 0.15); color: #047857;">🎟️</div>
           <div class="admin-stat-info">
             <span class="admin-stat-label">Admit Cards</span>
             <span id="stat-count-admit" class="admin-stat-value">--</span>
@@ -153,7 +153,7 @@
         </div>
 
         <div class="admin-stat-card">
-          <div class="admin-stat-icon-frame" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">📧</div>
+          <div class="admin-stat-icon-frame" style="background: rgba(245, 158, 11, 0.15); color: #92400e;">📧</div>
           <div class="admin-stat-info">
             <span class="admin-stat-label">Alert Subscribers</span>
             <span id="stat-count-subscribers" class="admin-stat-value">--</span>
@@ -161,7 +161,7 @@
         </div>
 
         <div class="admin-stat-card">
-          <div class="admin-stat-icon-frame" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">⏱️</div>
+          <div class="admin-stat-icon-frame" style="background: rgba(168, 85, 247, 0.15); color: #7e22ce;">⏱️</div>
           <div class="admin-stat-info">
             <span class="admin-stat-label">Tracked Applications</span>
             <span id="stat-count-tracked" class="admin-stat-value">--</span>
@@ -169,7 +169,7 @@
         </div>
 
         <div class="admin-stat-card">
-          <div class="admin-stat-icon-frame" style="background: rgba(234, 88, 12, 0.15); color: #fb923c;">🔔</div>
+          <div class="admin-stat-icon-frame" style="background: rgba(234, 88, 12, 0.15); color: #c2410c;">🔔</div>
           <div class="admin-stat-info">
             <span class="admin-stat-label">6 PM Batch Today</span>
             <span id="stat-count-batch-today" class="admin-stat-value">--</span>
@@ -187,7 +187,7 @@
                 <span>⚡</span>
                 <span>Live Web Scraper & Cloud Pipeline</span>
               </h3>
-              <div id="scraper-status-badge" class="admin-brand-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">
+              <div id="scraper-status-badge" class="admin-brand-badge" style="background: rgba(16, 185, 129, 0.15); color: #047857; border-color: rgba(16, 185, 129, 0.3);">
                 READY
               </div>
             </div>
@@ -208,11 +208,11 @@
 
             <!-- Scraper Progress Bar (Active while scraping) -->
             <div id="scraper-progress-container" style="display: none; margin-bottom: 1.25rem;">
-              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; margin-bottom: 6px;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #64748b; margin-bottom: 6px;">
                 <span id="scraper-progress-text">Scraping in progress...</span>
                 <span id="scraper-timer">00:00</span>
               </div>
-              <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden;">
+              <div style="width: 100%; height: 6px; background: rgba(15, 23, 42, 0.08); border-radius: 99px; overflow: hidden;">
                 <div class="scraper-progress-bar" style="width: 45%;"></div>
               </div>
             </div>
@@ -241,11 +241,11 @@
 
             <!-- Last Run Stats Summary -->
             <div id="admin-last-run-box" style="display: none; margin-top: 1.25rem; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 10px; padding: 1rem;">
-              <h4 style="margin: 0 0 0.5rem; color: #34d399; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+              <h4 style="margin: 0 0 0.5rem; color: #047857; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
                 <span>✓</span>
                 <span>Last Scrape Run Successful</span>
               </h4>
-              <div id="admin-last-run-details" style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.6;"></div>
+              <div id="admin-last-run-details" style="font-size: 0.82rem; color: #475569; line-height: 1.6;"></div>
             </div>
           </div>
         </div>
@@ -259,24 +259,24 @@
                 <span>🛡️</span>
                 <span>Active Session Security</span>
               </h3>
-              <span id="session-status-badge" class="admin-brand-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">
+              <span id="session-status-badge" class="admin-brand-badge" style="background: rgba(16, 185, 129, 0.15); color: #047857; border-color: rgba(16, 185, 129, 0.3);">
                 ● Active
               </span>
             </div>
 
-            <div style="font-size: 0.82rem; line-height: 1.8; color: #cbd5e1; margin-bottom: 1.25rem;">
+            <div style="font-size: 0.82rem; line-height: 1.8; color: #475569; margin-bottom: 1.25rem;">
               <div><strong>Admin Identity:</strong> <span id="session-admin-user">Master Administrator</span></div>
-              <div><strong>Assigned Role:</strong> <span id="session-admin-role" style="color: #c084fc; font-weight: 600;">Superadmin (Full Access)</span></div>
-              <div><strong>Granted Permissions:</strong> <span id="session-admin-permissions" style="color: #93c5fd; font-size: 0.74rem;">All Capabilities (*)</span></div>
-              <div><strong>Auto-Lock In:</strong> <span id="session-expires-countdown" style="color: #34d399; font-weight: 600;">Active Session</span></div>
-              <div><strong>Access Guard:</strong> <span style="color: #34d399;">✓ RBAC Permission Gatekeeper Enforced</span></div>
+              <div><strong>Assigned Role:</strong> <span id="session-admin-role" style="color: #7e22ce; font-weight: 600;">Superadmin (Full Access)</span></div>
+              <div><strong>Granted Permissions:</strong> <span id="session-admin-permissions" style="color: #1d4ed8; font-size: 0.74rem;">All Capabilities (*)</span></div>
+              <div><strong>Auto-Lock In:</strong> <span id="session-expires-countdown" style="color: #047857; font-weight: 600;">Active Session</span></div>
+              <div><strong>Access Guard:</strong> <span style="color: #047857;">✓ RBAC Permission Gatekeeper Enforced</span></div>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <button type="button" id="btn-quick-lock" class="admin-btn admin-btn-secondary" style="justify-content: center; width: 100%; padding: 0.55rem; font-size: 0.8rem;">
                 <span>🔒 Lock Session & Sign Out</span>
               </button>
-              <button type="button" id="btn-revoke-all-sessions" class="admin-btn admin-btn-secondary" style="justify-content: center; width: 100%; padding: 0.5rem; font-size: 0.76rem; color: #fca5a5; border-color: rgba(239, 68, 68, 0.25);" title="Requires Master Key verification">
+              <button type="button" id="btn-revoke-all-sessions" class="admin-btn admin-btn-secondary" style="justify-content: center; width: 100%; padding: 0.5rem; font-size: 0.76rem; color: #b91c1c; border-color: rgba(239, 68, 68, 0.25);" title="Requires Master Key verification">
                 <span>🚨 Revoke All Active Sessions Everywhere</span>
               </button>
             </div>
@@ -294,12 +294,12 @@
               </button>
             </div>
 
-            <div style="font-size: 0.84rem; line-height: 1.8; color: #cbd5e1;">
-              <div><strong>Status:</strong> <span id="db-health-status" style="color: #34d399;">Connected</span></div>
+            <div style="font-size: 0.84rem; line-height: 1.8; color: #475569;">
+              <div><strong>Status:</strong> <span id="db-health-status" style="color: #047857;">Connected</span></div>
               <div><strong>Target:</strong> <span>MongoDB Atlas Cloud</span></div>
-              <div><strong>Database:</strong> <code id="db-health-name" style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px;">sarkari_hith</code></div>
+              <div><strong>Database:</strong> <code id="db-health-name" style="background: rgba(15, 23, 42, 0.08); padding: 2px 6px; border-radius: 4px;">sarkari_hith</code></div>
               <div><strong>Latency:</strong> <span id="db-health-ping">-- ms</span></div>
-              <div><strong>Sync Mode:</strong> <span style="color: #60a5fa;">Direct Cloud Sync (No Local JSON)</span></div>
+              <div><strong>Sync Mode:</strong> <span style="color: #1d4ed8;">Direct Cloud Sync (No Local JSON)</span></div>
             </div>
           </div>
 
@@ -311,7 +311,7 @@
                 <span>Specs URL Inspector</span>
               </h3>
             </div>
-            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0 0 0.75rem;">
+            <p style="font-size: 0.8rem; color: #64748b; margin: 0 0 0.75rem;">
               Test scraper on a single recruitment URL (e.g. UPSC, SSC, Banking):
             </p>
 
@@ -337,7 +337,7 @@
                 <span>Reminder & Dispatch Controls</span>
               </h3>
             </div>
-            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0 0 0.85rem; line-height: 1.5;">
+            <p style="font-size: 0.8rem; color: #64748b; margin: 0 0 0.85rem; line-height: 1.5;">
               Automated reminders dispatch daily at 6:00 PM IST with persistent state & catch-up.
             </p>
 
@@ -346,8 +346,8 @@
             </button>
 
             <!-- Quick On-Demand Test Email Form -->
-            <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.85rem;">
-              <span style="font-size: 0.76rem; font-weight: 600; color: #cbd5e1; display: block; margin-bottom: 6px;">
+            <div style="border-top: 1px solid rgba(15, 23, 42, 0.08); padding-top: 0.85rem;">
+              <span style="font-size: 0.76rem; font-weight: 600; color: #475569; display: block; margin-bottom: 6px;">
                 ✉️ Send Immediate Test Notification:
               </span>
               <form id="admin-test-email-form" style="display: flex; gap: 6px;">
@@ -369,8 +369,8 @@
               <span>👥</span>
               <span>Subscriber Directory & 6:00 PM Reminder Dispatch Monitor</span>
             </h3>
-            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0;">
-              Real-time audit of all candidate deadline countdowns and subscriber alerts for today (<span id="subscribers-today-date" style="color: #60a5fa; font-weight: 600;">--</span>).
+            <p style="font-size: 0.8rem; color: #64748b; margin: 0;">
+              Real-time audit of all candidate deadline countdowns and subscriber alerts for today (<span id="subscribers-today-date" style="color: #1d4ed8; font-weight: 600;">--</span>).
             </p>
           </div>
 
@@ -378,7 +378,7 @@
             <button type="button" id="btn-force-all-reminders" class="admin-btn admin-btn-primary" style="padding: 6px 12px; font-size: 0.78rem;" title="Dispatches deadline countdowns and alerts to all pending candidates immediately">
               <span>⚡ Force 6:00 PM Dispatch Now</span>
             </button>
-            <button type="button" id="btn-clear-all-subscribers" class="admin-btn admin-btn-secondary" style="padding: 6px 12px; font-size: 0.78rem; color: #fca5a5; border-color: rgba(239, 68, 68, 0.3);" title="Clears all subscribers and tracked candidate records from the database">
+            <button type="button" id="btn-clear-all-subscribers" class="admin-btn admin-btn-secondary" style="padding: 6px 12px; font-size: 0.78rem; color: #b91c1c; border-color: rgba(239, 68, 68, 0.3);" title="Clears all subscribers and tracked candidate records from the database">
               <span>🗑️ Clear All</span>
             </button>
             <button type="button" id="btn-refresh-subscribers" class="admin-btn admin-btn-secondary" style="padding: 6px 12px; font-size: 0.78rem;">
@@ -389,17 +389,17 @@
 
         <!-- Metric Badges Row -->
         <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1.25rem;">
-          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 8px 14px; border-radius: 8px; font-size: 0.78rem;">
-            <span style="color: #94a3b8;">Total Registered:</span> <strong id="sub-stat-total" style="color: #fff; margin-left: 4px;">--</strong>
+          <div style="background: rgba(15, 23, 42, 0.03); border: 1px solid rgba(15, 23, 42, 0.08); padding: 8px 14px; border-radius: 8px; font-size: 0.78rem;">
+            <span style="color: #64748b;">Total Registered:</span> <strong id="sub-stat-total" style="color: #0f172a; margin-left: 4px;">--</strong>
           </div>
           <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); padding: 8px 14px; border-radius: 8px; font-size: 0.78rem;">
-            <span style="color: #fbbf24;">Pending 6:00 PM:</span> <strong id="sub-stat-pending" style="color: #fbbf24; margin-left: 4px;">--</strong>
+            <span style="color: #92400e;">Pending 6:00 PM:</span> <strong id="sub-stat-pending" style="color: #92400e; margin-left: 4px;">--</strong>
           </div>
           <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); padding: 8px 14px; border-radius: 8px; font-size: 0.78rem;">
-            <span style="color: #34d399;">Sent Today:</span> <strong id="sub-stat-sent" style="color: #34d399; margin-left: 4px;">--</strong>
+            <span style="color: #047857;">Sent Today:</span> <strong id="sub-stat-sent" style="color: #047857; margin-left: 4px;">--</strong>
           </div>
           <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); padding: 8px 14px; border-radius: 8px; font-size: 0.78rem;">
-            <span style="color: #a5b4fc;">Marked Applied:</span> <strong id="sub-stat-applied" style="color: #a5b4fc; margin-left: 4px;">--</strong>
+            <span style="color: #4338ca;">Marked Applied:</span> <strong id="sub-stat-applied" style="color: #4338ca; margin-left: 4px;">--</strong>
           </div>
         </div>
 
@@ -442,7 +442,7 @@
             </thead>
             <tbody id="subscribers-table-body">
               <tr>
-                <td colspan="6" style="text-align: center; color: #94a3b8; padding: 2rem;">
+                <td colspan="6" style="text-align: center; color: #64748b; padding: 2rem;">
                   Loading subscriber and reminder statuses...
                 </td>
               </tr>

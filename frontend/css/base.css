@@ -1,6 +1,6 @@
 /* ========================================================
    SARKARI HITH - SARVAM.AI HIGH-TECH BASE STYLES
-   Atmospheric dark surfaces, ambient glows, frosted glass
+   Light surfaces, subtle accents, frosted glass
 ======================================================== */
 
 *,
@@ -93,14 +93,14 @@ ol {
    TOP ANNOUNCEMENT & TICKER BAR (Frosted Acrylic)
 ======================================================== */
 .top-announcement-bar {
-  background: rgba(12, 15, 23, 0.85);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  color: #e2e8f0;
+  color: #334155;
   font-size: 0.8125rem;
   font-weight: 500;
   padding: 0.4rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
   border-top: 1px solid rgba(255, 69, 58, 0.35);
   letter-spacing: -0.01em;
 }
@@ -116,7 +116,7 @@ ol {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(15, 23, 42, 0.06);
   padding: 0.2rem 0.65rem;
   border-radius: var(--radius-full);
   font-size: 0.68rem;
@@ -124,8 +124,8 @@ ol {
   letter-spacing: 0.5px;
   text-transform: uppercase;
   flex-shrink: 0;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #f1f5f9;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  color: #0f172a;
 }
 
 .pulse-dot {
@@ -181,15 +181,15 @@ ol {
   display: inline-flex;
   align-items: center;
   margin-right: 2.5rem;
-  color: #cbd5e1;
+  color: #475569;
   font-weight: 500;
   transition: all var(--transition-fast);
 }
 
 .ticker-item:hover {
-  color: #ffffff;
+  color: var(--text-primary);
   text-decoration: underline;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  text-shadow: 0 0 10px rgba(15, 23, 42, 0.4);
 }
 
 .ticker-item-separator {
@@ -201,14 +201,14 @@ ol {
    SITE HEADER - SARVAM.AI FLOATING GLASS
 ======================================================== */
 .site-header {
-  background-color: rgba(9, 11, 17, 0.78);
+  background-color: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 30px rgba(15, 23, 42, 0.08);
 }
 
 .header-inner {
@@ -235,8 +235,8 @@ ol {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 20px rgba(255, 69, 58, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.15);
-  background: #0f131d;
+  box-shadow: 0 0 20px rgba(255, 69, 58, 0.3), 0 0 0 1px rgba(15, 23, 42, 0.15);
+  background: #ffffff;
   overflow: hidden;
   flex-shrink: 0;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
@@ -267,8 +267,8 @@ ol {
   font-size: 1.15rem;
   font-family: var(--font-heading);
   letter-spacing: -0.5px;
-  box-shadow: 0 0 20px rgba(255, 69, 58, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 20px rgba(255, 69, 58, 0.4), inset 0 1px 0 rgba(15, 23, 42, 0.3);
+  border: 1px solid rgba(15, 23, 42, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -282,7 +282,7 @@ ol {
   font-size: 1.35rem;
   font-weight: 800;
   letter-spacing: -0.035em;
-  color: #ffffff;
+  color: var(--text-primary);
   display: flex;
   align-items: baseline;
   gap: 0.2rem;
@@ -328,13 +328,13 @@ ol {
 }
 
 .nav-item:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  background-color: rgba(15, 23, 42, 0.06);
+  border-color: rgba(15, 23, 42, 0.1);
 }
 
 .nav-item.is-active {
-  color: #ffffff;
+  color: var(--text-primary);
   font-weight: 600;
   background: rgba(255, 69, 58, 0.14);
   border-color: rgba(255, 69, 58, 0.35);
@@ -359,12 +359,12 @@ ol {
   top: 100%;
   left: 0;
   min-width: 200px;
-  background-color: rgba(15, 19, 29, 0.95);
+  background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: var(--radius-md);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
   padding: 0.4rem;
   z-index: 120;
   margin-top: 0.5rem;
@@ -385,8 +385,8 @@ ol {
 }
 
 .dropdown-link:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  background-color: rgba(15, 23, 42, 0.08);
 }
 
 /* Header Action Controls */
@@ -404,11 +404,11 @@ main {
 }
 
 /* ========================================================
-   SARVAM.AI FOOTER - DARK LUXE WITH ACCENT BORDERS
+   FOOTER - LIGHT SURFACE WITH ACCENT BORDERS
 ======================================================== */
 .site-footer {
-  background-color: rgba(11, 14, 22, 0.95);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
   padding: 3.5rem 0 2rem;
   margin-top: auto;
   position: relative;
@@ -465,7 +465,7 @@ main {
 }
 
 .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
   padding-top: 1.5rem;
   display: flex;
   align-items: center;
