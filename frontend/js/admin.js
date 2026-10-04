@@ -603,7 +603,7 @@ function renderSubscribersTable() {
       : `No candidates or subscribers found in "${escapeHtml(currentFilter)}" view.`;
     tableBody.innerHTML = `
       <tr>
-        <td colspan="6" style="text-align: center; color: #94a3b8; padding: 2.5rem;">
+        <td colspan="6" class="candidate-empty">
           <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔍</div>
           <div>${emptyNotice}</div>
         </td>
@@ -613,22 +613,26 @@ function renderSubscribersTable() {
   }
 
   tableBody.innerHTML = filtered.map(item => {
-    const formattedDate = item.lastSentAt 
-      ? new Date(item.lastSentAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })
+    const formattedDate = item.lastSentAt
+      ? new Date(item.lastSentAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short', timeZone: 'Asia/Kolkata' })
       : '<span style="color: #64748b;">Never sent</span>';
 
-    const deadlineNotice = item.daysLeft !== null 
-      ? `<span style="display: inline-block; font-size: 0.72rem; color: #fbbf24; font-weight: 600; background: rgba(245, 158, 11, 0.12); padding: 1px 6px; border-radius: 4px; margin-top: 3px;">⏳ ${item.daysLeft} days remaining</span>` 
+    const statusLabel = item.status === 'sent_today' && item.lastSentAt
+      ? `Sent Today (${new Date(item.lastSentAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' })} IST)`
+      : item.statusLabel;
+
+    const deadlineNotice = item.daysLeft != null
+      ? `<span class="candidate-deadline">⏳ ${item.daysLeft} days remaining</span>`
       : '';
 
     const actionHtml = item.canSendNow
-      ? `<button type="button" class="admin-btn admin-btn-secondary btn-send-individual" data-id="${escapeHtml(item.id)}" data-email="${escapeHtml(item.email)}" style="padding: 4px 10px; font-size: 0.72rem; white-space: nowrap;">
+      ? `<button type="button" class="admin-btn admin-btn-secondary btn-send-individual" data-id="${escapeHtml(item.id)}" data-email="${escapeHtml(item.email)}" >
            <span>📧 Send Now</span>
          </button>`
       : `<span style="font-size: 0.72rem; color: #64748b;">Suppressed</span>`;
 
     const deleteBtnHtml = `
-      <button type="button" class="admin-btn admin-btn-secondary btn-delete-individual" data-id="${escapeHtml(item.id)}" data-email="${escapeHtml(item.email)}" style="padding: 4px 8px; font-size: 0.72rem; color: #fca5a5; border-color: rgba(239, 68, 68, 0.25);" title="Delete subscriber record">
+      <button type="button" class="admin-btn admin-btn-secondary btn-delete-individual" data-id="${escapeHtml(item.id)}" data-email="${escapeHtml(item.email)}" aria-label="Delete subscriber record" title="Delete subscriber record">
         <span>🗑️</span>
       </button>
     `;
@@ -638,42 +642,42 @@ function renderSubscribersTable() {
     return `
       <tr>
         <td>
-          <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="candidate-identity">
             <div class="candidate-avatar">${escapeHtml(initials)}</div>
-            <div>
-              <div style="font-weight: 600; color: #fff;">${escapeHtml(item.name || 'Candidate')}</div>
-              <div style="font-size: 0.74rem; color: #94a3b8;">${escapeHtml(item.email)}</div>
+            <div class="candidate-contact">
+              <div class="candidate-name">${escapeHtml(item.name || 'Candidate')}</div>
+              <div class="candidate-meta">${escapeHtml(item.email)}</div>
             </div>
           </div>
         </td>
         <td>
-          <span class="admin-brand-badge" style="font-size: 0.68rem; padding: 2px 6px;">
+          <span class="candidate-scope">
             ${escapeHtml(item.typeLabel)}
           </span>
         </td>
         <td>
-          <div style="font-weight: 500; color: #e2e8f0; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHtml(item.jobTitle)}">
+          <div class="candidate-job-title" title="${escapeHtml(item.jobTitle)}">
             ${escapeHtml(item.jobTitle)}
           </div>
-          <div style="font-size: 0.74rem; color: #94a3b8;">
+          <div class="candidate-meta">
             ${escapeHtml(item.organization)} • ${escapeHtml(item.lastDate)}
           </div>
           ${deadlineNotice}
         </td>
         <td>
           <span class="admin-status-badge ${item.statusBadge}" title="${escapeHtml(item.statusReason)}">
-            ${escapeHtml(item.statusLabel)}
+            ${escapeHtml(statusLabel)}
           </span>
-          <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 3px; max-width: 200px; line-height: 1.3;">
+          <div class="candidate-status-reason">
             ${escapeHtml(item.statusReason)}
           </div>
         </td>
         <td>
-          <div style="font-size: 0.75rem; color: #cbd5e1;">${formattedDate}</div>
-          <div style="font-size: 0.7rem; color: #64748b;">Dispatches: ${item.reminderCount || 0}</div>
+          <div class="candidate-last-sent">${formattedDate}</div>
+          <div class="candidate-meta">Dispatches: ${item.reminderCount || 0}</div>
         </td>
         <td style="text-align: right; white-space: nowrap;">
-          <div style="display: inline-flex; gap: 6px; align-items: center;">
+          <div class="candidate-actions">
             ${actionHtml}
             ${deleteBtnHtml}
           </div>

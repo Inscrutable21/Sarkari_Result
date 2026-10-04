@@ -510,19 +510,20 @@
   overflow-x: auto;
   border-radius: 8px;
   border: 1px solid rgba(15, 23, 42, 0.08);
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--bg-surface);
 }
 
 .admin-table {
   width: 100%;
+  min-width: 1120px;
   border-collapse: collapse;
   font-size: 0.82rem;
   text-align: left;
 }
 
 .admin-table th {
-  background: rgba(15, 23, 42, 0.04);
-  color: #64748b;
+  background: var(--bg-surface-elevated);
+  color: var(--text-secondary);
   font-weight: 600;
   padding: 10px 14px;
   border-bottom: 1px solid rgba(15, 23, 42, 0.08);
@@ -536,9 +537,50 @@
   vertical-align: middle;
 }
 
-.admin-table tr:hover {
-  background: rgba(15, 23, 42, 0.02);
+.admin-table tbody tr:hover {
+  background: #f8fafc;
 }
+
+.admin-table tbody tr:last-child td { border-bottom: none; }
+.candidate-identity { display: flex; align-items: center; gap: 10px; }
+.candidate-contact { min-width: 0; }
+.candidate-name { color: var(--text-primary); font-weight: 700; }
+.candidate-meta { color: var(--text-secondary); font-size: 0.74rem; line-height: 1.5; overflow-wrap: anywhere; }
+.candidate-scope {
+  display: inline-flex;
+  max-width: 160px;
+  padding: 5px 8px;
+  border: 1px solid #c7d2fe;
+  border-radius: 6px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.candidate-job-title {
+  max-width: 290px;
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.candidate-deadline {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.candidate-status-reason { max-width: 240px; margin-top: 6px; color: var(--text-secondary); font-size: 0.72rem; line-height: 1.5; }
+.candidate-last-sent { color: var(--text-primary); font-size: 0.75rem; line-height: 1.5; min-width: 110px; }
+.candidate-actions { display: inline-flex; gap: 6px; align-items: center; }
+.candidate-actions .admin-btn { min-height: 44px; padding: 6px 10px; font-size: 0.72rem; white-space: nowrap; }
+.candidate-actions .btn-delete-individual { min-width: 44px; color: #b91c1c; border-color: #fecaca; background: #fff1f2; }
+.candidate-empty { padding: 2.5rem; text-align: center; color: var(--text-secondary); }
 
 .admin-status-badge {
   display: inline-flex;
@@ -876,4 +918,3 @@
     min-width: unset;
   }
 }
-
