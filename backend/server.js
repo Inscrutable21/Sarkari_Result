@@ -23,6 +23,8 @@ function loadEnv() {
 }
 loadEnv();
 
+const { secretEquals, clientIp: getClientIp } = require("./src/utils/security");
+
 const frontendRoot = resolve(__dirname, "../frontend");
 const port = Number(process.env.PORT) || 3000;
 const contentTypes = {
@@ -102,6 +104,10 @@ function parseBody(request) {
 const ipRateLimitMap = new Map();
 function isRateLimited(ip, maxRequests = 10, windowMs = 60000) {
   const now = Date.now();
+  if (ipRateLimitMap.size >= 10000) {
+    for (const [key, value] of ipRateLimitMap) if (now >= value.resetTime) ipRateLimitMap.delete(key);
+    if (ipRateLimitMap.size >= 10000 && !ipRateLimitMap.has(ip)) return true;
+  }
   const entry = ipRateLimitMap.get(ip) || { count: 0, resetTime: now + windowMs };
   if (now > entry.resetTime) {
     entry.count = 1;
@@ -117,7 +123,7 @@ function isRateLimited(ip, maxRequests = 10, windowMs = 60000) {
 // Authenticates administrative requests and verifies granular RBAC permissions
 async function verifyAdminPermission(request, url, requiredPermission = null) {
   const authHeader = request.headers["authorization"] || "";
-  const token = authHeader.replace(/^Bearer\s+/i, "").trim() || url.searchParams.get("token");
+  const token = authHeader.replace(/^Bearer\s+/i, "").trim();
 
   // 1. Bearer Token Verification
   if (token) {
@@ -143,8 +149,7 @@ async function verifyAdminPermission(request, url, requiredPermission = null) {
   const adminKey = process.env.ADMIN_API_KEY;
   if (adminKey && adminKey.trim()) {
     const headerKey = request.headers["x-admin-key"] || authHeader;
-    const queryKey = url.searchParams.get("adminKey");
-    if ((headerKey && headerKey === adminKey) || (queryKey && queryKey === adminKey)) {
+    if (secretEquals(headerKey, adminKey)) {
       request.adminSession = {
         adminId: "master_admin",
         username: "Master Administrator",
@@ -187,7 +192,34 @@ async function isAdminAuthorized(request, url, requiredPermission = null) {
 }
 
 const server = createServer(async (request, response) => {
-  const url = new URL(request.url || "/", `http://${request.headers.host || "localhost"}`);
+  let url;
+  try { url = new URL(request.url || "/", "http://localhost"); }
+  catch {
+    response.writeHead(400, { "Content-Type": "application/json" });
+    response.end(JSON.stringify({ success: false, error: { code: "INVALID_URL", message: "Invalid request URL" } }));
+    return;
+  }
+  if (url.pathname.startsWith('/api/')) response.setHeader('Cache-Control', 'no-store');
+  const privateRoutes = {
+    '/api/mongodb/status': 'database:status',
+    '/api/admin/status': 'database:status',
+    '/api/anandapkaproject/status': 'database:status',
+    '/api/notifications/sent-history': 'notifications:view_logs',
+    '/api/track-job/list': 'track_job:view',
+    '/api/track-job/active-timers': 'track_job:view',
+    '/api/track-job/apply': 'track_job:manage',
+    '/api/track-job/status': 'track_job:manage',
+    '/api/track-job/schedule-timer': 'reminders:dispatch',
+    '/api/track-job/send-reminder-now': 'reminders:dispatch',
+    '/api/unsubscribe': 'subscribers:manage'
+  };
+  if (privateRoutes[url.pathname] && !(await enforceAdminPermission(request, response, url, privateRoutes[url.pathname]))) return;
+  if (['/api/auth/login', '/api/auth/rotate', '/api/auth/revoke-all', '/api/details'].includes(url.pathname)
+      && isRateLimited(getClientIp(request))) {
+    response.writeHead(429, { 'Content-Type': 'application/json' });
+    response.end(JSON.stringify({ success: false, error: { code: 'RATE_LIMITED', message: 'Too many requests; try again later.' } }));
+    return;
+  }
 
   // Defensive HTTP Security Headers
   response.setHeader("X-Content-Type-Options", "nosniff");
@@ -195,10 +227,7 @@ const server = createServer(async (request, response) => {
   response.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   response.setHeader("Permissions-Policy", "geolocation=(), camera=(), microphone=()");
 
-  // Global CORS headers for cross-origin requests
-  response.setHeader("Access-Control-Allow-Origin", "*");
-  response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, x-admin-key");
+  // Frontend and API are same-origin; do not expose administrative APIs via wildcard CORS.
 
   // Handle CORS preflight
   if (request.method === "OPTIONS") {
@@ -248,7 +277,7 @@ const server = createServer(async (request, response) => {
     // Block localhost and private IP addresses
     const isPrivateIp = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.|169\.254\.|0\.0\.0\.0|::1)/i.test(hostname);
 
-    if (!isHttp || !isAllowedDomain || isPrivateIp) {
+    if (!isHttp || !isAllowedDomain || isPrivateIp || parsedTarget.username || parsedTarget.password || parsedTarget.port) {
       response.writeHead(403, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: false, error: "Access denied: Target URL domain is not permitted" }));
       return;
@@ -264,6 +293,7 @@ const server = createServer(async (request, response) => {
       const { scrapePostingDetails } = require("./src/services/scraper/sarkariScraper");
       const details = await scrapePostingDetails(targetUrl);
       if (details) {
+        if (detailsCache.size >= 200) detailsCache.delete(detailsCache.keys().next().value);
         detailsCache.set(targetUrl, details);
       }
       response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
@@ -311,7 +341,7 @@ const server = createServer(async (request, response) => {
   // 1. Authenticate Single Admin Key & Issue Signed Cryptographic Token
   if (url.pathname === "/api/auth/login" && request.method === "POST") {
     const clientMeta = {
-      ip: request.headers["x-forwarded-for"]?.split(",")[0].trim() || request.socket.remoteAddress || "unknown",
+      ip: getClientIp(request),
       userAgent: request.headers["user-agent"] || "unknown"
     };
 
@@ -340,13 +370,13 @@ const server = createServer(async (request, response) => {
       const masterKey = body.masterKey || request.headers["x-admin-key"];
       const expectedKey = process.env.ADMIN_API_KEY;
 
-      if (!expectedKey || masterKey !== expectedKey) {
+      if (!secretEquals(masterKey, expectedKey)) {
         throw new Error("Master Authorization Key required to rotate token");
       }
       if (!token) throw new Error("Active session token required for rotation");
 
       const clientMeta = {
-        ip: request.headers["x-forwarded-for"]?.split(",")[0].trim() || request.socket.remoteAddress || "unknown",
+        ip: getClientIp(request),
         userAgent: request.headers["user-agent"] || "unknown"
       };
 
@@ -367,7 +397,7 @@ const server = createServer(async (request, response) => {
       const masterKey = body.masterKey || request.headers["x-admin-key"];
       const expectedKey = process.env.ADMIN_API_KEY;
 
-      if (!expectedKey || masterKey !== expectedKey) {
+      if (!secretEquals(masterKey, expectedKey)) {
         response.writeHead(403, { "Content-Type": "application/json; charset=utf-8" });
         response.end(JSON.stringify({ success: false, error: "Master Authorization Key required to revoke all sessions" }));
         return;
@@ -417,7 +447,7 @@ const server = createServer(async (request, response) => {
 
   // 1. Subscribe to custom email job alerts (Rate Limited)
   if (url.pathname === "/api/subscribe" && request.method === "POST") {
-    const clientIp = request.headers["x-forwarded-for"]?.split(",")[0].trim() || request.socket.remoteAddress || "unknown";
+    const clientIp = getClientIp(request);
     if (isRateLimited(clientIp, 10)) {
       response.writeHead(429, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: false, error: "Rate limit exceeded. Please wait a minute before subscribing again." }));
@@ -426,7 +456,7 @@ const server = createServer(async (request, response) => {
 
     try {
       const body = await parseBody(request);
-      const result = await subscribeUser(body);
+      const result = await subscribeUser(body, await isAdminAuthorized(request, url, 'subscribers:manage'));
       response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
       const confirmMsg = result.isNew
         ? (result.emailDispatched
@@ -441,7 +471,7 @@ const server = createServer(async (request, response) => {
         message: confirmMsg,
         emailDispatched: Boolean(result.emailDispatched),
         matchedCount: result.matchedCount || 0,
-        data: result.subscriber
+        data: { email: result.subscriber.email }
       }));
     } catch (err) {
       response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
@@ -481,7 +511,7 @@ const server = createServer(async (request, response) => {
 
   // 4. Send instant test notification matching profile (Rate Limited)
   if (url.pathname === "/api/notifications/test" && request.method === "POST") {
-    const clientIp = request.headers["x-forwarded-for"]?.split(",")[0].trim() || request.socket.remoteAddress || "unknown";
+    const clientIp = getClientIp(request);
     if (isRateLimited(clientIp, 5)) {
       response.writeHead(429, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: false, error: "Rate limit exceeded. Please wait a minute before requesting another test email." }));
@@ -557,7 +587,7 @@ const server = createServer(async (request, response) => {
 
   // 7. Track specific job opening for daily deadline countdown reminders (Rate Limited)
   if (url.pathname === "/api/track-job" && request.method === "POST") {
-    const clientIp = request.headers["x-forwarded-for"]?.split(",")[0].trim() || request.socket.remoteAddress || "unknown";
+    const clientIp = getClientIp(request);
     if (isRateLimited(clientIp, 10)) {
       response.writeHead(429, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: false, error: "Rate limit exceeded. Please wait a minute before tracking another job." }));
@@ -566,10 +596,10 @@ const server = createServer(async (request, response) => {
 
     try {
       const body = await parseBody(request);
-      const result = await trackJob(body);
+      const result = await trackJob(body, await isAdminAuthorized(request, url, 'track_job:manage'));
 
-      // If user requested 1-minute test reminder upon tracking
-      if (body.testTimer === true || body.testTimer === 'true' || body.delaySeconds) {
+      // Custom test timers require administrative dispatch permission.
+      if ((body.testTimer || body.delaySeconds) && (await isAdminAuthorized(request, url, 'reminders:dispatch'))) {
         scheduleReminderTimer({
           trackId: result.track.id,
           email: result.track.email,
@@ -606,7 +636,7 @@ const server = createServer(async (request, response) => {
       response.end(renderStatusPageHtml(result, status));
     } catch (err) {
       response.writeHead(400, { "Content-Type": "text/html; charset=utf-8" });
-      response.end(`<h3>Status Update Failed: ${err.message}</h3><p><a href="/">Return to Sarkari Hith</a></p>`);
+      response.end("Status update failed");
     }
     return;
   }
@@ -713,7 +743,7 @@ const server = createServer(async (request, response) => {
   if (url.pathname === "/api/cron/reminders" && (request.method === "GET" || request.method === "POST")) {
     const cronSecret = process.env.CRON_SECRET;
     const authHeader = request.headers["authorization"];
-    const isCronSecretValid = cronSecret && authHeader === `Bearer ${cronSecret}`;
+    const isCronSecretValid = secretEquals(authHeader, cronSecret ? `Bearer ${cronSecret}` : undefined);
     if (!isCronSecretValid && !(await isAdminAuthorized(request, url, "reminders:dispatch"))) {
       response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: false, error: "Unauthorized cron or admin trigger" }));

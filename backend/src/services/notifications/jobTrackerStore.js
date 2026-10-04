@@ -175,7 +175,7 @@ async function sendImmediateReminder({ trackId, email }) {
 /**
  * Tracks a specific job opening for a user and dispatches immediate confirmation email (Purely MongoDB Atlas)
  */
-async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, lastDateFormatted, link }) {
+async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, lastDateFormatted, link }, canManageExisting = false) {
   if (!isValidEmail(email)) {
     throw new Error('Please enter a valid email address');
   }
@@ -212,6 +212,7 @@ async function trackJob({ email, name, jobId, jobTitle, organization, lastDate, 
   const now = new Date().toISOString();
 
   if (existing) {
+    if (!canManageExisting) throw new Error('Administrator authorization is required to change existing tracking');
     trackRecord = {
       ...existing,
       name: name?.trim() || existing.name,

@@ -622,13 +622,13 @@ function renderSubscribersTable() {
       : '';
 
     const actionHtml = item.canSendNow
-      ? `<button type="button" class="admin-btn admin-btn-secondary btn-send-individual" data-id="${item.id}" data-email="${escapeHtml(item.email)}" style="padding: 4px 10px; font-size: 0.72rem; white-space: nowrap;">
+      ? `<button type="button" class="admin-btn admin-btn-secondary btn-send-individual" data-id="${escapeHtml(item.id)}" data-email="${escapeHtml(item.email)}" style="padding: 4px 10px; font-size: 0.72rem; white-space: nowrap;">
            <span>📧 Send Now</span>
          </button>`
       : `<span style="font-size: 0.72rem; color: #64748b;">Suppressed</span>`;
 
     const deleteBtnHtml = `
-      <button type="button" class="admin-btn admin-btn-secondary btn-delete-individual" data-id="${item.id}" data-email="${escapeHtml(item.email)}" style="padding: 4px 8px; font-size: 0.72rem; color: #fca5a5; border-color: rgba(239, 68, 68, 0.25);" title="Delete subscriber record">
+      <button type="button" class="admin-btn admin-btn-secondary btn-delete-individual" data-id="${escapeHtml(item.id)}" data-email="${escapeHtml(item.email)}" style="padding: 4px 8px; font-size: 0.72rem; color: #fca5a5; border-color: rgba(239, 68, 68, 0.25);" title="Delete subscriber record">
         <span>🗑️</span>
       </button>
     `;

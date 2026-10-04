@@ -6,6 +6,7 @@
 
 const axios = require('axios');
 const cheerio = require('cheerio');
+const { safeFetchOptions } = require('../../utils/safeFetch');
 
 const BASE_URL = 'https://www.sarkariresult.com';
 const DEFAULT_HEADERS = {
@@ -55,6 +56,7 @@ function generateId(title, link = '') {
 async function scrapeHomepage() {
   try {
     const response = await axios.get(`${BASE_URL}/`, {
+      ...safeFetchOptions,
       headers: DEFAULT_HEADERS,
       timeout: 15000
     });
@@ -154,6 +156,7 @@ async function scrapeHomepage() {
 async function scrapeCategoryArchive(categoryUrl, targetKey, maxItems = 150) {
   try {
     const response = await axios.get(categoryUrl, {
+      ...safeFetchOptions,
       headers: DEFAULT_HEADERS,
       timeout: 15000
     });
@@ -199,6 +202,7 @@ async function scrapeCategoryArchive(categoryUrl, targetKey, maxItems = 150) {
 async function scrapePostingDetails(url) {
   try {
     const response = await axios.get(url, {
+      ...safeFetchOptions,
       headers: DEFAULT_HEADERS,
       timeout: 15000
     });

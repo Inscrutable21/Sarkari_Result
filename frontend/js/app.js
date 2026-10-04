@@ -1,3 +1,4 @@
+import { safeLink } from './components.js';
 /**
  * Application Entry Point for sarkari hith Portal
  */
@@ -727,7 +728,7 @@ function setupEventListeners() {
       if (alertsStatusMsg) {
         alertsStatusMsg.className = 'alerts-status-banner is-success';
         const previewLink = res.data?.previewUrl
-          ? `<br><a href="${res.data.previewUrl}" target="_blank" style="color: #15803d; text-decoration: underline; font-weight: 700; margin-top: 4px; display: inline-block;">View sent email preview online</a>`
+          ? `<br><a href="${safeLink(res.data.previewUrl)}" target="_blank" style="color: #15803d; text-decoration: underline; font-weight: 700; margin-top: 4px; display: inline-block;">View sent email preview online</a>`
           : '';
         alertsStatusMsg.innerHTML = `<strong>Test alert sent to ${escapeHtml(email)}!</strong><br>Matched <strong>${res.data?.matchedCount || 0} jobs</strong> matching your Degree & Qualification.${previewLink}`;
         alertsStatusMsg.style.display = 'block';

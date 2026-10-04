@@ -106,7 +106,7 @@ function matchJobsForSubscriber(subscriber, allJobs) {
 /**
  * Subscribes a user with their degree, qualification, and alert preferences (Exclusively MongoDB Atlas)
  */
-async function subscribeUser({ email, name, qualification, disciplines, state, sector, frequency = 'instant' }) {
+async function subscribeUser({ email, name, qualification, disciplines, state, sector, frequency = 'instant' }, canManageExisting = false) {
   if (!isValidEmail(email)) {
     throw new Error('Please provide a valid email address');
   }
@@ -125,6 +125,7 @@ async function subscribeUser({ email, name, qualification, disciplines, state, s
   let isNew = false;
 
   if (index !== -1) {
+    if (!canManageExisting) throw new Error('Administrator authorization is required to change an existing subscription');
     // Update existing subscription preferences
     subscriber = {
       ...subscribers[index],

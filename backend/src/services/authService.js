@@ -5,9 +5,10 @@
 
 const crypto = require('node:crypto');
 const { getDb } = require('./mongoService');
+const { secretEquals } = require('../utils/security');
 
 // Derived secret for HMAC signing of tokens
-const MASTER_SECRET = process.env.SESSION_SECRET || process.env.ADMIN_API_KEY || 'sarkari_hith_fallback_master_secret_2026';
+const MASTER_SECRET = process.env.SESSION_SECRET || process.env.ADMIN_API_KEY || crypto.randomBytes(32).toString('hex');
 const TOKEN_EXPIRY_HOURS = 12;
 
 /**
@@ -100,7 +101,7 @@ function createSignedToken(payload) {
  * Verifies a signed cryptographic token string
  */
 function verifySignedToken(token) {
-  if (!token || typeof token !== 'string') return null;
+  if (!token || typeof token !== 'string' || token.length > 8192) return null;
   const parts = token.split('.');
   if (parts.length !== 3) return null;
 
@@ -118,7 +119,7 @@ function verifySignedToken(token) {
 
   try {
     const payload = JSON.parse(Buffer.from(body, 'base64url').toString('utf8'));
-    if (payload.exp && Date.now() >= payload.exp) {
+    if (!payload || typeof payload !== 'object' || !Number.isFinite(payload.exp) || Date.now() >= payload.exp || typeof payload.sid !== 'string' || typeof payload.sub !== 'string') {
       return null; // Expired
     }
     return payload;
@@ -156,10 +157,10 @@ async function registerAdmin(username, password, masterKey = '') {
   if (!db) throw new Error('Database connection unavailable');
 
   const existingCount = await db.collection('admin_users').countDocuments({});
-  // If an admin already exists, require the valid master key to register a new admin
-  if (existingCount > 0) {
+  // All registrations, including bootstrap, require the master key.
+  {
     const expectedMasterKey = process.env.ADMIN_API_KEY;
-    if (!expectedMasterKey || masterKey !== expectedMasterKey) {
+    if (!secretEquals(masterKey, expectedMasterKey)) {
       throw new Error('Master Authorization Key is required to register an additional administrator');
     }
   }
@@ -243,7 +244,7 @@ async function loginWithCredentials(username, password, clientMeta = {}) {
  */
 async function loginWithMasterKey(apiKey, clientMeta = {}) {
   const expectedKey = process.env.ADMIN_API_KEY;
-  if (!expectedKey || apiKey !== expectedKey) {
+  if (!secretEquals(apiKey, expectedKey)) {
     throw new Error('Invalid Master Authorization Key');
   }
 
@@ -300,13 +301,8 @@ async function createSession(adminId, username, authMethod = 'credentials', clie
     lastActiveAt: new Date(now).toISOString()
   };
 
-  if (db) {
-    try {
-      await db.collection('admin_sessions').insertOne(tokenRecord);
-    } catch (err) {
-      console.warn('[AuthService] Could not persist session in DB:', err.message);
-    }
-  }
+  if (!db) throw new Error('Session store unavailable');
+  await db.collection('admin_sessions').insertOne(tokenRecord);
 
   return {
     token,
@@ -329,7 +325,10 @@ async function rotateToken(oldToken, clientMeta = {}) {
     throw new Error('Invalid or expired token. Cannot rotate.');
   }
 
+  const validation = await validateSessionToken(oldToken);
+  if (!validation.valid) throw new Error('Invalid or revoked session');
   const db = await getDb();
+  if (!db) throw new Error('Session store unavailable');
   const oldTokenHashed = hashToken(oldToken);
 
   if (db) {
@@ -344,8 +343,8 @@ async function rotateToken(oldToken, clientMeta = {}) {
     }
 
     // Mark old session as rotated/revoked
-    await db.collection('admin_sessions').updateOne(
-      { sessionId: payload.sid, tokenHash: oldTokenHashed },
+    const revoked = await db.collection('admin_sessions').updateOne(
+      { sessionId: payload.sid, tokenHash: oldTokenHashed, revoked: false },
       {
         $set: {
           revoked: true,
@@ -354,6 +353,7 @@ async function rotateToken(oldToken, clientMeta = {}) {
         }
       }
     );
+    if (revoked.modifiedCount !== 1) throw new Error('Session already revoked or rotated');
   }
 
   const newRotationCount = (payload.rot || 0) + 1;
@@ -383,7 +383,9 @@ async function validateSessionToken(token) {
     return { valid: false, error: 'Token signature invalid or expired' };
   }
 
-  const db = await getDb();
+  let db;
+  try { db = await getDb(); } catch { return { valid: false, error: 'Session store unavailable' }; }
+  if (!db) return { valid: false, error: 'Session store unavailable' };
   if (db) {
     try {
       const hashed = hashToken(token);
@@ -406,7 +408,7 @@ async function validateSessionToken(token) {
         { $set: { lastActiveAt: new Date().toISOString() } }
       ).catch(() => {});
     } catch {
-      // If DB read temporarily times out, signed payload remains cryptographically valid
+      return { valid: false, error: 'Session store unavailable' };
     }
   }
 
