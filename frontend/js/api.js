@@ -271,7 +271,7 @@ export async function fetchPostingDetails(targetUrl) {
   if (!response.ok) {
     throw new Error(result.error || 'Failed to fetch posting details');
   }
-  return result;
+  return result.data || null;
 }
 
 

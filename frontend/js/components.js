@@ -523,8 +523,51 @@ function renderModalContent(item) {
     }
   }
 
+  // Overview keeps source metadata visible alongside the full notification.
+  const details = item.details || {};
+  const overview = document.getElementById('modal-overview');
+  if (overview) {
+    const facts = [
+      ['Conducting authority', item.organization], ['Location', item.state],
+      ['Qualification', item.qualification], ['Notification updated', details.postDate],
+      ['Application deadline', item.lastDateFormatted || item.lastDate],
+      ['Total vacancies', details.totalVacancies]
+    ].filter(([, value]) => value);
+    overview.innerHTML = facts.map(([label, value]) => `<div class="modal-overview-fact"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join('');
+  }
+  const ageList = document.getElementById('modal-age-list');
+  if (ageList) {
+    const entries = Object.entries(details.ageLimit || {});
+    ageList.innerHTML = entries.length ? entries.map(([key, value]) => `<li><span>${escapeHtml(key)}</span><strong>${escapeHtml(value)}</strong></li>`).join('')
+      : '<li><span>Age requirements</span><strong>Not published in the available source</strong></li>';
+  }
+  const extended = document.getElementById('modal-extended-details');
+  if (extended) {
+    const groups = [
+      ['eligibility', 'Qualification & Experience'], ['selectionProcess', 'Selection Process'],
+      ['salary', 'Salary & Benefits'], ['howToApply', 'How to Apply'],
+      ['documents', 'Required Documents'], ['examPattern', 'Exam Pattern & Syllabus'],
+      ['physicalStandards', 'Physical Standards & Tests']
+    ];
+    extended.innerHTML = groups.map(([type, title]) => {
+      const lines = [...new Set((details.sections || []).filter(section => section.type === type).flatMap(section => section.items || []))];
+      const tag = type === 'howToApply' ? 'ol' : 'ul';
+      return `<section class="modal-info-box"><h4>${title}</h4>${lines.length
+        ? `<${tag} class="modal-detail-points">${lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</${tag}>`
+        : '<p class="modal-unavailable">Not published in the available source.</p>'}</section>`;
+    }).join('');
+  }
+  const additionalTables = document.getElementById('modal-additional-tables');
+  if (additionalTables) {
+    additionalTables.innerHTML = (details.additionalTables || []).map(table => `<section class="modal-info-box"><h4>${escapeHtml(table.title)}</h4>
+      <div class="modal-table-scroll" tabindex="0" role="region" aria-label="${escapeHtml(table.title)}">
+        <table class="modal-vacancy-table"><tbody>${table.rows.map((row, index) => `<tr>${row.map(cell => index === 0
+          ? `<th scope="col">${escapeHtml(cell)}</th>` : `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table>
+      </div></section>`).join('');
+  }
+
   // 1. Important Dates
-  const dates = item.details?.importantDates || {};
+  const dates = { ...(item.lastDate ? { 'Last date to apply': item.lastDateFormatted || item.lastDate } : {}), ...(details.importantDates || {}) };
   if (datesListEl) {
     const dateKeys = Object.keys(dates);
     if (dateKeys.length > 0) {
@@ -536,8 +579,7 @@ function renderModalContent(item) {
       `).join('');
     } else {
       datesListEl.innerHTML = `
-        <li><span>Status</span><strong>${escapeHtml(item.status || 'Active')}</strong></li>
-        <li><span>Category</span><strong>${escapeHtml(item.category || item.section || 'General')}</strong></li>
+        <li><span>Schedule</span><strong>Not published in the available source</strong></li>
       `;
     }
   }
@@ -555,7 +597,7 @@ function renderModalContent(item) {
       `).join('');
     } else {
       feeListEl.innerHTML = `
-        <li><span>Application Fee</span><strong>Refer official PDF notice</strong></li>
+        <li><span>Application Fee</span><strong>Not published in the available source</strong></li>
       `;
     }
   }
@@ -681,7 +723,7 @@ function renderModalContent(item) {
   if (actionLinksEl) {
     let linksHtml = `
       <a href="${safeLink(item.link)}" target="_blank" rel="noopener" class="btn-primary-action">
-        Official Notification Page &nearr;
+        Source Notification &nearr;
       </a>
       <button class="btn-secondary-action" id="btn-copy-link" data-url="${safeLink(item.link)}">
         Copy Link
@@ -713,38 +755,48 @@ function renderModalContent(item) {
 /**
  * Shows interactive details modal for an item
  */
+let modalRequestId = 0;
+
 export function openModal(item) {
   const modal = document.getElementById('item-detail-modal');
   if (!modal || !item) return;
-
+  const requestId = ++modalRequestId;
   renderModalContent(item);
   modal.classList.add('is-open');
+  modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
-
-  // If details not pre-scraped, fetch live and enrich
-  if (!item.details && item.link && item.link.includes('sarkariresult.com')) {
-    const vacancyTableContainer = document.getElementById('modal-vacancy-table-container');
-    if (vacancyTableContainer) {
-      vacancyTableContainer.innerHTML = '<p style="font-size: 0.825rem; color: var(--text-muted); font-style: italic;">Loading deep exam specifications & eligibility details...</p>';
-    }
-
+  const body = modal.querySelector('.modal-body');
+  if (body) body.scrollTop = 0;
+  const status = document.getElementById('modal-details-status');
+  const showStatus = message => { if (status && requestId === modalRequestId) status.textContent = message; };
+  showStatus(item.details?.scrapedAt ? `Source information retrieved ${new Date(item.details.scrapedAt).toLocaleString('en-IN')}.` : '');
+  let supported = false;
+  try {
+    const url = new URL(item.link);
+    supported = ['http:', 'https:'].includes(url.protocol) && (url.hostname === 'sarkariresult.com'
+      || url.hostname.endsWith('.sarkariresult.com') || url.hostname.endsWith('.gov.in') || url.hostname.endsWith('.nic.in'));
+  } catch {}
+  if (supported && item.details?.schemaVersion !== 2) {
+    showStatus('Loading the full notification, eligibility and application instructions?');
     fetchPostingDetails(item.link).then(details => {
+      if (details) item.details = details;
+      if (requestId !== modalRequestId || !modal.classList.contains('is-open')) return;
       if (details) {
-        item.details = details;
         renderModalContent(item);
-      } else if (vacancyTableContainer) {
-        vacancyTableContainer.innerHTML = '';
-      }
-    }).catch(() => {
-      if (vacancyTableContainer) vacancyTableContainer.innerHTML = '';
-    });
+        showStatus(`Source information retrieved ${new Date(details.scrapedAt).toLocaleString('en-IN')}.`);
+      } else showStatus('Full notification could not be loaded. Available listing information is shown below.');
+    }).catch(() => showStatus('Full notification could not be loaded. Available listing information is shown below.'));
+  } else if (!item.details) {
+    showStatus('Detailed notification is not available from this source yet. Available listing information is shown below.');
   }
 }
 
 export function closeModal() {
+  modalRequestId++;
   const modal = document.getElementById('item-detail-modal');
   if (modal) {
     modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }
 }

@@ -1389,6 +1389,23 @@
   transition: transform var(--transition-normal);
 }
 
+#item-detail-modal .modal-dialog { max-width: 1040px; }
+.modal-details-status { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; }
+.modal-details-status:empty { display: none; }
+.modal-overview { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
+.modal-overview-fact { padding: 0.85rem; border: 1px solid var(--border-color); border-radius: 10px; overflow-wrap: anywhere; }
+.modal-overview-fact span { display: block; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.35rem; }
+.modal-overview-fact strong { font-size: 0.85rem; }
+.modal-extended-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.modal-detail-points { padding-left: 1.2rem; font-size: 0.875rem; line-height: 1.7; list-style: disc; }
+ol.modal-detail-points { list-style: decimal; }
+.modal-detail-points li + li { margin-top: 0.45rem; }
+.modal-unavailable { font-size: 0.825rem; color: var(--text-secondary); line-height: 1.5; }
+.modal-table-scroll { max-width: 100%; overflow-x: auto; }
+.modal-table-scroll table { min-width: 480px; width: 100%; }
+#modal-additional-tables .modal-info-box + .modal-info-box { margin-top: 1rem; }
+#item-detail-modal .modal-info-box { min-width: 0; overflow-wrap: anywhere; }
+
 .modal-overlay.is-open .modal-dialog {
   transform: scale(1);
 }

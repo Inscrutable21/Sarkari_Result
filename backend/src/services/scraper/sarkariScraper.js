@@ -6,6 +6,7 @@
 
 const axios = require('axios');
 const cheerio = require('cheerio');
+const { extractAdditionalDetails } = require('./detailExtractor');
 const { safeFetchOptions } = require('../../utils/safeFetch');
 
 const BASE_URL = 'https://www.sarkariresult.com';
@@ -20,9 +21,10 @@ const DEFAULT_HEADERS = {
  */
 function toAbsoluteUrl(url, base = BASE_URL) {
   if (!url) return '';
-  if (url.startsWith('http://') || url.startsWith('https://')) return url;
-  if (url.startsWith('//')) return `https:${url}`;
-  return `${base.replace(/\/$/, '')}/${url.replace(/^\//, '')}`;
+  try {
+    const parsed = new URL(url, base);
+    return ['http:', 'https:'].includes(parsed.protocol) && !parsed.username && !parsed.password ? parsed.href : '';
+  } catch { return ''; }
 }
 
 /**
@@ -285,7 +287,7 @@ async function scrapePostingDetails(url) {
           const totalPost = cleanText($(tds[1]).text());
           const eligibility = cleanText($(tds[2]).text());
 
-          if (postName && totalPost && eligibility &&
+          if (postName && /\d/.test(totalPost) && eligibility &&
             !postName.toLowerCase().includes('post name') &&
             !postName.toLowerCase().includes('candidate can read')) {
             vacancyDetails.push({ postName, totalPost, eligibility });
@@ -301,7 +303,7 @@ async function scrapePostingDetails(url) {
             linkEl.each((_, a) => {
               const rawHref = $(a).attr('href');
               const linkText = cleanText($(a).text());
-              const finalUrl = toAbsoluteUrl(rawHref);
+              const finalUrl = toAbsoluteUrl(rawHref, url);
 
               // Ignore spam / app stores / internal redundant redirects
               if (!finalUrl ||
@@ -329,17 +331,23 @@ async function scrapePostingDetails(url) {
       });
     });
 
+    const additional = extractAdditionalDetails(response.data, url);
+    const mergedLinks = [...importantLinks];
+    for (const link of additional.extractedLinks) {
+      if (!mergedLinks.some(existing => existing.url === link.url)) mergedLinks.push(link);
+    }
     return {
+      ...additional,
       title,
       url,
       postDate,
       shortInfo,
-      importantDates,
-      applicationFee,
-      ageLimit,
+      importantDates: { ...importantDates, ...additional.importantDates },
+      applicationFee: { ...applicationFee, ...additional.applicationFee },
+      ageLimit: { ...ageLimit, ...additional.ageLimit },
       totalVacancies,
       vacancyDetails,
-      importantLinks: importantLinks.slice(0, 10),
+      importantLinks: mergedLinks.slice(0, 30),
       scrapedAt: new Date().toISOString()
     };
   } catch (error) {

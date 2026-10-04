@@ -1150,3 +1150,9 @@ object {
     filter: drop-shadow(0 0 6px rgba(255, 69, 58, 0.5));
   }
 }
+@media (max-width: 600px) {
+  .modal-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .modal-extended-details { grid-template-columns: minmax(0, 1fr); }
+  #item-detail-modal .modal-header { padding: 1rem; }
+  #item-detail-modal .modal-body { padding: 1rem; }
+}
