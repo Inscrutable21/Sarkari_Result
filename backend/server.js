@@ -748,7 +748,7 @@ const server = createServer(async (request, response) => {
     const isCronSecretValid = secretEquals(authHeader, cronSecret ? `Bearer ${cronSecret}` : undefined);
     if (!isCronSecretValid && !(await isAdminAuthorized(request, url, "reminders:dispatch"))) {
       response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, error: "Unauthorized cron or admin trigger" }));
+      response.end(JSON.stringify({ success: false, error: cronSecret ? "Unauthorized cron or admin trigger" : "CRON_SECRET is not configured in Vercel environment variables" }));
       return;
     }
 
