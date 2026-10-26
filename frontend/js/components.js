@@ -1149,7 +1149,7 @@ export function renderRadarTable(container, portalData, activeTab = 'all', searc
               <line x1="12" y1="8" x2="12" y2="12"></line>
               <line x1="12" y1="16" x2="12.01" y2="16"></line>
             </svg>
-            <p class="radar-empty-title">No Sarkari Radar vacancies found</p>
+            <p class="radar-empty-title">No matching vacancies found</p>
             <p class="radar-empty-desc">${q ? `No results matching "${escapeHtml(q)}". Try searching for "JRF", "PSU", "IIT", or reset search.` : 'No active listings in this category right now.'}</p>
           </div>
         </td>
