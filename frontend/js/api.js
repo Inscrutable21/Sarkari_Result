@@ -71,6 +71,11 @@ export async function fetchCategories() {
   return await response.json();
 }
 
+export async function fetchRadarJobs() {
+  const response = await fetchWithFallback('/radar');
+  return await response.json();
+}
+
 export async function subscribeToJobAlerts(data) {
   const response = await fetchWithFallback('/subscribe', {
     method: 'POST',

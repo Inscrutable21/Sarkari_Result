@@ -273,8 +273,14 @@ const server = createServer(async (request, response) => {
     const hostname = parsedTarget.hostname.toLowerCase();
     const isAllowedDomain = hostname === "sarkariresult.com" ||
       hostname.endsWith(".sarkariresult.com") ||
+      hostname === "sarkaritech.netlify.app" ||
+      hostname.endsWith(".netlify.app") ||
+      hostname === "mysarkarinaukri.com" ||
+      hostname.endsWith(".mysarkarinaukri.com") ||
       hostname.endsWith(".gov.in") ||
-      hostname.endsWith(".nic.in");
+      hostname.endsWith(".nic.in") ||
+      hostname.endsWith(".ac.in") ||
+      hostname.endsWith(".edu.in");
 
     // Block localhost and private IP addresses
     const isPrivateIp = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.|169\.254\.|0\.0\.0\.0|::1)/i.test(hostname);
@@ -921,6 +927,32 @@ const server = createServer(async (request, response) => {
     return;
   }
 
+  // Dedicated endpoint to serve Sarkari Radar dataset exclusively
+  if (url.pathname === "/api/radar" && request.method === "GET") {
+    const { getPortalDatasetFromMongo } = require("./src/services/mongoService");
+    try {
+      const allJobs = await getPortalDatasetFromMongo("jobs") || [];
+      const radarJobs = allJobs.filter(j => j.source === 'Sarkari Radar' || (j.id && j.id.startsWith('sr-')) || j.radarCategory);
+      const allAdmissions = await getPortalDatasetFromMongo("admissions") || [];
+      const radarExams = allAdmissions.filter(e => e.source === 'Sarkari Radar' || (e.id && e.id.startsWith('exam-')) || e.radarCategory);
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({
+        success: true,
+        data: radarJobs,
+        exams: radarExams,
+        meta: {
+          total: radarJobs.length,
+          examsCount: radarExams.length,
+          source: "https://sarkaritech.netlify.app/"
+        }
+      }));
+    } catch (err) {
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
   // Endpoints to serve scraped SarkariResult datasets exclusively from MongoDB Atlas
   const apiDataMap = {
     "/api/all": "all",
@@ -928,7 +960,9 @@ const server = createServer(async (request, response) => {
     "/api/results": "results",
     "/api/admit-cards": "admitCards",
     "/api/trending": "trending",
-    "/api/categories": "categories"
+    "/api/categories": "categories",
+    "/api/admissions": "admissions",
+    "/api/exams": "admissions"
   };
 
   if (apiDataMap[url.pathname]) {

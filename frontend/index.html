@@ -269,6 +269,11 @@
           <span>Home</span>
         </a>
         <a href="#matrix-col-latestjobs" class="nav-item"><span>Latest Jobs</span></a>
+        <a href="#special-openings-section" class="nav-item nav-radar-item">
+          <span class="radar-live-beacon"></span>
+          <span>Research &amp; PSU Jobs</span>
+          <span class="radar-nav-badge">Live</span>
+        </a>
         <a href="#matrix-col-results" class="nav-item"><span>Results</span></a>
         <a href="#matrix-col-admitcards" class="nav-item"><span>Admit Cards</span></a>
         <a href="#secondary-services" class="nav-item nav-tab-link" data-tab-target="syllabus"><span>Syllabus</span></a>
@@ -676,6 +681,108 @@
             <!-- Populated dynamically -->
           </div>
         </article>
+      </div>
+    </section>
+
+    <!-- Dedicated Sarkari Radar Opportunities Section & Table -->
+    <section id="sarkari-radar-section" class="radar-section" aria-labelledby="radar-heading">
+      <div class="radar-card-wrapper">
+        <!-- Radar Section Header -->
+        <div class="radar-header">
+          <div class="radar-header-main">
+            <div class="radar-brand-badge">
+              <span class="radar-live-beacon"></span>
+              <span class="radar-brand-name">SARKARI RADAR</span>
+              <span class="radar-brand-tag">sarkaritech.netlify.app</span>
+            </div>
+            <h2 id="radar-heading" class="radar-title">
+              Sarkari Radar Opportunities &amp; Fellowships Table
+            </h2>
+            <p class="radar-subtitle">
+              Comprehensive real-time directory for Research &amp; PhD (JRF/SRF), Navratna &amp; Maharatna PSUs, State &amp; District Openings, and Government Internships.
+            </p>
+          </div>
+
+          <div class="radar-header-actions">
+            <div class="radar-search-wrapper">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="radar-search-icon">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="radar-search-input" class="radar-search-input" placeholder="Search Institute, JRF, PSU, Post, State..." aria-label="Search Sarkari Radar jobs">
+              <button type="button" id="radar-search-clear" class="radar-search-clear" aria-label="Clear radar search" style="display: none;">&times;</button>
+            </div>
+            <div class="radar-total-badge" id="radar-total-count">
+              <span>Loading jobs...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Radar Category Filter Tabs -->
+        <div class="radar-tabs-nav" role="tablist" aria-label="Sarkari Radar Categories">
+          <button type="button" class="radar-tab-btn is-active" data-radar-tab="all">
+            <span>All Radar Jobs</span>
+            <span class="radar-tab-counter" id="radar-cnt-all">0</span>
+          </button>
+          <button type="button" class="radar-tab-btn" data-radar-tab="research">
+            <span>Research &amp; PhD</span>
+            <span class="radar-tab-counter" id="radar-cnt-research">0</span>
+          </button>
+          <button type="button" class="radar-tab-btn" data-radar-tab="psu">
+            <span>PSU Jobs</span>
+            <span class="radar-tab-counter" id="radar-cnt-psu">0</span>
+          </button>
+          <button type="button" class="radar-tab-btn" data-radar-tab="govt">
+            <span>Railway &amp; Bank</span>
+            <span class="radar-tab-counter" id="radar-cnt-govt">0</span>
+          </button>
+          <button type="button" class="radar-tab-btn" data-radar-tab="state">
+            <span>State &amp; District</span>
+            <span class="radar-tab-counter" id="radar-cnt-state">0</span>
+          </button>
+          <button type="button" class="radar-tab-btn" data-radar-tab="intern">
+            <span>Internships</span>
+            <span class="radar-tab-counter" id="radar-cnt-intern">0</span>
+          </button>
+          <button type="button" class="radar-tab-btn" data-radar-tab="exams">
+            <span>Exam Calendar</span>
+            <span class="radar-tab-counter" id="radar-cnt-exams">0</span>
+          </button>
+        </div>
+
+        <!-- Radar Table Wrapper -->
+        <div class="radar-table-responsive">
+          <table class="radar-table" aria-label="Sarkari Radar Jobs Table">
+            <thead>
+              <tr>
+                <th scope="col" class="th-post">Opening / Post Name</th>
+                <th scope="col" class="th-org">Conducting Body</th>
+                <th scope="col" class="th-sector">Category &amp; Stream</th>
+                <th scope="col" class="th-state">Region / Level</th>
+                <th scope="col" class="th-date">Application Deadline</th>
+                <th scope="col" class="th-action text-right">Official Links</th>
+              </tr>
+            </thead>
+            <tbody id="radar-table-body">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Radar Table Footer Note -->
+        <div class="radar-footer">
+          <span class="radar-footer-note">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            Sourced and verified live from <strong>Sarkari Radar (sarkaritech.netlify.app)</strong>. Click any row or &ldquo;View Details&rdquo; for full eligibility, facts &amp; application guidelines.
+          </span>
+          <a href="https://sarkaritech.netlify.app/" target="_blank" rel="noopener" class="radar-source-link">
+            Open Sarkari Radar Portal &nearr;
+          </a>
+        </div>
       </div>
     </section>
 

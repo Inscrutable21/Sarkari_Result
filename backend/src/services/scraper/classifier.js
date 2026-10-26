@@ -12,6 +12,18 @@ const SECTOR_RULES = [
     keywords: [/\bbank\b/i, /\bbob\b/i, /\bbank of baroda\b/i, /\bsbi\b/i, /\bibps\b/i, /\brbi\b/i, /\bnabard\b/i, /\bcanara\b/i, /\bpnb\b/i, /\bboi\b/i, /\brrb (?:officer|scale|clerk|office assistant)/i, /apprentice.*bank/i, /\bwealth management\b/i]
   },
   {
+    name: 'Public Sector (PSU)',
+    badge: 'psu',
+    color: '#d97706', // Amber / Gold
+    keywords: [/\bpsu\b/i, /\bcoal india\b/i, /\bongc\b/i, /\bmrpl\b/i, /\bnlcil\b/i, /\bkrcl\b/i, /\bntpc\b/i, /\bbhel\b/i, /\biocl\b/i, /\bgail\b/i, /\bsail\b/i, /\bpowergrid\b/i, /\bnhpc\b/i, /\bpgcil\b/i, /\bnpcil\b/i, /\bbarc\b/i, /\bdrdo\b/i, /\bisro\b/i, /\bhal\b/i, /\bbel\b/i, /\boil and natural gas\b/i]
+  },
+  {
+    name: 'Research & Fellowship',
+    badge: 'research',
+    color: '#059669', // Emerald Green
+    keywords: [/\bjrf\b/i, /\bsrf\b/i, /\bresearch fellow\b/i, /\bresearch associate\b/i, /\bproject fellow\b/i, /\bproject assistant\b/i, /\bproject associate\b/i, /\bphd\b/i, /\bdoctoral\b/i, /\bpostdoc\b/i, /\bfellowship\b/i, /\bscientist\b/i, /\bresearch\b/i]
+  },
+  {
     name: 'Staff Selection (SSC)',
     badge: 'ssc',
     color: '#ea580c', // Orange
@@ -27,7 +39,7 @@ const SECTOR_RULES = [
     name: 'Engineering & Technical',
     badge: 'engineering',
     color: '#0891b2', // Cyan
-    keywords: [/\bengineer/i, /\bjunior engineer\b/i, /\bje\b/i, /\bgate\b/i, /\bpolytechnic\b/i, /\biti\b/i, /\bapprentice\b/i, /\btechnical\b/i, /\btechnician\b/i, /\bjam\b/i, /\biit\b/i, /\biit[- ]bhu\b/i]
+    keywords: [/\bengineer/i, /\bjunior engineer\b/i, /\bje\b/i, /\bgate\b/i, /\bpolytechnic\b/i, /\biti\b/i, /\bapprentice\b/i, /\btechnical\b/i, /\btechnician\b/i, /\bjam\b/i, /\biit\b/i, /\biit[- ]bhu\b/i, /\bget\b/i, /\bexecutive trainee\b/i]
   },
   {
     name: 'Teaching & Education',
@@ -72,6 +84,12 @@ const SECTOR_RULES = [
     keywords: [/\bcourt\b/i, /\bhigh court\b/i, /\bjudge\b/i, /\bjudicial\b/i, /\blaw\b/i, /\blegal\b/i]
   },
   {
+    name: 'Internship & Trainee',
+    badge: 'internship',
+    color: '#2563eb', // Royal Blue
+    keywords: [/\bintern\b/i, /\binternship\b/i, /\bindustrial trainee\b/i, /\bclerical trainee\b/i, /\bco-operative intern\b/i]
+  },
+  {
     name: 'State Subordinate & Welfare',
     badge: 'state-subordinate',
     color: '#d97706', // Amber
@@ -80,39 +98,73 @@ const SECTOR_RULES = [
 ];
 
 const STATE_RULES = [
-  { state: 'Uttar Pradesh (UP)', keywords: [/\bup\b/i, /\buppsc\b/i, /\bupsssc\b/i, /\bupessc\b/i, /\buttar pradesh\b/i, /\blucknow\b/i, /\bbareilly\b/i, /\brampur\b/i, /\buptet\b/i, /\biit[- ]bhu\b/i, /\bvaranasi\b/i] },
+  { state: 'Uttar Pradesh (UP)', keywords: [/\bup\b/i, /\buppsc\b/i, /\bupsssc\b/i, /\bupessc\b/i, /\buttar pradesh\b/i, /\blucknow\b/i, /\bbareilly\b/i, /\brampur\b/i, /\buptet\b/i, /\biit[- ]bhu\b/i, /\bvaranasi\b/i, /\ballahabad\b/i] },
   { state: 'Bihar', keywords: [/\bbihar\b/i, /\bbpsc\b/i, /\bbssc\b/i, /\bbseb\b/i, /\bbtsc\b/i, /\bpatna\b/i] },
-  { state: 'Madhya Pradesh (MP)', keywords: [/\bmp\b/i, /\bmpesb\b/i, /\bmppsc\b/i, /\bmadhya pradesh\b/i, /\bbhopal\b/i] },
+  { state: 'Madhya Pradesh (MP)', keywords: [/\bmp\b/i, /\bmpesb\b/i, /\bmppsc\b/i, /\bmadhya pradesh\b/i, /\bbhopal\b/i, /\bgwalior\b/i, /\bjabalpur\b/i] },
   { state: 'Rajasthan', keywords: [/\brajasthan\b/i, /\brpsc\b/i, /\brsmssb\b/i, /\bjaipur\b/i] },
-  { state: 'Delhi', keywords: [/\bdelhi\b/i, /\bdsssb\b/i] },
-  { state: 'Chhattisgarh', keywords: [/\bchhattisgarh\b/i, /\bcgpsc\b/i, /\bvyapam\b/i] },
-  { state: 'Haryana', keywords: [/\bharyana\b/i, /\bhssc\b/i, /\bhpsc\b/i] },
+  { state: 'Delhi', keywords: [/\bdelhi\b/i, /\bdsssb\b/i, /\bdpsru\b/i] },
+  { state: 'Chhattisgarh', keywords: [/\bchhattisgarh\b/i, /\bcgpsc\b/i, /\bvyapam\b/i, /\bcg apex\b/i] },
+  { state: 'Haryana', keywords: [/\bharyana\b/i, /\bhssc\b/i, /\bhpsc\b/i, /\brohtak\b/i] },
   { state: 'Uttarakhand', keywords: [/\buttarakhand\b/i, /\bukpsc\b/i, /\buksssc\b/i] },
   { state: 'Jharkhand', keywords: [/\bjharkhand\b/i, /\bjpsc\b/i, /\bjssc\b/i] },
-  { state: 'Central / All India', keywords: [/\bssc\b/i, /\bupsc\b/i, /\bibps\b/i, /\brrb\b/i, /\bnta\b/i, /\bairforce\b/i, /\barmy\b/i, /\bnavy\b/i, /\bcanara bank\b/i, /\bbank of india\b/i, /\bbank of baroda\b/i, /\bbob\b/i, /\bsbi\b/i, /\biit\b/i, /\bgate\b/i, /\bcsir\b/i, /\bugc\b/i, /\bcentral\b/i, /\ball india\b/i] }
+  { state: 'West Bengal', keywords: [/\bwest bengal\b/i, /\bwb\b/i, /\bkolkata\b/i, /\bhowrah\b/i, /\bshibpur\b/i, /\bwbpolice\b/i, /\biiest\b/i] },
+  { state: 'Maharashtra', keywords: [/\bmaharashtra\b/i, /\bmumbai\b/i, /\bpune\b/i, /\bmpsc\b/i, /\bdiat\b/i] },
+  { state: 'Karnataka', keywords: [/\bkarnataka\b/i, /\bbangalore\b/i, /\bbengaluru\b/i, /\bkpsc\b/i, /\bmrpl\b/i] },
+  { state: 'Tamil Nadu', keywords: [/\btamil nadu\b/i, /\bchennai\b/i, /\btnpsc\b/i, /\btmb\b/i, /\bneyveli\b/i, /\bnlcil\b/i] },
+  { state: 'Gujarat', keywords: [/\bgujarat\b/i, /\bahmedabad\b/i, /\bgandhinagar\b/i, /\bgpsc\b/i, /\bbknmu\b/i] },
+  { state: 'Kerala', keywords: [/\bkerala\b/i, /\bthiruvananthapuram\b/i, /\bkpsc\b/i] },
+  { state: 'Odisha', keywords: [/\bodisha\b/i, /\borissa\b/i, /\bbhubaneswar\b/i, /\brourkela\b/i, /\bopsc\b/i, /\bils\b/i, /\bkendrapara\b/i] },
+  { state: 'Punjab', keywords: [/\bpunjab\b/i, /\bchandigarh\b/i, /\bmohhali\b/i, /\bppsc\b/i] },
+  { state: 'Telangana', keywords: [/\btelangana\b/i, /\bhyderabad\b/i, /\btspsc\b/i] },
+  { state: 'Andhra Pradesh', keywords: [/\bandhra pradesh\b/i, /\bamaravati\b/i, /\bappsc\b/i] },
+  { state: 'Assam', keywords: [/\bassam\b/i, /\bguwahati\b/i, /\bapsc\b/i] },
+  { state: 'Himachal Pradesh', keywords: [/\bhimachal\b/i, /\bhimachal pradesh\b/i, /\bshimla\b/i, /\bhpsc\b/i, /\bhpscb\b/i] },
+  { state: 'Central / All India', keywords: [/\bssc\b/i, /\bupsc\b/i, /\bibps\b/i, /\brrb\b/i, /\bnta\b/i, /\bairforce\b/i, /\barmy\b/i, /\bnavy\b/i, /\bcanara bank\b/i, /\bbank of india\b/i, /\bbank of baroda\b/i, /\bbob\b/i, /\bsbi\b/i, /\biit\b/i, /\bgate\b/i, /\bcsir\b/i, /\bugc\b/i, /\bcentral\b/i, /\ball india\b/i, /\bcoal india\b/i, /\bongc\b/i] }
 ];
 
 const QUALIFICATION_RULES = [
-  { level: '10th / Matric Pass', keywords: [/\b10th\b/i, /\bmatric\b/i, /\bhigh school\b/i, /\bchsl\b/i, /\bmts\b/i, /\bgroup d\b/i, /\banganwadi\b/i] },
-  { level: '12th / Intermediate', keywords: [/\b12th\b/i, /\b10\+2\b/i, /\bintermediate\b/i, /\binter\b/i, /\bconstable\b/i] },
-  { level: 'Teaching Degree (B.Ed / D.El.Ed)', keywords: [/(?<!non[- ]?)\bteacher\b/i, /\bdeled\b/i, /\bb\.?ed\b/i, /\btet\b/i, /\bctet\b/i, /\bpgt\b/i, /\btgt\b/i, /\btre\b/i] },
-  { level: 'Engineering / Diploma / ITI', keywords: [/\bengineer/i, /\bje\b/i, /\bgate\b/i, /\bdiploma\b/i, /\biti\b/i, /\bpolytechnic\b/i, /\bapprentice\b/i, /\btechnician\b/i] },
+  { level: 'Post Graduate (PG / Master)', keywords: [/\bpg\b/i, /\bpost graduate\b/i, /\bmaster\b/i, /\bpgt\b/i, /\bnet\b/i, /\bphd\b/i, /\bjrf\b/i, /\bsrf\b/i, /\bresearch fellow\b/i, /\bresearch associate\b/i, /\bm\.?sc\b/i, /\bm\.?tech\b/i, /\bm\.?e\b/i, /\bpostdoc\b/i] },
   { level: 'Medical / Nursing Degree', keywords: [/\bnurse\b/i, /\bnursing\b/i, /\bmedical\b/i, /\bmbbs\b/i, /\bcho\b/i, /\bveterinary\b/i] },
-  { level: 'Graduate / Degree', keywords: [/\bgraduate\b/i, /\bdegree\b/i, /\bbachelor\b/i, /\bofficer\b/i, /\bcgl\b/i, /\bpo\b/i, /\bso\b/i, /\bclerk\b/i, /\bbank\b/i, /\bupsc\b/i, /\bpsc\b/i, /\bwealth management\b/i, /\bsuperintendent\b/i] },
-  { level: 'Post Graduate (PG / Master)', keywords: [/\bpg\b/i, /\bpost graduate\b/i, /\bmaster\b/i, /\bpgt\b/i, /\bnet\b/i, /\bphd\b/i] }
+  { level: 'Teaching Degree (B.Ed / D.El.Ed)', keywords: [/(?<!non[- ]?)\bteacher\b/i, /\bdeled\b/i, /\bb\.?ed\b/i, /\btet\b/i, /\bctet\b/i, /\bpgt\b/i, /\btgt\b/i, /\btre\b/i] },
+  { level: 'Engineering / Diploma / ITI', keywords: [/\bengineer/i, /\bjunior engineer\b/i, /\bje\b/i, /\bgate\b/i, /\bdiploma\b/i, /\biti\b/i, /\bpolytechnic\b/i, /\bapprentice\b/i, /\btechnician\b/i, /\bget\b/i, /\bgraduate executive trainee\b/i] },
+  { level: 'Graduate / Degree', keywords: [/\bgraduate\b/i, /\bdegree\b/i, /\bbachelor\b/i, /\bofficer\b/i, /\bcgl\b/i, /\bpo\b/i, /\bso\b/i, /\bclerk\b/i, /\bbank\b/i, /\bupsc\b/i, /\bpsc\b/i, /\bwealth management\b/i, /\bsuperintendent\b/i, /\bindustrial trainee\b/i, /\bclerical trainee\b/i, /\bco-operative intern\b/i] },
+  { level: '12th / Intermediate', keywords: [/\b12th\b/i, /\b10\+2\b/i, /\bintermediate\b/i, /\binter\b/i, /\bconstable\b/i] },
+  { level: '10th / Matric Pass', keywords: [/\b10th\b/i, /\bmatric\b/i, /\bhigh school\b/i, /\bchsl\b/i, /\bmts\b/i, /\bgroup d\b/i, /\banganwadi\b/i] }
 ];
 
 /**
- * Extracts organization name abbreviation or full name from title and link
+ * Extracts organization name abbreviation or full name from item, title, and link
  */
-function extractOrganization(title, link = '') {
+function extractOrganization(itemOrTitle, maybeLink = '') {
+  let title = '';
+  let link = '';
+  let explicitOrg = '';
+
+  if (typeof itemOrTitle === 'object' && itemOrTitle !== null) {
+    explicitOrg = itemOrTitle.org || '';
+    title = itemOrTitle.title || itemOrTitle.what || '';
+    link = itemOrTitle.link || '';
+  } else {
+    title = String(itemOrTitle || '');
+    link = String(maybeLink || '');
+  }
+
+  if (explicitOrg && explicitOrg.trim().length > 1) {
+    return explicitOrg.trim();
+  }
+
   const text = `${title} ${link}`;
   const orgs = [
+    'Coal India', 'ONGC', 'MRPL', 'KRCL', 'NLCIL', 'NTPC', 'BHEL', 'IOCL', 'GAIL', 'SAIL',
     'Bank of Baroda', 'BOB', 'Canara Bank', 'Bank of India', 'SBI', 'IBPS', 'SSC', 'UPSC',
     'UPPSC', 'UPSSSC', 'UPESSC', 'BPSC', 'BSEB', 'BTSC', 'MPESB', 'MPPSC',
     'RPSC', 'NTA', 'IIT BHU', 'IIT', 'UIIC', 'ITBP', 'CISF', 'CRPF', 'BSF',
     'Indian Airforce', 'Indian Army', 'Indian Navy',
-    'RRB', 'RRC', 'CSIR', 'UGC', 'DSSSB', 'HSSC', 'CG Vyapam'
+    'RRB', 'RRC', 'CSIR', 'UGC', 'DSSSB', 'HSSC', 'CG Vyapam',
+    'DIAT', 'IIEST', 'NIT Rourkela', 'NIT', 'ILS', 'IIITM', 'IIITDM', 'DPSRU', 'BKNMU',
+    'CCRAS', 'Amrita', 'WB Police', 'West Bengal Police', 'PNB', 'Punjab National Bank',
+    'South Indian Bank', 'MUCB', 'Punjab & Sind Bank', 'RBI', 'Reserve Bank of India',
+    'UCO Bank', 'CG Apex Bank', 'TMB', 'NABARD', 'HPSCB', 'Central Bank of India'
   ];
 
   for (const org of orgs) {
@@ -140,17 +192,24 @@ function parseDateParts(d, m, y) {
   };
 }
 
-function extractLastDate(text, importantDates = {}) {
+function extractLastDate(text, importantDates = {}, explicitDeadline = null) {
+  if (explicitDeadline && typeof explicitDeadline === 'string') {
+    const isoMatch = explicitDeadline.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (isoMatch) return parseDateParts(isoMatch[3], isoMatch[2], isoMatch[1]);
+  }
+
   if (importantDates && typeof importantDates === 'object') {
     for (const [k, v] of Object.entries(importantDates)) {
-      if (k.toLowerCase().includes('last date') || k.toLowerCase().includes('apply online') || k.toLowerCase().includes('closing date')) {
+      if (k.toLowerCase().includes('last date') || k.toLowerCase().includes('apply online') || k.toLowerCase().includes('closing date') || k.toLowerCase().includes('deadline')) {
+        const isoMatch = String(v).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (isoMatch) return parseDateParts(isoMatch[3], isoMatch[2], isoMatch[1]);
         const match = String(v).match(/(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})/);
         if (match) return parseDateParts(match[1], match[2], match[3]);
       }
     }
   }
 
-  // Common patterns in SarkariResult titles like "Last Date : 27/10/2026", "Last : 18/08/2026", "Till 25/09/2026", "by 10/10/2026"
+  // Common patterns in titles like "Last Date : 27/10/2026", "Last : 18/08/2026", "Till 25/09/2026", "by 10/10/2026"
   const matchLast = text.match(/(?:last\s*date|last\s*day|last\s*time|last|till|upto|before|by)\s*[:\-]?\s*(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})/i);
   if (matchLast) return parseDateParts(matchLast[1], matchLast[2], matchLast[3]);
 
@@ -384,7 +443,7 @@ function isDirectFieldMatch(discId, text) {
       );
 
     case 'science_agriculture':
-      return /(?<!computer\s+)\b(?:science|b\.?sc|m\.?sc|physics|chemistry|biology|botany|zoology|agriculture|fishery|horticulture|forestry|veterinary)\b/i.test(lower);
+      return /(?<!computer\s+)\b(?:science|b\.?sc|m\.?sc|physics|chemistry|biology|botany|zoology|agriculture|fishery|horticulture|forestry|veterinary|life sciences|pharmaceutical|biotechnology|biotech)\b/i.test(lower);
 
     case 'medical_healthcare':
       return lower.includes('mbbs') || lower.includes('bds') || lower.includes('nursing') || lower.includes('nurse') || lower.includes('pharm') || lower.includes('pharmacist') || lower.includes('doctor') || lower.includes('medical') || lower.includes('cho') || lower.includes('bams') || lower.includes('bhms');
@@ -543,29 +602,51 @@ function evaluateDegreeEligibility(item) {
  */
 function categorizeItem(item, defaultSection = '') {
   const section = item.category || item.section || defaultSection;
-  const searchCorpus = `${item.title || ''} ${item.link || ''} ${item.details?.shortInfo || ''}`;
+  const searchCorpus = `${item.title || ''} ${item.link || ''} ${item.details?.shortInfo || ''} ${item.radarType || ''} ${item.what || ''} ${item.org || ''}`;
 
   // 1. Sector
-  let matchedSector = SECTOR_RULES.find(r => r.keywords.some(k => k.test(searchCorpus)));
+  let matchedSector = null;
+  // If explicit radarCategory is provided, match sector directly if relevant
+  if (item.radarCategory === 'research') {
+    matchedSector = SECTOR_RULES.find(r => r.badge === 'research');
+  } else if (item.radarCategory === 'psu') {
+    matchedSector = SECTOR_RULES.find(r => r.badge === 'psu');
+  } else if (item.radarCategory === 'intern') {
+    matchedSector = SECTOR_RULES.find(r => r.badge === 'internship');
+  }
+
+  if (!matchedSector) {
+    matchedSector = SECTOR_RULES.find(r => r.keywords.some(k => k.test(searchCorpus)));
+  }
   if (!matchedSector) {
     matchedSector = { name: 'General & Others', badge: 'general', color: '#475569' };
   }
 
   // 2. State
-  let matchedState = STATE_RULES.find(r => r.keywords.some(k => k.test(searchCorpus)));
-  const state = matchedState ? matchedState.state : 'Central / All India';
+  let state = null;
+  const rawState = item.radarState || item.state;
+  if (rawState && rawState.trim() && rawState.trim() !== 'All India') {
+    const matchedStRule = STATE_RULES.find(r => r.keywords.some(k => k.test(rawState)) || r.state.toLowerCase().includes(rawState.toLowerCase()));
+    state = matchedStRule ? matchedStRule.state : rawState.trim();
+  }
+  if (!state) {
+    const matchedState = STATE_RULES.find(r => r.keywords.some(k => k.test(searchCorpus)));
+    state = matchedState ? matchedState.state : 'Central / All India';
+  }
 
   // 3. Qualification
   let matchedQual = QUALIFICATION_RULES.find(r => r.keywords.some(k => k.test(searchCorpus)));
-  const qualification = matchedQual ? matchedQual.level : 'Graduate / Check Notice';
+  const qualification = matchedQual
+    ? matchedQual.level
+    : (item.radarCategory === 'research' ? 'Post Graduate (PG / Master)' : 'Graduate / Check Notice');
 
   // 4. Organization
-  const organization = extractOrganization(item.title, item.link);
+  const organization = extractOrganization(item, item.title, item.link);
 
   // 5. Deadline & Validity (Active relative to today's date)
   const isExtended = item.title.toLowerCase().includes('extended') ||
     Boolean(item.details?.importantDates && Object.values(item.details.importantDates).some(v => String(v).toLowerCase().includes('extended')));
-  const deadline = extractLastDate(item.title, item.details?.importantDates);
+  const deadline = extractLastDate(item.title, item.details?.importantDates, item.deadline);
 
   // 6. Status
   const status = extractStatus(item.title, section, deadline, isExtended);
@@ -584,6 +665,7 @@ function categorizeItem(item, defaultSection = '') {
   ]);
 
   if (item.tag) tags.add(item.tag);
+  if (item.radarType) tags.add(item.radarType);
 
   return {
     ...item,

@@ -18,10 +18,35 @@ blocked.addSubnet('2001:db8::', 32, 'ipv6');
 blocked.addSubnet('2002::', 16, 'ipv6');
 blocked.addSubnet('3fff::', 20, 'ipv6');
 
+const nat64 = new BlockList();
+nat64.addSubnet('64:ff9b::', 96, 'ipv6');
+
 function isPublicAddress(address) {
   const family = isIP(address);
   if (family === 4) return !blocked.check(address, 'ipv4');
-  return family === 6 && globalV6.check(address, 'ipv6') && !blocked.check(address, 'ipv6');
+  if (family === 6) {
+    if (nat64.check(address, 'ipv6')) {
+      const parts = address.split(':');
+      const last = parts[parts.length - 1];
+      const prev = parts[parts.length - 2];
+      let ipv4 = '';
+      if (last.includes('.')) {
+        ipv4 = last;
+      } else {
+        const h1 = parseInt(prev, 16);
+        const h2 = parseInt(last, 16);
+        if (!isNaN(h1) && !isNaN(h2)) {
+          ipv4 = `${(h1 >> 8) & 0xff}.${h1 & 0xff}.${(h2 >> 8) & 0xff}.${h2 & 0xff}`;
+        }
+      }
+      if (ipv4 && isIP(ipv4) === 4) {
+        return !blocked.check(ipv4, 'ipv4');
+      }
+      return false;
+    }
+    return globalV6.check(address, 'ipv6') && !blocked.check(address, 'ipv6');
+  }
+  return false;
 }
 
 // Validate the actual DNS results used by the socket, rather than doing a

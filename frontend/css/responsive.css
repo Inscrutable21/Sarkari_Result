@@ -1156,3 +1156,74 @@ object {
   #item-detail-modal .modal-header { padding: 1rem; }
   #item-detail-modal .modal-body { padding: 1rem; }
 }
+
+/* ========================================================
+   Sarkari Radar Responsive Optimization
+   ======================================================== */
+@media (max-width: 768px) {
+  .radar-card-wrapper {
+    padding: 1.25rem 1rem;
+    border-radius: 16px;
+  }
+
+  .radar-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .radar-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .radar-search-wrapper {
+    min-width: 100%;
+    width: 100%;
+  }
+
+  .radar-total-badge {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .radar-tabs-nav {
+    gap: 0.35rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .radar-tab-btn {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.78rem;
+  }
+
+  .radar-table th,
+  .radar-table td {
+    padding: 0.75rem 0.65rem;
+    font-size: 0.8rem;
+  }
+
+  .radar-post-title {
+    font-size: 0.82rem;
+  }
+
+  .radar-org-name {
+    font-size: 0.78rem;
+    max-width: 160px;
+  }
+
+  .radar-action-btn-group {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .btn-radar-details,
+  .btn-radar-official {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.72rem;
+    width: 100%;
+    text-align: center;
+  }
+}
+

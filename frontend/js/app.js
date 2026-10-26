@@ -42,8 +42,14 @@ import {
   renderTrackedJobsList,
   showToast,
   updateDegreeScopePills,
-  escapeHtml
+  escapeHtml,
+  renderRadarTable
 } from './components.js';
+
+// Sarkari Radar table state
+let radarActiveTab = 'all';
+let radarSearchQuery = '';
+
 
 // DOM Element References
 const tickerContainer = document.getElementById('ticker-content');
@@ -137,6 +143,12 @@ function renderAll() {
 
   // Update mobile filter badges and state indicators
   updateMobileFilterUI();
+
+  // Render dedicated Sarkari Radar table
+  const radarTableBody = document.getElementById('radar-table-body');
+  if (radarTableBody) {
+    renderRadarTable(radarTableBody, state.data, radarActiveTab, radarSearchQuery);
+  }
 }
 
 /**
@@ -609,9 +621,48 @@ function setupEventListeners() {
     });
   });
 
-  // 9. Card Click -> Open Detail Modal (Event Delegation)
+  // 8b. Sarkari Radar Tabs & Search Interactions
+  const radarTabsNav = document.querySelector('.radar-tabs-nav');
+  if (radarTabsNav) {
+    radarTabsNav.addEventListener('click', (e) => {
+      const btn = e.target.closest('.radar-tab-btn');
+      if (!btn) return;
+      radarTabsNav.querySelectorAll('.radar-tab-btn').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      radarActiveTab = btn.getAttribute('data-radar-tab') || 'all';
+      const radarTableBody = document.getElementById('radar-table-body');
+      renderRadarTable(radarTableBody, state.data, radarActiveTab, radarSearchQuery);
+    });
+  }
+
+  const radarSearchInput = document.getElementById('radar-search-input');
+  const radarSearchClear = document.getElementById('radar-search-clear');
+  if (radarSearchInput) {
+    radarSearchInput.addEventListener('input', (e) => {
+      radarSearchQuery = e.target.value;
+      if (radarSearchClear) {
+        radarSearchClear.style.display = radarSearchQuery ? 'inline-flex' : 'none';
+      }
+      const radarTableBody = document.getElementById('radar-table-body');
+      renderRadarTable(radarTableBody, state.data, radarActiveTab, radarSearchQuery);
+    });
+  }
+  if (radarSearchClear) {
+    radarSearchClear.addEventListener('click', () => {
+      if (radarSearchInput) {
+        radarSearchInput.value = '';
+        radarSearchInput.focus();
+      }
+      radarSearchQuery = '';
+      radarSearchClear.style.display = 'none';
+      const radarTableBody = document.getElementById('radar-table-body');
+      renderRadarTable(radarTableBody, state.data, radarActiveTab, radarSearchQuery);
+    });
+  }
+
+  // 9. Card / Row Click -> Open Detail Modal (Event Delegation)
   document.addEventListener('click', (e) => {
-    const card = e.target.closest('.trending-card, .matrix-item, .secondary-card');
+    const card = e.target.closest('.trending-card, .matrix-item, .secondary-card, .radar-table-row, .btn-radar-details');
     if (card && !e.target.closest('a')) {
       const id = card.getAttribute('data-id');
       if (id) {

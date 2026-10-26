@@ -1,4 +1,5 @@
 const { scrapeHomepage, scrapeCategoryArchive, scrapePostingDetails } = require('./sarkariScraper');
+const { scrapeRadarAll } = require('./sarkariRadarScraper');
 const { categorizeCollection, DEGREE_DISCIPLINES, isFillableJob } = require('./classifier');
 const { dispatchAllNotifications } = require('../notificationService');
 const { saveAllPortalDataToMongo, saveCategorySummaryToMongo } = require('../mongoService');
@@ -61,12 +62,12 @@ function buildCategorySummary(allItems) {
 function mergeListings(primary, secondary) {
   const map = new Map();
 
-  for (const item of primary) {
+  for (const item of (primary || [])) {
     const key = item.link || item.id;
     if (key) map.set(key, { ...item });
   }
 
-  for (const item of secondary) {
+  for (const item of (secondary || [])) {
     const key = item.link || item.id;
     if (!key) continue;
 
@@ -81,6 +82,9 @@ function mergeListings(primary, secondary) {
       if (secondaryHasDate && !existingHasDate) {
         existing.title = item.title;
       }
+      if (item.details && !existing.details) {
+        existing.details = item.details;
+      }
     }
   }
 
@@ -89,13 +93,21 @@ function mergeListings(primary, secondary) {
 
 async function run() {
   console.log('====================================================');
-  console.log('Starting SarkariResult Scraper & Categorization Pipeline...');
+  console.log('Starting Unified Portal Scraper (SarkariResult & Sarkari Radar)...');
   console.log('====================================================');
 
   try {
-    // Step 1: Scrape Homepage
-    console.log('[Scraper] Fetching homepage listings from SarkariResult.com...');
-    const data = await scrapeHomepage();
+    // Step 1: Concurrently Scrape SarkariResult Homepage & Sarkari Radar listings/exams
+    console.log('[Scraper] Fetching listings from SarkariResult.com & Sarkari Radar (sarkaritech.netlify.app)...');
+    const [data, radarData] = await Promise.all([
+      scrapeHomepage(),
+      scrapeRadarAll().catch(err => {
+        console.warn('[Scraper] Sarkari Radar fetch notice:', err.message);
+        return { jobs: [], trending: [], exams: [] };
+      })
+    ]);
+
+    console.log(`   Sarkari Radar -> Fetched ${radarData.jobs.length} vacancies, ${radarData.trending.length} trending highlights, ${radarData.exams.length} exams.`);
 
     // Step 2: Fetch Dedicated Archive Pages for Comprehensive Datasets
     console.log('[Scraper] Fetching dedicated archive listings for Latest Jobs, Results, Admit Cards, and UPSC...');
@@ -121,11 +133,13 @@ async function run() {
       }
     }
 
-    data.latestJobs = mergeListings(data.latestJobs, [...archiveJobs, ...upscJobs]);
+    data.latestJobs = mergeListings(data.latestJobs, [...archiveJobs, ...upscJobs, ...radarData.jobs]);
     data.results = mergeListings(data.results, [...archiveResults, ...upscResults]);
     data.admitCards = mergeListings(data.admitCards, [...archiveAdmit, ...upscAdmit]);
+    data.trending = mergeListings(data.trending || [], radarData.trending || []);
+    data.admissions = mergeListings(data.admissions || [], radarData.exams || []);
 
-    console.log(`   Merged datasets -> Jobs: ${data.latestJobs.length}, Results: ${data.results.length}, Admit Cards: ${data.admitCards.length}`);
+    console.log(`   Merged datasets -> Jobs: ${data.latestJobs.length}, Results: ${data.results.length}, Admit Cards: ${data.admitCards.length}, Admissions/Exams: ${data.admissions.length}, Trending: ${data.trending.length}`);
 
     // Step 3: Enrich priority and recent jobs with deep specs
     console.log('\n[Scraper] Enriching priority jobs with deep specs (UPSC Engineering, IIT BHU, BOB, and top recent)...');
@@ -202,7 +216,8 @@ async function run() {
       ...data.trending,
       ...data.latestJobs,
       ...data.results,
-      ...data.admitCards
+      ...data.admitCards,
+      ...(data.admissions || [])
     ];
     const categorySummary = buildCategorySummary(allItems);
 
@@ -237,7 +252,9 @@ async function run() {
 }
 
 if (require.main === module) {
-  run().catch(() => process.exit(1));
+  run()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
 }
 
 module.exports = {
