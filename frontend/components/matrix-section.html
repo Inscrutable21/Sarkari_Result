@@ -1,0 +1,114 @@
+<!-- Component: Core 3-Column Matrix (Results | Admit Cards | Latest Jobs) -->
+<!-- Mobile Matrix Column Switcher -->
+<div class="matrix-mobile-tabs" role="tablist">
+  <button class="matrix-tab-btn is-active" data-target="latestjobs">Latest Jobs</button>
+  <button class="matrix-tab-btn" data-target="results">Results</button>
+  <button class="matrix-tab-btn" data-target="admitcards">Admit Cards</button>
+</div>
+
+<!-- Main Matrix Section -->
+<section class="matrix-section" aria-label="Main Postings Matrix">
+  <div class="matrix-grid">
+    <!-- Column 1: RESULTS -->
+    <article id="matrix-col-results" class="matrix-column">
+      <div class="column-header header-results">
+        <div class="column-header-inner">
+          <div class="column-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <div class="column-text-group">
+            <div class="column-title-row">
+              <h3>Sarkari Results</h3>
+              <span id="count-results" class="column-count-badge">0</span>
+            </div>
+            <span class="column-subtitle">Sarkari exam results, scorecards &amp; cutoffs</span>
+          </div>
+        </div>
+        <div class="column-header-graphic graphic-results" aria-hidden="true">
+          <span class="badge-3d-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div id="matrix-results-list" class="column-items-list">
+        <!-- Populated dynamically -->
+      </div>
+    </article>
+
+    <!-- Column 2: ADMIT CARDS -->
+    <article id="matrix-col-admitcards" class="matrix-column">
+      <div class="column-header header-admitcards">
+        <div class="column-header-inner">
+          <div class="column-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <circle cx="8" cy="11" r="2.5"></circle>
+              <line x1="14" y1="9" x2="19" y2="9"></line>
+              <line x1="14" y1="13" x2="17" y2="13"></line>
+            </svg>
+          </div>
+          <div class="column-text-group">
+            <div class="column-title-row">
+              <h3>Sarkari Admit Cards</h3>
+              <span id="count-admitcards" class="column-count-badge">0</span>
+            </div>
+            <span class="column-subtitle">Download hall tickets &amp; exam city slips</span>
+          </div>
+        </div>
+        <div class="column-header-graphic graphic-admitcards" aria-hidden="true">
+          <span class="badge-3d-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+              <circle cx="9" cy="10" r="2"></circle>
+              <line x1="15" y1="8" x2="17" y2="8"></line>
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div id="matrix-admitcards-list" class="column-items-list">
+        <!-- Populated dynamically -->
+      </div>
+    </article>
+
+    <!-- Column 3: LATEST JOBS -->
+    <article id="matrix-col-latestjobs" class="matrix-column is-mobile-active">
+      <div class="column-header header-jobs">
+        <div class="column-header-inner">
+          <div class="column-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+          </div>
+          <div class="column-text-group">
+            <div class="column-title-row">
+              <h3>Top Government Jobs</h3>
+              <span id="count-jobs" class="column-count-badge">0</span>
+              <span class="column-tag-new">New</span>
+            </div>
+            <span class="column-subtitle">Latest government job vacancies &amp; online forms</span>
+          </div>
+        </div>
+        <div class="column-header-graphic graphic-jobs" aria-hidden="true">
+          <span class="badge-3d-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div id="matrix-jobs-list" class="column-items-list">
+        <!-- Populated dynamically -->
+      </div>
+    </article>
+  </div>
+</section>

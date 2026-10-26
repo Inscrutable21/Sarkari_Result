@@ -1,0 +1,130 @@
+<!-- Component: Hero Banner Section -->
+<section id="home" class="mockup-hero-section" aria-label="Hero Introduction">
+  <div class="mockup-hero-grid">
+    <!-- Left Column: Typography, Search, Tags -->
+    <div class="hero-left-col">
+      <span class="hero-kicker">YOUR TRUSTED GOVERNMENT JOB PORTAL</span>
+      <h1 class="mockup-hero-title">
+        <span class="title-orange">GOVERNMENT</span> <span class="doodle-star">&#10022;</span><br>
+        <span class="title-dark">JOBS THAT MOVE</span><br>
+        <span class="title-orange">YOUR FUTURE</span><br>
+        <span class="title-dark">
+          FORWARD
+          <span class="doodle-squiggle-wrap">
+            <svg class="doodle-squiggle" width="130" height="22" viewBox="0 0 130 22" fill="none">
+              <path d="M4 14 C 22 4, 38 22, 56 14 C 72 6, 88 22, 106 14 C 118 8, 124 18, 126 14" stroke="#ea580c" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </span>
+      </h1>
+
+      <p class="hero-lead-text">
+        Get latest government jobs, results, admit cards, syllabus and exam updates &mdash; all in one place.
+      </p>
+
+      <!-- Search Bar Pill with Orange Button -->
+      <div class="mockup-search-container">
+        <div class="mockup-search-pill">
+          <svg class="mockup-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="search-input" class="mockup-search-input"
+            placeholder="Search jobs, exams, or keywords (e.g. SSC, UPSC, Delhi Police)" autocomplete="off">
+          <button id="search-clear-btn" class="search-clear-btn" aria-label="Clear search" style="display: none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+          <button id="hero-search-btn" class="mockup-search-btn" type="button">
+            <span>Search</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Category Tags Row -->
+      <div class="mockup-hero-tags" role="tablist" aria-label="Quick Tags">
+        <button type="button" class="hero-pill-tag tag-peach quick-tag-pill" data-query="SSC">SSC</button>
+        <button type="button" class="hero-pill-tag tag-rose quick-tag-pill" data-query="UPSC">UPSC</button>
+        <button type="button" class="hero-pill-tag tag-amber quick-tag-pill" data-query="Railway">Railway</button>
+        <button type="button" class="hero-pill-tag tag-lavender quick-tag-pill" data-query="Bank">Banking</button>
+        <button type="button" class="hero-pill-tag tag-blue quick-tag-pill" data-query="Police">Police</button>
+        <button type="button" class="hero-pill-tag tag-purple quick-tag-pill" data-query="Teacher">Teaching</button>
+        <button type="button" class="hero-pill-tag tag-sand quick-tag-pill" data-query="Defence">Defence</button>
+      </div>
+    </div>
+
+    <!-- Right Column: Landmark Arch + Floating Quick Cards -->
+    <div class="hero-right-col">
+      <div class="hero-blob-backdrop" aria-hidden="true"></div>
+
+      <!-- Landmark Arch Frame -->
+      <div class="landmark-arch-frame">
+        <img src="/assets/images/rashtrapati_bhavan_hero.jpg" alt="Rashtrapati Bhavan with Indian National Flag" class="landmark-arch-img">
+      </div>
+
+      <!-- Floating Quick Cards -->
+      <a href="#special-openings-section" class="hero-floating-card card-top-left">
+        <div class="floating-card-icon icon-orange">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </div>
+        <div class="floating-card-text">
+          <span class="floating-card-title">Latest Jobs</span>
+          <span class="floating-card-desc">New opportunities every day</span>
+        </div>
+        <span class="floating-card-arrow">&rarr;</span>
+      </a>
+
+      <a href="#matrix-col-results" class="hero-floating-card card-top-right">
+        <div class="floating-card-icon icon-pink">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+        </div>
+        <div class="floating-card-text">
+          <span class="floating-card-title">Results</span>
+          <span class="floating-card-desc">Check your latest results</span>
+        </div>
+        <span class="floating-card-arrow">&rarr;</span>
+      </a>
+
+      <a href="#matrix-col-admitcards" class="hero-floating-card card-bottom-left">
+        <div class="floating-card-icon icon-coral">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </div>
+        <div class="floating-card-text">
+          <span class="floating-card-title">Admit Cards</span>
+          <span class="floating-card-desc">Download hall tickets easily</span>
+        </div>
+        <span class="floating-card-arrow">&rarr;</span>
+      </a>
+
+      <a href="#secondary-services" class="hero-floating-card card-bottom-right" data-tab-target="syllabus">
+        <div class="floating-card-icon icon-magenta">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </div>
+        <div class="floating-card-text">
+          <span class="floating-card-title">Syllabus</span>
+          <span class="floating-card-desc">Get exam syllabus and pattern</span>
+        </div>
+        <span class="floating-card-arrow">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>

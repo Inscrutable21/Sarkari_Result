@@ -1,4 +1,3 @@
-import { safeLink } from './components.js';
 /**
  * Application Entry Point for sarkari hith Portal
  */
@@ -25,6 +24,8 @@ import {
   resetFilters
 } from './state.js';
 import {
+  safeLink,
+  escapeHtml,
   renderTicker,
   renderSectorChips,
   populateDropdowns,
@@ -42,39 +43,63 @@ import {
   renderTrackedJobsList,
   showToast,
   updateDegreeScopePills,
-  escapeHtml,
-  renderRadarTable
-} from './components.js';
+  renderRadarTable,
+  loadComponents
+} from './components/index.js';
 
 // Sarkari Radar table state
 let radarActiveTab = 'all';
 let radarSearchQuery = '';
 
-
-// DOM Element References
-const tickerContainer = document.getElementById('ticker-content');
-const sectorChipsContainer = document.getElementById('sector-chips-container');
-const stateSelect = document.getElementById('filter-state');
-const qualSelect = document.getElementById('filter-qualification');
-const searchInput = document.getElementById('search-input');
-const searchClearBtn = document.getElementById('search-clear-btn');
-const resetFiltersBtn = document.getElementById('btn-reset-filters');
-const trendingContainer = document.getElementById('trending-container');
-const resultsContainer = document.getElementById('matrix-results-list');
-const admitCardsContainer = document.getElementById('matrix-admitcards-list');
-const jobsContainer = document.getElementById('matrix-jobs-list');
-const secondaryGridContainer = document.getElementById('secondary-grid-container');
-const modalCloseBtn = document.getElementById('modal-close-btn');
-const modalOverlay = document.getElementById('item-detail-modal');
+// DOM Element References (initialized after components mount)
+let tickerContainer;
+let sectorChipsContainer;
+let stateSelect;
+let qualSelect;
+let searchInput;
+let searchClearBtn;
+let resetFiltersBtn;
+let trendingContainer;
+let resultsContainer;
+let admitCardsContainer;
+let jobsContainer;
+let secondaryGridContainer;
+let modalCloseBtn;
+let modalOverlay;
 
 // Job Alert Notification DOM References
-const btnOpenAlerts = document.getElementById('btn-open-alerts');
-const btnBannerSubscribe = document.getElementById('btn-banner-subscribe');
-const alertsModalCloseBtn = document.getElementById('alerts-modal-close-btn');
-const alertsModalOverlay = document.getElementById('job-alerts-modal');
-const alertsForm = document.getElementById('alerts-subscription-form');
-const btnTestAlert = document.getElementById('btn-test-alert');
-const alertsStatusMsg = document.getElementById('alerts-modal-status-msg');
+let btnOpenAlerts;
+let btnBannerSubscribe;
+let alertsModalCloseBtn;
+let alertsModalOverlay;
+let alertsForm;
+let btnTestAlert;
+let alertsStatusMsg;
+
+function initDomReferences() {
+  tickerContainer = document.getElementById('ticker-content');
+  sectorChipsContainer = document.getElementById('sector-chips-container');
+  stateSelect = document.getElementById('filter-state');
+  qualSelect = document.getElementById('filter-qualification');
+  searchInput = document.getElementById('search-input');
+  searchClearBtn = document.getElementById('search-clear-btn');
+  resetFiltersBtn = document.getElementById('btn-reset-filters');
+  trendingContainer = document.getElementById('trending-container');
+  resultsContainer = document.getElementById('matrix-results-list');
+  admitCardsContainer = document.getElementById('matrix-admitcards-list');
+  jobsContainer = document.getElementById('matrix-jobs-list');
+  secondaryGridContainer = document.getElementById('secondary-grid-container');
+  modalCloseBtn = document.getElementById('modal-close-btn');
+  modalOverlay = document.getElementById('item-detail-modal');
+
+  btnOpenAlerts = document.getElementById('btn-open-alerts');
+  btnBannerSubscribe = document.getElementById('btn-banner-subscribe');
+  alertsModalCloseBtn = document.getElementById('alerts-modal-close-btn');
+  alertsModalOverlay = document.getElementById('job-alerts-modal');
+  alertsForm = document.getElementById('alerts-subscription-form');
+  btnTestAlert = document.getElementById('btn-test-alert');
+  alertsStatusMsg = document.getElementById('alerts-modal-status-msg');
+}
 
 const ALERT_DISCIPLINES = [
   { id: 'all', label: 'All Degrees (Any Stream)' },
@@ -1103,8 +1128,11 @@ function applyUrlParams() {
   } catch { }
 }
 
-// Bootstrap
-document.addEventListener('DOMContentLoaded', () => {
+// Bootstrap Application Lifecycle
+async function startApp() {
+  await loadComponents();
+  initDomReferences();
+
   const todayBadge = document.getElementById('filter-current-date-badge');
   if (todayBadge) {
     const today = new Date();
@@ -1116,4 +1144,10 @@ document.addEventListener('DOMContentLoaded', () => {
   subscribe(renderAll);
   applyUrlParams();
   loadPortalData();
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', startApp);
+} else {
+  startApp();
+}

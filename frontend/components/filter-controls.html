@@ -1,0 +1,237 @@
+<!-- Component: Category Browser & Multi-Dimensional Filter Controls -->
+<section class="browse-categories-section" aria-labelledby="browse-heading">
+  <div class="section-headline-bar">
+    <div>
+      <span class="headline-kicker">BROWSE BY CATEGORY</span>
+      <h2 id="browse-heading" class="headline-title">Find Jobs Your Way</h2>
+    </div>
+    <div class="headline-side-desc">
+      <span>Explore government jobs and exam updates as per your preference.</span>
+    </div>
+  </div>
+
+  <div class="four-cards-grid">
+    <a href="#sector-chips-container" class="quick-pillar-card" data-filter-scroll="qualification">
+      <div class="pillar-card-icon icon-orange">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+        </svg>
+      </div>
+      <div class="pillar-card-text">
+        <h3 class="pillar-card-title">By Qualification</h3>
+        <p class="pillar-card-desc">10th, 12th, Graduation, Post Graduation and more</p>
+      </div>
+      <span class="pillar-card-arrow">&rarr;</span>
+    </a>
+
+    <a href="#sector-chips-container" class="quick-pillar-card" data-filter-scroll="state">
+      <div class="pillar-card-icon icon-pink">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+      </div>
+      <div class="pillar-card-text">
+        <h3 class="pillar-card-title">By State</h3>
+        <p class="pillar-card-desc">Central and State wise job notifications</p>
+      </div>
+      <span class="pillar-card-arrow">&rarr;</span>
+    </a>
+
+    <a href="#sector-chips-container" class="quick-pillar-card" data-filter-scroll="department">
+      <div class="pillar-card-icon icon-coral">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+          <line x1="9" y1="22" x2="9" y2="2"></line>
+          <line x1="15" y1="22" x2="15" y2="2"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+        </svg>
+      </div>
+      <div class="pillar-card-text">
+        <h3 class="pillar-card-title">By Department</h3>
+        <p class="pillar-card-desc">Railway, Banking, Defence, Police and more</p>
+      </div>
+      <span class="pillar-card-arrow">&rarr;</span>
+    </a>
+
+    <a href="#sector-chips-container" class="quick-pillar-card" data-filter-scroll="exam">
+      <div class="pillar-card-icon icon-magenta">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="9" y1="15" x2="15" y2="15"></line>
+        </svg>
+      </div>
+      <div class="pillar-card-text">
+        <h3 class="pillar-card-title">By Exam Type</h3>
+        <p class="pillar-card-desc">SSC, UPSC, State PSC, Teaching, and more</p>
+      </div>
+      <span class="pillar-card-arrow">&rarr;</span>
+    </a>
+  </div>
+</section>
+
+<!-- Sector Chips Horizontal Carousel -->
+<div id="sector-chips-container" class="sector-chips-scroll" role="tablist" aria-label="Category Filters">
+  <!-- Populated dynamically by components -->
+</div>
+
+<!-- Secondary Multi-Filter Bar (State, Qualification, Discipline, Reset) -->
+<section class="filter-controls-bar" aria-label="Filter Controls">
+  <!-- Mobile Quick Filter Toggle Bar -->
+  <div class="mobile-filter-bar-header">
+    <button type="button" id="btn-toggle-mobile-filters" class="btn-toggle-mobile-filters" aria-expanded="false"
+      aria-controls="filter-group-dropdowns">
+      <svg class="mobile-filter-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2.2">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+      </svg>
+      <span id="mobile-filter-toggle-label">Filter Jobs (State / Degree)</span>
+      <span id="mobile-filter-count-badge" class="mobile-filter-count-badge" style="display: none;">0</span>
+      <svg class="mobile-filter-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.5">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+
+    <div class="mobile-filter-quick-actions">
+      <label class="mobile-active-toggle" for="mobile-filter-active-only" title="Show only active notifications">
+        <input type="checkbox" id="mobile-filter-active-only" checked />
+        <span class="mobile-active-track">
+          <span class="mobile-active-thumb"></span>
+        </span>
+        <span class="mobile-active-text">Active</span>
+      </label>
+      <button id="btn-reset-filters-mobile" class="btn-reset-filters-mobile" type="button" title="Reset all filters"
+        aria-label="Reset all filters">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="filter-group-dropdowns" id="filter-group-dropdowns">
+    <!-- Candidate Degree / Branch Stream Filter -->
+    <div class="select-filter-wrapper select-discipline-wrapper">
+      <select id="filter-discipline" class="select-filter select-discipline"
+        aria-label="Filter by Candidate Degree / Branch">
+        <option value="all">All Degrees / Streams</option>
+        <option value="cs_it">Computer Science & IT (B.Tech/BE/BCA/MCA)</option>
+        <option value="civil_eng">Civil Engineering (B.Tech/Diploma)</option>
+        <option value="mech_eng">Mechanical Engineering (B.Tech/Diploma)</option>
+        <option value="elec_eng">Electrical & Electronics (B.Tech/Diploma/ECE)</option>
+        <option value="any_bachelor">Any Bachelor Degree (Any Stream)</option>
+        <option value="commerce_finance">Commerce, Accounts & CA (B.Com/MBA)</option>
+        <option value="law_legal">Law & Legal (LLB / LLM)</option>
+        <option value="science_agriculture">Science & Agriculture (B.Sc / M.Sc)</option>
+        <option value="medical_healthcare">Medical & Nursing (MBBS/Nursing/Pharmacy)</option>
+        <option value="education_teaching">Teaching Degree (B.Ed / D.El.Ed / TET)</option>
+        <option value="matric_inter_10_12">10th / 12th Pass / ITI</option>
+      </select>
+      <svg class="select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2.5">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+
+    <!-- State Filter -->
+    <div class="select-filter-wrapper">
+      <select id="filter-state" class="select-filter" aria-label="Filter by State">
+        <option value="all">All States / Regions</option>
+      </select>
+      <svg class="select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2.5">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+
+    <!-- Qualification Filter -->
+    <div class="select-filter-wrapper">
+      <select id="filter-qualification" class="select-filter" aria-label="Filter by Qualification">
+        <option value="all">All Qualifications</option>
+      </select>
+      <svg class="select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2.5">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+
+    <!-- Active Jobs Only Filter Toggle -->
+    <label class="filter-toggle-wrapper desktop-filter-toggle" for="filter-active-only"
+      title="Hide expired notifications and show only active jobs">
+      <input type="checkbox" id="filter-active-only" class="filter-toggle-input" checked />
+      <span class="filter-toggle-slider"></span>
+      <span class="filter-toggle-label">Active Only</span>
+      <span id="filter-current-date-badge" class="filter-current-date-badge">Live</span>
+    </label>
+  </div>
+
+  <div class="filter-meta-stats desktop-filter-meta">
+    <button id="btn-quick-subscribe-filters" class="quick-subscribe-filters-btn" type="button"
+      title="Get notified when new jobs match these active filters">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+      </svg>
+      <span>Activate Alert for These Filters</span>
+    </button>
+    <button id="btn-reset-filters" class="reset-filters-btn">
+      Reset Filters
+    </button>
+  </div>
+</section>
+
+<!-- Candidate Degree Match Scope Selector (Shown when a degree is active) -->
+<div id="degree-scope-container" class="degree-scope-container" style="display: none;">
+  <div class="degree-scope-header">
+    <span class="degree-scope-title">
+      <span id="scope-degree-label">Degree Opportunities:</span>
+    </span>
+    <span id="scope-stat-summary" class="scope-stat-summary">Eligible Jobs</span>
+  </div>
+  <div class="degree-scope-pills" role="radiogroup" aria-label="Degree Scope Filter">
+    <button type="button" class="scope-pill is-active" data-scope="all"
+      title="Show every job in India where your degree is legally eligible to apply">
+      <span class="pill-text">All Eligible Jobs</span>
+      <span class="pill-badge" id="badge-count-all">0</span>
+    </button>
+    <button type="button" class="scope-pill" data-scope="field"
+      title="Show only jobs specifically demanding your degree branch/specialization">
+      <span class="pill-text">Direct Field Match Only</span>
+      <span class="pill-badge" id="badge-count-field">0</span>
+    </button>
+    <button type="button" class="scope-pill" data-scope="general"
+      title="Show wide opportunities like Bank PO, SSC, and Civil Services open to all graduates">
+      <span class="pill-text">General Degree (Any Stream)</span>
+      <span class="pill-badge" id="badge-count-general">0</span>
+    </button>
+  </div>
+</div>
+
+<!-- Job Notification Subscription Callout Banner -->
+<div class="job-alerts-banner" role="region" aria-label="Job Alert Subscription">
+  <div class="job-alerts-banner-content">
+    <div class="job-alerts-banner-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+      </svg>
+    </div>
+    <div class="job-alerts-banner-text">
+      <h3 class="job-alerts-banner-title">Never Miss a Govt Job Notification!</h3>
+      <p class="job-alerts-banner-subtitle">
+        Get instant alerts in your email inbox tailored to your exact <strong>Degree, Qualification & State</strong>
+        as soon as vacancies are released.
+      </p>
+    </div>
+  </div>
+  <button id="btn-banner-subscribe" class="btn-banner-subscribe" type="button">
+    <span>Get Free Alerts</span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </button>
+</div>

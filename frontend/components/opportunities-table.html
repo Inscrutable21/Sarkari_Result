@@ -1,0 +1,99 @@
+<!-- Component: Dedicated Special Opportunities Table (Research, PSU & Autonomous Bodies) -->
+<section id="special-openings-section" class="radar-section" aria-labelledby="radar-heading">
+  <span id="sarkari-radar-section" style="position: absolute; top: -80px;"></span>
+  <div class="radar-card-wrapper">
+    <!-- Section Header -->
+    <div class="radar-header">
+      <div class="radar-header-main">
+        <div class="radar-brand-badge">
+          <span class="radar-live-beacon"></span>
+          <span class="radar-brand-name">SPECIAL RECRUITMENTS</span>
+          <span class="radar-brand-tag">Central &amp; State Autonomous Bodies</span>
+        </div>
+        <h2 id="radar-heading" class="radar-title">
+          Research, PSU &amp; Institutional Openings
+        </h2>
+        <p class="radar-subtitle">
+          Comprehensive recruitment directory for Research &amp; Fellowships (JRF / SRF / PhD), Maharatna &amp; Navratna PSUs, State Openings, and Trainee Programs.
+        </p>
+      </div>
+
+      <div class="radar-header-actions">
+        <div class="radar-search-wrapper">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="radar-search-icon">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="radar-search-input" class="radar-search-input" placeholder="Search Institute, JRF, PSU, Post, State..." aria-label="Search job openings">
+          <button type="button" id="radar-search-clear" class="radar-search-clear" aria-label="Clear search" style="display: none;">&times;</button>
+        </div>
+        <div class="radar-total-badge" id="radar-total-count">
+          <span>Loading jobs...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="radar-tabs-nav" role="tablist" aria-label="Job Categories">
+      <button type="button" class="radar-tab-btn is-active" data-radar-tab="all">
+        <span>All Opportunities</span>
+        <span class="radar-tab-counter" id="radar-cnt-all">0</span>
+      </button>
+      <button type="button" class="radar-tab-btn" data-radar-tab="research">
+        <span>Research &amp; PhD</span>
+        <span class="radar-tab-counter" id="radar-cnt-research">0</span>
+      </button>
+      <button type="button" class="radar-tab-btn" data-radar-tab="psu">
+        <span>PSU Jobs</span>
+        <span class="radar-tab-counter" id="radar-cnt-psu">0</span>
+      </button>
+      <button type="button" class="radar-tab-btn" data-radar-tab="govt">
+        <span>Railway &amp; Bank</span>
+        <span class="radar-tab-counter" id="radar-cnt-govt">0</span>
+      </button>
+      <button type="button" class="radar-tab-btn" data-radar-tab="state">
+        <span>State &amp; District</span>
+        <span class="radar-tab-counter" id="radar-cnt-state">0</span>
+      </button>
+      <button type="button" class="radar-tab-btn" data-radar-tab="intern">
+        <span>Internships</span>
+        <span class="radar-tab-counter" id="radar-cnt-intern">0</span>
+      </button>
+      <button type="button" class="radar-tab-btn" data-radar-tab="exams">
+        <span>Exam Calendar</span>
+        <span class="radar-tab-counter" id="radar-cnt-exams">0</span>
+      </button>
+    </div>
+
+    <!-- Table Wrapper -->
+    <div class="radar-table-responsive">
+      <table class="radar-table" aria-label="Opportunities Table">
+        <thead>
+          <tr>
+            <th scope="col" class="th-post">Opening / Post Name</th>
+            <th scope="col" class="th-org">Conducting Body</th>
+            <th scope="col" class="th-sector">Category &amp; Stream</th>
+            <th scope="col" class="th-state">Region / Level</th>
+            <th scope="col" class="th-date">Application Deadline</th>
+            <th scope="col" class="th-action text-right">Official Links</th>
+          </tr>
+        </thead>
+        <tbody id="radar-table-body">
+          <!-- Rendered dynamically -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table Footer Note -->
+    <div class="radar-footer">
+      <span class="radar-footer-note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        Click any row or &ldquo;Details&rdquo; for full eligibility, qualification requirements &amp; application procedures.
+      </span>
+    </div>
+  </div>
+</section>

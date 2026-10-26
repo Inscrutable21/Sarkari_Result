@@ -1,0 +1,343 @@
+<!-- Component: Interactive Modals & Dialogs -->
+
+<!-- 1. Interactive Item Detail Modal Dialog -->
+<div id="item-detail-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-dialog">
+    <header class="modal-header">
+      <div class="modal-title-group">
+        <h3 id="modal-title">Notification Details</h3>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <span id="modal-meta-sector" class="badge badge-sector">Sector</span>
+          <span id="modal-meta-state" class="badge badge-state">State</span>
+        </div>
+      </div>
+      <button id="modal-close-btn" class="modal-close-btn" aria-label="Close dialog">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </header>
+
+    <div class="modal-body">
+      <!-- Candidate Degree Eligibility Check Banner -->
+      <div id="modal-eligibility-banner" class="modal-eligibility-banner"></div>
+
+      <!-- Specific Job Daily Deadline Reminders CTA Banner -->
+      <div id="modal-tracker-banner" style="display: none;"></div>
+
+      <p id="modal-short-info" style="font-size: 0.95rem; line-height: 1.6; color: var(--text-secondary);"></p>
+      <p id="modal-details-status" class="modal-details-status" role="status" aria-live="polite"></p>
+      <div id="modal-overview" class="modal-overview"></div>
+
+      <div class="modal-meta-grid">
+        <!-- Important Dates Box -->
+        <div class="modal-info-box">
+          <h4>Important Dates</h4>
+          <ul id="modal-dates-list" class="modal-info-list"></ul>
+        </div>
+
+        <!-- Application Fee Box -->
+        <div class="modal-info-box">
+          <h4>Application Fee</h4>
+          <ul id="modal-fee-list" class="modal-info-list"></ul>
+        </div>
+      </div>
+
+      <div class="modal-info-box">
+        <h4>Eligibility &amp; Vacancies</h4>
+        <p><strong>Total Vacancies:</strong> <span id="modal-vacancies">Refer Notification</span></p>
+        <p style="margin-top: 0.4rem;"><strong>Eligibility Criteria:</strong> <span id="modal-meta-qual">Graduate / Check official advertisement</span></p>
+        <div id="modal-vacancy-table-container" style="margin-top: 0.75rem;"></div>
+      </div>
+
+      <div class="modal-info-box">
+        <h4>Age Limit &amp; Relaxation</h4>
+        <ul id="modal-age-list" class="modal-info-list"></ul>
+      </div>
+      <div id="modal-extended-details" class="modal-extended-details"></div>
+      <div id="modal-additional-tables"></div>
+
+      <!-- Action Links Row -->
+      <div id="modal-action-links" class="modal-actions-row">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Email Job Alerts Subscription Modal -->
+<div id="job-alerts-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true"
+  aria-labelledby="alerts-modal-title">
+  <div class="modal-container modal-dialog alerts-modal-dialog">
+    <header class="modal-header">
+      <div class="modal-title-group">
+        <div class="modal-category-badge alerts-pill-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span>Email Job Notification Service</span>
+        </div>
+        <h2 id="alerts-modal-title" class="modal-item-title">Subscribe to Govt Job Alerts</h2>
+        <p class="alerts-modal-subtitle">
+          Receive tailored notifications directly to your email inbox whenever new vacancies match your qualification
+          and degree stream.
+        </p>
+      </div>
+      <button id="alerts-modal-close-btn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+    </header>
+
+    <form id="alerts-subscription-form" class="alerts-modal-body">
+      <div class="form-group">
+        <label for="alerts-input-email" class="form-label">
+          Email Address <span class="required-asterisk">*</span>
+        </label>
+        <input type="email" id="alerts-input-email" class="form-input" placeholder="e.g. yourname@gmail.com" required
+          autocomplete="email">
+        <span class="form-help-text">We respect your privacy. No spam &mdash; only verified government job notifications.</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group form-col">
+          <label for="alerts-input-name" class="form-label">Candidate Name</label>
+          <input type="text" id="alerts-input-name" class="form-input" placeholder="e.g. Rahul Sharma"
+            autocomplete="name">
+        </div>
+
+        <div class="form-group form-col">
+          <label for="alerts-select-qualification" class="form-label">
+            Highest Qualification <span class="required-asterisk">*</span>
+          </label>
+          <select id="alerts-select-qualification" class="form-select" required>
+            <option value="all">Any Qualification (All Jobs)</option>
+            <option value="10th / Matric Pass">10th / Matric Pass</option>
+            <option value="12th / Intermediate">12th / Intermediate</option>
+            <option value="Graduate / Degree" selected>Graduate / Degree (Any Stream)</option>
+            <option value="Engineering / Diploma / ITI">Engineering / Diploma / ITI</option>
+            <option value="Teaching Degree (B.Ed / D.El.Ed)">Teaching Degree (B.Ed / D.El.Ed)</option>
+            <option value="Medical / Nursing Degree">Medical / Nursing Degree</option>
+            <option value="Post Graduate (PG / Master)">Post Graduate (PG / Master)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          Your Degree / Branch Stream <span class="required-asterisk">*</span>
+          <span class="form-label-hint">(Select your educational domain)</span>
+        </label>
+        <div id="alerts-discipline-pills" class="alerts-discipline-pills-grid">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group form-col">
+          <label for="alerts-select-state" class="form-label">State / Region Preference</label>
+          <select id="alerts-select-state" class="form-select">
+            <option value="all">All States &amp; Central India</option>
+            <option value="Central / All India">Central / All India Only</option>
+            <option value="Uttar Pradesh (UP)">Uttar Pradesh (UP)</option>
+            <option value="Bihar">Bihar</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Madhya Pradesh (MP)">Madhya Pradesh (MP)</option>
+            <option value="Haryana">Haryana</option>
+            <option value="Uttarakhand">Uttarakhand</option>
+            <option value="Jharkhand">Jharkhand</option>
+          </select>
+        </div>
+
+        <div class="form-group form-col">
+          <label for="alerts-select-sector" class="form-label">Preferred Department / Sector</label>
+          <select id="alerts-select-sector" class="form-select">
+            <option value="all">All Departments / Sectors</option>
+            <option value="Staff Selection (SSC)">Staff Selection (SSC)</option>
+            <option value="Railway (RRB)">Railway (RRB)</option>
+            <option value="Banking &amp; Financial">Banking &amp; Financial</option>
+            <option value="Defense &amp; Armed Forces">Defense &amp; Armed Forces</option>
+            <option value="Police &amp; Security">Police &amp; Security</option>
+            <option value="Teaching &amp; Education">Teaching &amp; Education</option>
+            <option value="Engineering &amp; Technical">Engineering &amp; Technical</option>
+            <option value="Civil Services &amp; State PSC">Civil Services &amp; State PSC</option>
+            <option value="Medical &amp; Healthcare">Medical &amp; Healthcare</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Real-Time Match Counter Preview -->
+      <div id="alerts-match-preview-box" class="alerts-match-box">
+        <div class="alerts-match-badge">
+          <span class="pulse-dot"></span>
+          <span id="alerts-match-count-text">Calculating matching opportunities...</span>
+        </div>
+        <div id="alerts-match-job-tags" class="alerts-match-tags"></div>
+      </div>
+
+      <div id="alerts-modal-status-msg" class="alerts-status-banner" style="display: none;"></div>
+
+      <div class="alerts-modal-actions">
+        <button type="submit" id="btn-submit-subscription" class="btn-primary-alert">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span>Subscribe &amp; Activate Alerts</span>
+        </button>
+        <button type="button" id="btn-test-alert" class="btn-secondary-alert"
+          title="Test how the email looks right now">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+          <span>Send Me a Test Alert</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 3. Specific Job Deadline Tracking Modal Dialog -->
+<div id="track-job-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true"
+  aria-labelledby="track-modal-title">
+  <div class="modal-container modal-dialog track-modal-dialog">
+    <header class="modal-header">
+      <div class="modal-title-group">
+        <div class="modal-category-badge tracker-pill-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>Daily Deadline Reminder Service</span>
+        </div>
+        <h2 id="track-modal-title" class="modal-item-title">Set Daily Deadline Reminders</h2>
+        <p class="track-modal-subtitle">
+          Never miss the application deadline. Get daily email updates showing remaining days until this form closes.
+        </p>
+      </div>
+      <button id="track-modal-close-btn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+    </header>
+
+    <form id="track-job-form" class="alerts-modal-body">
+      <input type="hidden" id="track-input-job-id">
+      <input type="hidden" id="track-input-job-link">
+      <input type="hidden" id="track-input-job-last-date">
+      <input type="hidden" id="track-input-job-last-date-fmt">
+
+      <!-- Selected Job Card Info -->
+      <div class="track-selected-job-card">
+        <div class="track-job-org" id="track-job-org">Government Department</div>
+        <div class="track-job-name" id="track-job-name">Recruitment Opening</div>
+        <div class="track-job-deadline-row">
+          <span class="track-deadline-pill">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Deadline: <strong id="track-job-deadline">Check notice</strong></span>
+          </span>
+          <span class="track-days-badge" id="track-job-days-badge">Calculating...</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="track-input-email" class="form-label">
+          Your Email Address <span class="required-asterisk">*</span>
+        </label>
+        <input type="email" id="track-input-email" class="form-input" placeholder="e.g. yourname@gmail.com" required
+          autocomplete="email">
+        <span class="form-help-text">You will receive an instant confirmation email and daily countdown updates.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="track-input-name" class="form-label">Candidate Name (Optional)</label>
+        <input type="text" id="track-input-name" class="form-input" placeholder="e.g. Rahul Sharma"
+          autocomplete="name">
+      </div>
+
+      <div class="form-group" style="margin-top: -6px; margin-bottom: 12px;">
+        <label class="form-checkbox-label" style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.82rem; color: var(--text-primary); cursor: pointer;">
+          <input type="checkbox" id="track-input-test-timer" name="testTimer" value="1" checked style="margin-top: 2px;">
+          <span>
+            <strong>Send 1-minute test reminder email</strong> (dispatches a test countdown email to your inbox in 1 minute to verify delivery).
+          </span>
+        </label>
+      </div>
+
+      <!-- How It Works Note -->
+      <div class="track-how-it-works-box">
+        <div class="track-step">
+          <span class="step-num">1</span>
+          <span>Daily emails sent every day at 7:00 PM show exact days left until application closes.</span>
+        </div>
+        <div class="track-step">
+          <span class="step-num">2</span>
+          <span>In every email, click <strong>"I Have Applied"</strong> once submitted to stop reminders.</span>
+        </div>
+        <div class="track-step">
+          <span class="step-num">3</span>
+          <span>If not applied yet, reminders continue daily until the closing date.</span>
+        </div>
+      </div>
+
+      <div id="track-modal-status-msg" class="alerts-status-banner" style="display: none;"></div>
+
+      <div class="alerts-modal-actions">
+        <button type="submit" id="btn-submit-track" class="btn-primary-alert">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>Activate Daily Reminders</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 4. My Tracked Jobs List Modal Dialog -->
+<div id="my-tracked-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true"
+  aria-labelledby="my-tracked-modal-title">
+  <div class="modal-container modal-dialog track-modal-dialog">
+    <header class="modal-header">
+      <div class="modal-title-group">
+        <div class="modal-category-badge tracker-pill-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>Candidate Dashboard</span>
+        </div>
+        <h2 id="my-tracked-modal-title" class="modal-item-title">My Tracked Recruitments</h2>
+        <p class="track-modal-subtitle">
+          Manage your daily reminders and mark applications as completed.
+        </p>
+      </div>
+      <button id="my-tracked-modal-close-btn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+    </header>
+
+    <div class="alerts-modal-body">
+      <div style="background-color: var(--bg-surface-soft); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary-red)" stroke-width="2.2" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span><strong>Test Your Reminders:</strong> Use <strong>"1-Min Test"</strong> to receive an automated reminder in 60s, or <strong>"Send Now"</strong> to test instant email delivery.</span>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+        <input type="email" id="tracked-filter-email" class="form-input"
+          placeholder="Enter your email to load tracked jobs" style="flex: 1;">
+        <button type="button" id="btn-lookup-tracked" class="btn-primary-alert" style="width: auto; padding: 0 16px;">
+          <span>Load</span>
+        </button>
+      </div>
+
+      <div id="tracked-jobs-list-container" class="tracked-jobs-container">
+        <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 20px;">
+          Enter your email address above to view your active deadline reminders and update application statuses.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
