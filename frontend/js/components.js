@@ -1246,7 +1246,7 @@ export function renderRadarTable(container, portalData, activeTab = 'all', searc
             </button>
             ${hasOfficial ? `
               <a href="${officialUrl}" target="_blank" rel="noopener" class="btn-radar-official" onclick="event.stopPropagation();" title="Open official site">
-                Apply &nearr;
+                Apply
               </a>
             ` : ''}
           </div>

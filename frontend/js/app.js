@@ -861,20 +861,20 @@ function setupEventListeners() {
 
       try {
         await scheduleJobReminderTimer({ trackId, email, delaySeconds: 60 });
-        showToast(`⏱️ 1-Minute test reminder set for ${title}! Check your inbox in 60s.`, 'info');
+        showToast(`1-Minute test reminder set for ${title}. Check your inbox in 60s.`, 'info');
 
         let secondsRemaining = 60;
-        btnTest.innerHTML = `<span>⏱️ in ${secondsRemaining}s</span>`;
+        btnTest.innerHTML = `<span>In ${secondsRemaining}s</span>`;
 
         const countdownInterval = setInterval(() => {
           secondsRemaining--;
           if (secondsRemaining > 0) {
-            btnTest.innerHTML = `<span>⏱️ in ${secondsRemaining}s</span>`;
+            btnTest.innerHTML = `<span>In ${secondsRemaining}s</span>`;
           } else {
             clearInterval(countdownInterval);
             btnTest.classList.remove('is-counting');
-            btnTest.innerHTML = `<span>✅ Sent!</span>`;
-            showToast(`✅ 1-Minute test reminder delivered to ${email}! Check your inbox.`, 'success');
+            btnTest.innerHTML = `<span>Sent</span>`;
+            showToast(`1-Minute test reminder delivered to ${email}. Check your inbox.`, 'success');
             setTimeout(() => {
               btnTest.removeAttribute('disabled');
               btnTest.innerHTML = originalHtml;
@@ -903,8 +903,8 @@ function setupEventListeners() {
 
       try {
         await sendJobReminderNow({ trackId, email });
-        btnSendNow.innerHTML = '<span>✅ Sent!</span>';
-        showToast(`✅ Reminder email dispatched immediately to ${email}!`, 'success');
+        btnSendNow.innerHTML = '<span>Sent</span>';
+        showToast(`Reminder email dispatched immediately to ${email}.`, 'success');
         setTimeout(() => {
           btnSendNow.removeAttribute('disabled');
           btnSendNow.innerHTML = origHtml;
