@@ -222,6 +222,7 @@
   <link rel="stylesheet" href="/css/base.css">
   <link rel="stylesheet" href="/css/components.css">
   <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/mockup-theme.css">
 
   <!-- Vercel Web Analytics -->
   <script>
@@ -249,139 +250,488 @@
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="/" aria-label="Sarkari Hith home">
-        <div class="brand-logo-frame">
-          <img src="/assets/images/sarkari_hith_logo.webp" alt="Sarkari Hith Logo" class="brand-logo-img">
-        </div>
-        <div class="brand-text">
-          <span class="brand-title">SARKARI <span>HITH</span></span>
-          <span class="brand-subtitle">Government Recruitment & Student Welfare Portal</span>
+        <div class="brand-text-logo">
+          <div class="brand-name-row">
+            <span class="brand-sarkari">Sarkari</span>
+            <span class="brand-hith">Hith</span>
+          </div>
+          <span class="brand-tagline">Latest Jobs &bull; Results &bull; A Brighter Tomorrow</span>
         </div>
       </a>
 
-      <!-- Center Navigation Links from Reference Design -->
+      <!-- Center Navigation Links from Mockup Design -->
       <nav class="header-nav" aria-label="Main Navigation">
-        <a href="#home" class="nav-item is-active">
-          <svg class="nav-item-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2.2">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
-          <span>Home</span>
-        </a>
-        <a href="#matrix-col-latestjobs" class="nav-item"><span>Latest Jobs</span></a>
-        <a href="#special-openings-section" class="nav-item nav-radar-item">
-          <span class="radar-live-beacon"></span>
-          <span>Research &amp; PSU Jobs</span>
-          <span class="radar-nav-badge">Live</span>
-        </a>
-        <a href="#matrix-col-results" class="nav-item"><span>Results</span></a>
-        <a href="#matrix-col-admitcards" class="nav-item"><span>Admit Cards</span></a>
-        <a href="#secondary-services" class="nav-item nav-tab-link" data-tab-target="syllabus"><span>Syllabus</span></a>
-        <a href="#secondary-services" class="nav-item nav-tab-link" data-tab-target="answerKeys"><span>Answer
-            Key</span></a>
-        <div class="nav-item nav-dropdown">
-          <span>More</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-          <div class="dropdown-menu">
-            <a href="#secondary-services" class="dropdown-link" data-tab-target="admissions">Admissions</a>
-            <a href="#secondary-services" class="dropdown-link" data-tab-target="certificates">Certificate
-              Verification</a>
-            <a href="#trending-section" class="dropdown-link">Trending Highlights</a>
-          </div>
-        </div>
+        <a href="#home" class="nav-link-item is-active"><span>Home</span></a>
+        <a href="#selected-opportunities" class="nav-link-item"><span>Latest Jobs</span></a>
+        <a href="#matrix-col-results" class="nav-link-item"><span>Results</span></a>
+        <a href="#matrix-col-admitcards" class="nav-link-item"><span>Admit Card</span></a>
+        <a href="#secondary-services" class="nav-link-item nav-tab-link" data-tab-target="answerKeys"><span>Answer Key</span></a>
+        <a href="#secondary-services" class="nav-link-item nav-tab-link" data-tab-target="syllabus"><span>Syllabus</span></a>
+        <a href="#mockup-contact-footer" class="nav-link-item"><span>Contact</span></a>
       </nav>
 
       <div class="header-actions">
-        <!-- Job Alerts Email Notification Button -->
-        <button id="btn-open-alerts" class="btn-job-alerts"
-          title="Subscribe to custom Email Job Alerts based on your Degree">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          </svg>
-          <span>Email Alerts</span>
-          <span class="alerts-badge">Free</span>
-        </button>
-
-        <!-- Tracked Jobs & Daily Deadline Reminders -->
-        <button id="btn-open-tracked" class="btn-job-alerts btn-tracked-nav"
-          title="View & manage your tracked job deadline reminders">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
-          <span>Tracked Jobs</span>
+        <!-- Get Updates CTA Pill Button from Mockup -->
+        <button id="btn-open-alerts" class="btn-get-updates" type="button" aria-label="Get Job Updates">
+          <span>Get Updates &rarr;</span>
         </button>
       </div>
     </div>
   </header>
 
   <main class="container">
-    <!-- Hero Banner Section ("Your Gateway to Government Jobs") -->
-    <section id="home" class="hero-gateway-card" aria-label="Hero Introduction">
-      <div class="hero-content-col">
-        <div class="hero-header-text">
-          <span class="hero-eyebrow-tag">India's #1 Sarkari Result &amp; Recruitment Portal 2026</span>
-          <h1 class="hero-display-title">
-            Top Government Jobs, Sarkari Result &amp; <br>
-            <span class="hero-title-highlight">Latest Government Vacancies 2026</span>
+    <!-- Hero Banner Section Matching User Mockup -->
+    <section id="home" class="mockup-hero-section" aria-label="Hero Introduction">
+      <div class="mockup-hero-grid">
+        <!-- Left Column: Typography, Search, Tags -->
+        <div class="hero-left-col">
+          <span class="hero-kicker">YOUR TRUSTED GOVERNMENT JOB PORTAL</span>
+          <h1 class="mockup-hero-title">
+            <span class="title-orange">GOVERNMENT</span> <span class="doodle-star">&#10022;</span><br>
+            <span class="title-dark">JOBS THAT MOVE</span><br>
+            <span class="title-orange">YOUR FUTURE</span><br>
+            <span class="title-dark">
+              FORWARD
+              <span class="doodle-squiggle-wrap">
+                <svg class="doodle-squiggle" width="130" height="22" viewBox="0 0 130 22" fill="none">
+                  <path d="M4 14 C 22 4, 38 22, 56 14 C 72 6, 88 22, 106 14 C 118 8, 124 18, 126 14" stroke="#ea580c" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+              </span>
+            </span>
           </h1>
-          <p class="hero-display-subtitle">
-            Sarkari Results 2026 <span class="hero-divider">|</span> Top Government Job Vacancies <span class="hero-divider">|</span> Admit
-            Cards <span class="hero-divider">|</span> Answer Keys &amp; Syllabus
+
+          <p class="hero-lead-text">
+            Get latest government jobs, results, admit cards, syllabus and exam updates &mdash; all in one place.
           </p>
+
+          <!-- Search Bar Pill with Orange Button -->
+          <div class="mockup-search-container">
+            <div class="mockup-search-pill">
+              <svg class="mockup-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="search-input" class="mockup-search-input"
+                placeholder="Search jobs, exams, or keywords (e.g. SSC, UPSC, Delhi Police)" autocomplete="off">
+              <button id="search-clear-btn" class="search-clear-btn" aria-label="Clear search" style="display: none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <button id="hero-search-btn" class="mockup-search-btn" type="button">
+                <span>Search</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Category Tags Row -->
+          <div class="mockup-hero-tags" role="tablist" aria-label="Quick Tags">
+            <button type="button" class="hero-pill-tag tag-peach quick-tag-pill" data-query="SSC">SSC</button>
+            <button type="button" class="hero-pill-tag tag-rose quick-tag-pill" data-query="UPSC">UPSC</button>
+            <button type="button" class="hero-pill-tag tag-amber quick-tag-pill" data-query="Railway">Railway</button>
+            <button type="button" class="hero-pill-tag tag-lavender quick-tag-pill" data-query="Bank">Banking</button>
+            <button type="button" class="hero-pill-tag tag-blue quick-tag-pill" data-query="Police">Police</button>
+            <button type="button" class="hero-pill-tag tag-purple quick-tag-pill" data-query="Teacher">Teaching</button>
+            <button type="button" class="hero-pill-tag tag-sand quick-tag-pill" data-query="Defence">Defence</button>
+          </div>
         </div>
 
-        <!-- Hero Search Box with Red Search Button -->
-        <div class="hero-search-wrapper">
-          <div class="hero-search-bar">
-            <svg class="hero-search-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#64748b"
-              stroke-width="2.2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" id="search-input" class="hero-search-input"
-              placeholder="Search Top Government Jobs, Sarkari Results, Admit Cards, Vacancy..." autocomplete="off">
-            <button id="search-clear-btn" class="search-clear-btn" aria-label="Clear search">
+        <!-- Right Column: Landmark Arch + Floating Quick Cards -->
+        <div class="hero-right-col">
+          <div class="hero-blob-backdrop" aria-hidden="true"></div>
+
+          <!-- Landmark Arch Frame -->
+          <div class="landmark-arch-frame">
+            <img src="/assets/images/rashtrapati_bhavan_hero.jpg" alt="Rashtrapati Bhavan with Indian National Flag" class="landmark-arch-img">
+          </div>
+
+          <!-- Floating Quick Cards -->
+          <a href="#selected-opportunities" class="hero-floating-card card-top-left">
+            <div class="floating-card-icon icon-orange">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
               </svg>
-            </button>
-            <span class="search-badge-hint">Ctrl + K</span>
-            <button id="hero-search-btn" class="hero-search-btn" type="button">
-              <span>Search</span>
-            </button>
-          </div>
-        </div>
+            </div>
+            <div class="floating-card-text">
+              <span class="floating-card-title">Latest Jobs</span>
+              <span class="floating-card-desc">New opportunities every day</span>
+            </div>
+            <span class="floating-card-arrow">&rarr;</span>
+          </a>
 
-        <!-- Quick Category Tags Row from Reference Design -->
-        <div class="hero-quick-tags-row">
-          <div class="hero-tags-list" role="tablist" aria-label="Quick Category Tags">
-            <button type="button" class="quick-tag-pill" data-query="Top">Top Jobs</button>
-            <button type="button" class="quick-tag-pill" data-query="SSC">SSC</button>
-            <button type="button" class="quick-tag-pill" data-query="UPSC">UPSC</button>
-            <button type="button" class="quick-tag-pill" data-query="Railway">Railway</button>
-            <button type="button" class="quick-tag-pill" data-query="Bank">Banking</button>
-            <button type="button" class="quick-tag-pill" data-query="Police">Police</button>
-            <button type="button" class="quick-tag-pill" data-query="10th">10th Pass</button>
-            <button type="button" class="quick-tag-pill" data-query="12th">12th Pass</button>
-            <button type="button" class="quick-tag-pill" data-query="Teacher">Teaching</button>
-            <button type="button" class="quick-tag-pill" data-query="Defence">Defence</button>
-            <button type="button" class="quick-tag-pill" data-query="Admit">Admit Card</button>
-            <button type="button" class="quick-tag-next" aria-label="Next categories">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="9 18 15 12 9 6"></polyline>
+          <a href="#matrix-col-results" class="hero-floating-card card-top-right">
+            <div class="floating-card-icon icon-pink">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
               </svg>
-            </button>
-          </div>
+            </div>
+            <div class="floating-card-text">
+              <span class="floating-card-title">Results</span>
+              <span class="floating-card-desc">Check your latest results</span>
+            </div>
+            <span class="floating-card-arrow">&rarr;</span>
+          </a>
+
+          <a href="#matrix-col-admitcards" class="hero-floating-card card-bottom-left">
+            <div class="floating-card-icon icon-coral">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <div class="floating-card-text">
+              <span class="floating-card-title">Admit Cards</span>
+              <span class="floating-card-desc">Download hall tickets easily</span>
+            </div>
+            <span class="floating-card-arrow">&rarr;</span>
+          </a>
+
+          <a href="#secondary-services" class="hero-floating-card card-bottom-right" data-tab-target="syllabus">
+            <div class="floating-card-icon icon-magenta">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+            <div class="floating-card-text">
+              <span class="floating-card-title">Syllabus</span>
+              <span class="floating-card-desc">Get exam syllabus and pattern</span>
+            </div>
+            <span class="floating-card-arrow">&rarr;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: TOP SECTIONS (Everything You Need for Your Sarkari Exam Journey) -->
+    <section class="top-sections-block" aria-labelledby="top-sections-heading">
+      <div class="section-headline-bar">
+        <div>
+          <span class="headline-kicker">TOP SECTIONS</span>
+          <h2 id="top-sections-heading" class="headline-title">
+            Everything You Need for Your <span class="hl-orange">Sarkari Exam</span> Journey
+          </h2>
+        </div>
+        <div class="headline-side-desc">
+          <span>Quick access to the most important sections, updated regularly for your convenience.</span>
+          <a href="#matrix-col-latestjobs" class="headline-link">Explore All &rarr;</a>
         </div>
       </div>
 
-      <!-- Hero Parliament Background Artwork (Seamlessly integrated into hero card) -->
-      <div class="hero-parliament-bg" aria-hidden="true"></div>
+      <div class="four-cards-grid">
+        <a href="#matrix-col-latestjobs" class="quick-pillar-card">
+          <div class="pillar-card-icon icon-orange">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <div class="pillar-card-text">
+            <h3 class="pillar-card-title">Latest Jobs</h3>
+            <p class="pillar-card-desc">Find new government job notifications</p>
+          </div>
+          <span class="pillar-card-arrow">&rarr;</span>
+        </a>
+
+        <a href="#matrix-col-results" class="quick-pillar-card">
+          <div class="pillar-card-icon icon-pink">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </div>
+          <div class="pillar-card-text">
+            <h3 class="pillar-card-title">Results</h3>
+            <p class="pillar-card-desc">Check and download your results</p>
+          </div>
+          <span class="pillar-card-arrow">&rarr;</span>
+        </a>
+
+        <a href="#matrix-col-admitcards" class="quick-pillar-card">
+          <div class="pillar-card-icon icon-coral">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <div class="pillar-card-text">
+            <h3 class="pillar-card-title">Admit Cards</h3>
+            <p class="pillar-card-desc">Get your hall tickets and exam details</p>
+          </div>
+          <span class="pillar-card-arrow">&rarr;</span>
+        </a>
+
+        <a href="#secondary-services" class="quick-pillar-card" data-tab-target="syllabus">
+          <div class="pillar-card-icon icon-magenta">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+          </div>
+          <div class="pillar-card-text">
+            <h3 class="pillar-card-title">Syllabus</h3>
+            <p class="pillar-card-desc">Download syllabus, exam pattern and more</p>
+          </div>
+          <span class="pillar-card-arrow">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- SECTION 3: SELECTED OPPORTUNITIES - Latest Notifications (The Iconic Orange Container) -->
+    <section id="selected-opportunities" class="selected-showcase-section" aria-labelledby="showcase-heading">
+      <div class="orange-showcase-card">
+        <div class="showcase-header">
+          <div>
+            <span class="showcase-kicker">SELECTED OPPORTUNITIES</span>
+            <h2 id="showcase-heading" class="showcase-title">Latest Notifications</h2>
+          </div>
+          <div class="showcase-subtitle">
+            Handpicked government job notifications to help you stay ahead.
+          </div>
+          <a href="#matrix-col-latestjobs" class="btn-view-all-white">
+            <span>View All Jobs &rarr;</span>
+          </a>
+        </div>
+
+        <div class="showcase-cards-grid">
+          <!-- Card 1: SSC CGL 2026 -->
+          <article class="showcase-job-card" data-id="job-ssc-cgl-2026">
+            <div class="showcase-card-header">
+              <span class="showcase-tag-pill tag-ssc-tone">SSC</span>
+              <div class="showcase-emblem">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 6v6l4 2"></path>
+                </svg>
+              </div>
+            </div>
+            <h3 class="showcase-post-title">SSC CGL 2026</h3>
+            <p class="showcase-post-subtitle">Combined Graduate Level Examination</p>
+            <div class="showcase-meta-group">
+              <div class="showcase-meta-item">
+                <svg class="showcase-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span>Total Vacancies: <strong class="showcase-meta-val">14,582</strong></span>
+              </div>
+              <div class="showcase-meta-item">
+                <svg class="showcase-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Application Date: <strong class="showcase-meta-val">09 Jun &ndash; 04 Jul 2026</strong></span>
+              </div>
+            </div>
+            <div class="showcase-card-footer">
+              <span class="showcase-view-link">View Details &rarr;</span>
+            </div>
+          </article>
+
+          <!-- Card 2: UP Police Recruitment 2026 -->
+          <article class="showcase-job-card" data-id="job-up-police-2026">
+            <div class="showcase-card-header">
+              <span class="showcase-tag-pill tag-police-tone">POLICE</span>
+              <div class="showcase-emblem">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+            </div>
+            <h3 class="showcase-post-title">UP Police Recruitment 2026</h3>
+            <p class="showcase-post-subtitle">Uttar Pradesh Police Constable</p>
+            <div class="showcase-meta-group">
+              <div class="showcase-meta-item">
+                <svg class="showcase-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+                <span>Total Vacancies: <strong class="showcase-meta-val">60,244</strong></span>
+              </div>
+              <div class="showcase-meta-item">
+                <svg class="showcase-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Application Date: <strong class="showcase-meta-val">01 May &ndash; 28 May 2026</strong></span>
+              </div>
+            </div>
+            <div class="showcase-card-footer">
+              <span class="showcase-view-link">View Details &rarr;</span>
+            </div>
+          </article>
+
+          <!-- Card 3: RRB NTPC 2026 -->
+          <article class="showcase-job-card" data-id="job-rrb-ntpc-2026">
+            <div class="showcase-card-header">
+              <span class="showcase-tag-pill tag-rail-tone">RAILWAY</span>
+              <div class="showcase-emblem">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2">
+                  <rect x="4" y="3" width="16" height="16" rx="2"></rect>
+                  <path d="M4 11h16"></path>
+                  <path d="M12 3v8"></path>
+                  <path d="m8 19-2 3"></path>
+                  <path d="m18 22-2-3"></path>
+                  <circle cx="8" cy="15" r="1"></circle>
+                  <circle cx="16" cy="15" r="1"></circle>
+                </svg>
+              </div>
+            </div>
+            <h3 class="showcase-post-title">RRB NTPC 2026</h3>
+            <p class="showcase-post-subtitle">Non Technical Popular Categories</p>
+            <div class="showcase-meta-group">
+              <div class="showcase-meta-item">
+                <svg class="showcase-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+                <span>Total Vacancies: <strong class="showcase-meta-val">11,558</strong></span>
+              </div>
+              <div class="showcase-meta-item">
+                <svg class="showcase-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Application Date: <strong class="showcase-meta-val">10 Apr &ndash; 09 May 2026</strong></span>
+              </div>
+            </div>
+            <div class="showcase-card-footer">
+              <span class="showcase-view-link">View Details &rarr;</span>
+            </div>
+          </article>
+
+          <!-- Card 4: IBPS PO 2026 -->
+          <article class="showcase-job-card" data-id="job-ibps-po-2026">
+            <div class="showcase-card-header">
+              <span class="showcase-tag-pill tag-bank-tone">BANKING</span>
+              <div class="showcase-emblem">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7e22ce" stroke-width="2">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+            </div>
+            <h3 class="showcase-post-title">IBPS PO 2026</h3>
+            <p class="showcase-post-subtitle">Institute of Banking Personnel Selection</p>
+            <div class="showcase-meta-group">
+              <div class="showcase-meta-item">
+                <svg class="showcase-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+                <span>Total Vacancies: <strong class="showcase-meta-val">5,208</strong></span>
+              </div>
+              <div class="showcase-meta-item">
+                <svg class="showcase-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Application Date: <strong class="showcase-meta-val">01 Aug &ndash; 21 Aug 2026</strong></span>
+              </div>
+            </div>
+            <div class="showcase-card-footer">
+              <span class="showcase-view-link">View Details &rarr;</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: BROWSE BY CATEGORY (Find Jobs Your Way) -->
+    <section class="browse-categories-section" aria-labelledby="browse-heading">
+      <div class="section-headline-bar">
+        <div>
+          <span class="headline-kicker">BROWSE BY CATEGORY</span>
+          <h2 id="browse-heading" class="headline-title">Find Jobs Your Way</h2>
+        </div>
+        <div class="headline-side-desc">
+          <span>Explore government jobs and exam updates as per your preference.</span>
+        </div>
+      </div>
+
+      <div class="four-cards-grid">
+        <a href="#sector-chips-container" class="quick-pillar-card" data-filter-scroll="qualification">
+          <div class="pillar-card-icon icon-orange">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+            </svg>
+          </div>
+          <div class="pillar-card-text">
+            <h3 class="pillar-card-title">By Qualification</h3>
+            <p class="pillar-card-desc">10th, 12th, Graduation, Post Graduation and more</p>
+          </div>
+          <span class="pillar-card-arrow">&rarr;</span>
+        </a>
+
+        <a href="#sector-chips-container" class="quick-pillar-card" data-filter-scroll="state">
+          <div class="pillar-card-icon icon-pink">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <div class="pillar-card-text">
+            <h3 class="pillar-card-title">By State</h3>
+            <p class="pillar-card-desc">Central and State wise job notifications</p>
+          </div>
+          <span class="pillar-card-arrow">&rarr;</span>
+        </a>
+
+        <a href="#sector-chips-container" class="quick-pillar-card" data-filter-scroll="department">
+          <div class="pillar-card-icon icon-coral">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <line x1="9" y1="22" x2="9" y2="2"></line>
+              <line x1="15" y1="22" x2="15" y2="2"></line>
+              <line x1="4" y1="12" x2="20" y2="12"></line>
+            </svg>
+          </div>
+          <div class="pillar-card-text">
+            <h3 class="pillar-card-title">By Department</h3>
+            <p class="pillar-card-desc">Railway, Banking, Defence, Police and more</p>
+          </div>
+          <span class="pillar-card-arrow">&rarr;</span>
+        </a>
+
+        <a href="#sector-chips-container" class="quick-pillar-card" data-filter-scroll="exam">
+          <div class="pillar-card-icon icon-magenta">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+            </svg>
+          </div>
+          <div class="pillar-card-text">
+            <h3 class="pillar-card-title">By Exam Type</h3>
+            <p class="pillar-card-desc">SSC, UPSC, State PSC, Teaching, and more</p>
+          </div>
+          <span class="pillar-card-arrow">&rarr;</span>
+        </a>
+      </div>
     </section>
 
     <!-- Sector Chips Horizontal Carousel -->
@@ -1009,72 +1359,241 @@
         </div>
       </div>
     </section>
-  </main>
+      <!-- SECTION 5: PORTAL BY THE NUMBERS -->
+      <section class="numbers-stats-section" aria-labelledby="numbers-heading">
+        <div class="numbers-split-grid">
+          <div class="numbers-title-col">
+            <span class="numbers-kicker">PORTAL BY THE NUMBERS</span>
+            <h2 id="numbers-heading" class="numbers-main-title">Trusted by Lakhs of Aspirants</h2>
+            <svg class="doodle-squiggle" width="110" height="18" viewBox="0 0 110 18" fill="none">
+              <path d="M4 12 C 20 4, 35 18, 52 12 C 68 4, 85 18, 102 12" stroke="#ea580c" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
 
-  <!-- Authoritative Global Semantic Footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-top">
-        <div class="footer-about">
-          <div class="brand" style="margin-bottom: 0.85rem;">
-            <div class="brand-logo-frame">
-              <img src="/assets/images/sarkari_hith_logo.webp" alt="Sarkari Hith Logo" class="brand-logo-img">
+          <div class="numbers-cards-grid">
+            <div class="stat-counter-card">
+              <div class="stat-icon-wrap">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+              </div>
+              <span class="stat-number">10,000+</span>
+              <span class="stat-label">Jobs Listed</span>
+              <span class="stat-sublabel">Updated Regularly</span>
             </div>
-            <div class="brand-text">
-              <span class="brand-title">SARKARI <span>HITH</span></span>
-              <span class="brand-subtitle" style="font-size: 0.72rem; color: var(--text-muted);">Government Employment &amp; Results Portal</span>
+
+            <div class="stat-counter-card">
+              <div class="stat-icon-wrap">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </div>
+              <span class="stat-number">2,500+</span>
+              <span class="stat-label">Results Updated</span>
+              <span class="stat-sublabel">Across Major Exams</span>
+            </div>
+
+            <div class="stat-counter-card">
+              <div class="stat-icon-wrap">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+              <span class="stat-number">800+</span>
+              <span class="stat-label">Admit Cards</span>
+              <span class="stat-sublabel">Available for Download</span>
+            </div>
+
+            <div class="stat-counter-card">
+              <div class="stat-icon-wrap">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+              </div>
+              <span class="stat-number">500+</span>
+              <span class="stat-label">Syllabus Updates</span>
+              <span class="stat-sublabel">With Latest Patterns</span>
             </div>
           </div>
-          <p>
-            Sarkari Hith (sarkari_hith) is India's authoritative employment portal providing real-time updates for
-            <strong>Top Government Jobs</strong>, official <strong>Sarkari Results</strong>, <strong>government job vacancy</strong>
-            notifications, admit cards, and syllabus details. Built for speed, clarity, and zero misinformation.
-          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 6: WHY STUDENTS TRUST US (Testimonials) -->
+      <section class="testimonials-section" aria-labelledby="testimonials-heading">
+        <div class="testimonials-split-grid">
+          <div class="numbers-title-col">
+            <span class="numbers-kicker">WHY STUDENTS TRUST US</span>
+            <h2 id="testimonials-heading" class="numbers-main-title">Real People<br>Real Success</h2>
+            <svg class="doodle-squiggle" width="110" height="18" viewBox="0 0 110 18" fill="none">
+              <path d="M4 12 C 20 4, 35 18, 52 12 C 68 4, 85 18, 102 12" stroke="#ea580c" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <div class="testimonials-cards-grid">
+            <article class="testimonial-quote-card">
+              <div class="quote-mark">&ldquo;</div>
+              <p class="testimonial-text">&ldquo;Sarkari Hith helps me get the latest job updates instantly. It's my go-to website!&rdquo;</p>
+              <div class="testimonial-author-row">
+                <div class="testimonial-avatar">RS</div>
+                <div>
+                  <strong class="author-name">Rohit Sharma</strong>
+                  <span class="author-role">SSC Aspirant</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="testimonial-quote-card">
+              <div class="quote-mark">&ldquo;</div>
+              <p class="testimonial-text">&ldquo;The information is always accurate and well-organized. Very easy to find what I need.&rdquo;</p>
+              <div class="testimonial-author-row">
+                <div class="testimonial-avatar" style="background: #fce7f3; color: #9d174d;">PV</div>
+                <div>
+                  <strong class="author-name">Priya Verma</strong>
+                  <span class="author-role">Banking Aspirant</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="testimonial-quote-card">
+              <div class="quote-mark">&ldquo;</div>
+              <p class="testimonial-text">&ldquo;Clean design, fast updates and all important links in one place. Truly helpful for students.&rdquo;</p>
+              <div class="testimonial-author-row">
+                <div class="testimonial-avatar" style="background: #e0f2fe; color: #075985;">AK</div>
+                <div>
+                  <strong class="author-name">Amit Kumar</strong>
+                  <span class="author-role">UPSC Aspirant</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 7: PRE-FOOTER BANNER -->
+      <section class="pre-footer-banner-section">
+        <div class="banner-warm-card">
+          <div class="banner-text-col">
+            <h2 class="banner-headline">Let's Find Your Next Opportunity</h2>
+            <p class="banner-desc">Stay updated with the latest government jobs, results, admit cards and syllabus.</p>
+          </div>
+          <div class="banner-action-col">
+            <button type="button" class="btn-get-updates" onclick="document.getElementById('btn-open-alerts')?.click();" style="padding: 0.85rem 2rem; font-size: 1rem;">
+              <span>Get Free Updates &rarr;</span>
+            </button>
+            <div class="banner-doodle-quote">
+              <svg width="40" height="25" viewBox="0 0 40 25" fill="none" style="display: block; margin-bottom: 4px; margin-left: auto;">
+                <path d="M2 12 L38 2 L22 22 L18 13 Z" fill="none" stroke="#ea580c" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+              <span>A BRIGHTER<br>TOMORROW<br>BEGINS HERE</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- SECTION 8: MOCKUP FOOTER -->
+    <footer class="mockup-site-footer" id="mockup-contact-footer">
+      <div class="container">
+        <div class="footer-main-grid">
+          <!-- Col 1: Brand Info -->
+          <div class="footer-brand-col">
+            <div class="footer-brand-title">
+              <span class="red">Sarkari</span> <span class="dark">Hith</span>
+            </div>
+            <p class="footer-brand-desc">
+              Your Trusted Government Job Portal<br>
+              Latest Jobs &bull; Results &bull; Admit Cards &bull; Syllabus
+            </p>
+          </div>
+
+          <!-- Col 2: Quick Links -->
+          <div>
+            <h3 class="footer-heading">Quick Links</h3>
+            <ul class="footer-links-list">
+              <li><a href="#home">Home</a></li>
+              <li><a href="#selected-opportunities">Latest Jobs</a></li>
+              <li><a href="#matrix-col-results">Results</a></li>
+              <li><a href="#matrix-col-admitcards">Admit Card</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 3: Resources & Contact -->
+          <div>
+            <h3 class="footer-heading">Contact Us</h3>
+            <ul class="footer-contact-list">
+              <li class="footer-contact-item">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <a href="mailto:info@sarkarihith.in">info@sarkarihith.in</a>
+              </li>
+              <li class="footer-contact-item">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                <span>+91 98765 43210</span>
+              </li>
+              <li class="footer-contact-item">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>New Delhi, India</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Col 4: Follow Us -->
+          <div>
+            <h3 class="footer-heading">Follow Us</h3>
+            <div class="footer-social-row">
+              <a href="#" class="footer-social-icon social-yt" aria-label="YouTube">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+              <a href="#" class="footer-social-icon social-fb" aria-label="Facebook">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+              <a href="#" class="footer-social-icon social-tg" aria-label="Telegram">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                </svg>
+              </a>
+              <a href="#" class="footer-social-icon social-ig" aria-label="Instagram">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+              <a href="#" class="footer-social-icon social-x" aria-label="X">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
 
-        <div class="footer-col">
-          <h4>Top Government Jobs</h4>
-          <ul>
-            <li><a href="#sector-chips-container" data-footer-filter="SSC">Staff Selection (SSC CGL, CHSL)</a></li>
-            <li><a href="#sector-chips-container" data-footer-filter="Railway">Railway RRB (NTPC, Group D)</a></li>
-            <li><a href="#sector-chips-container" data-footer-filter="UPSC">UPSC (IAS, IPS, NDA, CDS)</a></li>
-            <li><a href="#sector-chips-container" data-footer-filter="Bank">Banking (IBPS PO, Clerk, SBI)</a></li>
-            <li><a href="#sector-chips-container" data-footer-filter="Police">Police &amp; Paramilitary Vacancies</a></li>
-            <li><a href="#sector-chips-container" data-footer-filter="Defence">Armed Forces &amp; Agniveer</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4>Jobs by Qualification</h4>
-          <ul>
-            <li><a href="#sector-chips-container" data-footer-filter="10th">10th Pass Govt Jobs</a></li>
-            <li><a href="#sector-chips-container" data-footer-filter="12th">12th Pass Vacancies</a></li>
-            <li><a href="#sector-chips-container" data-footer-filter="Graduate">Graduate / Degree Jobs</a></li>
-            <li><a href="#sector-chips-container" data-footer-filter="Engineering">Engineering / ITI / Diploma</a></li>
-            <li><a href="#sector-chips-container" data-footer-filter="Teacher">Teaching &amp; TET Vacancies</a></li>
-            <li><a href="#sector-chips-container" data-footer-filter="Medical">Medical &amp; Nursing Posts</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4>Sarkari Results &amp; Tools</h4>
-          <ul>
-            <li><a href="#matrix-col-results">Sarkari Results 2026</a></li>
-            <li><a href="#matrix-col-admitcards">Sarkari Admit Cards</a></li>
-            <li><a href="#secondary-services">Answer Keys &amp; Objections</a></li>
-            <li><a href="#secondary-services">Syllabus &amp; Exam Pattern</a></li>
-            <li><a href="/sitemap.xml">XML Sitemap</a></li>
-            <li><a href="/robots.txt">Robots.txt</a></li>
-          </ul>
+        <div class="footer-bottom-bar">
+          <div>&copy; 2026 Sarkari Hith. All rights reserved.</div>
+          <div class="footer-legal-links">
+            <a href="#">Terms of Use</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Disclaimer</a>
+          </div>
         </div>
       </div>
-
-      <div class="footer-bottom">
-        <span>&copy; 2012-2026 Sarkari Hith (sarkari_hith). All rights reserved. Disclaimer: sarkarihith.com is an informational portal and is not affiliated with any government agency. Always verify notices on official commission websites.</span>
-        <span>Fast, Lightweight, Clean Indian Government Employment Portal</span>
-      </div>
-    </div>
-  </footer>
+    </footer>
 
   <!-- Interactive Item Detail Modal Dialog -->
   <div id="item-detail-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">

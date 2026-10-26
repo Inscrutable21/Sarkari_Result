@@ -97,6 +97,61 @@ const alertSelectedDisciplines = new Set(['all']);
  * Finds an item across all portal categories by its ID
  */
 function findItemById(id) {
+  const showcaseFallbacks = {
+    'job-ssc-cgl-2026': {
+      id: 'job-ssc-cgl-2026',
+      title: 'SSC CGL 2026 - Combined Graduate Level Examination',
+      organization: 'Staff Selection Commission (SSC)',
+      category: 'latestJobs',
+      vacancies: 14582,
+      lastDate: '2026-07-04',
+      startDate: '2026-06-09',
+      qualification: 'Graduate',
+      postCount: '14,582',
+      link: 'https://ssc.gov.in',
+      description: 'SSC CGL 2026 recruitment notification for 14,582 Assistant Section Officer, Inspector, Sub Inspector, and Executive posts across central ministries and departments.'
+    },
+    'job-up-police-2026': {
+      id: 'job-up-police-2026',
+      title: 'UP Police Recruitment 2026 - Uttar Pradesh Police Constable',
+      organization: 'UPPRPB (Uttar Pradesh Police Recruitment Board)',
+      category: 'latestJobs',
+      vacancies: 60244,
+      lastDate: '2026-05-28',
+      startDate: '2026-05-01',
+      qualification: '12th Pass',
+      postCount: '60,244',
+      link: 'http://uppbpb.gov.in',
+      description: 'UP Police Constable recruitment 2026 for 60,244 constable civil police vacancies across Uttar Pradesh.'
+    },
+    'job-rrb-ntpc-2026': {
+      id: 'job-rrb-ntpc-2026',
+      title: 'RRB NTPC 2026 - Non Technical Popular Categories',
+      organization: 'Railway Recruitment Control Board (RRB)',
+      category: 'latestJobs',
+      vacancies: 11558,
+      lastDate: '2026-05-09',
+      startDate: '2026-04-10',
+      qualification: '12th / Graduate',
+      postCount: '11,558',
+      link: 'https://indianrailways.gov.in',
+      description: 'RRB NTPC 2026 recruitment for Station Master, Goods Guard, Senior Clerk cum Typist, and Junior Clerk positions.'
+    },
+    'job-ibps-po-2026': {
+      id: 'job-ibps-po-2026',
+      title: 'IBPS PO 2026 - Institute of Banking Personnel Selection',
+      organization: 'Institute of Banking Personnel Selection (IBPS)',
+      category: 'latestJobs',
+      vacancies: 5208,
+      lastDate: '2026-08-21',
+      startDate: '2026-08-01',
+      qualification: 'Graduate',
+      postCount: '5,208',
+      link: 'https://ibps.in',
+      description: 'IBPS PO/MT CRP XIV recruitment for 5,208 Probationary Officer and Management Trainee posts in participating public sector banks.'
+    }
+  };
+
   const all = [
     ...state.data.trending,
     ...state.data.latestJobs,
@@ -108,7 +163,7 @@ function findItemById(id) {
     ...state.data.certificates,
     ...(state.data.important || [])
   ];
-  return all.find(item => item.id === id);
+  return all.find(item => item.id === id) || showcaseFallbacks[id];
 }
 
 /**
@@ -468,8 +523,8 @@ function setupEventListeners() {
     });
   });
 
-  // Navigation Links Interaction
-  document.querySelectorAll('.nav-tab-link, .dropdown-link').forEach(link => {
+  // Navigation Links Interaction & Tab Targets
+  document.querySelectorAll('.nav-tab-link, .dropdown-link, [data-tab-target]').forEach(link => {
     link.addEventListener('click', (e) => {
       const tabTarget = link.getAttribute('data-tab-target');
       if (tabTarget) {
@@ -479,6 +534,27 @@ function setupEventListeners() {
         });
         renderAll();
         document.querySelector('.secondary-section')?.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Browse by Category Filter Scroll Buttons
+  document.querySelectorAll('[data-filter-scroll]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      const target = el.getAttribute('data-filter-scroll');
+      if (target === 'qualification') {
+        const filterSection = document.getElementById('filter-qualification');
+        filterSection?.focus();
+        document.querySelector('.filters-section')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (target === 'state') {
+        const stateFilter = document.getElementById('filter-state');
+        stateFilter?.focus();
+        document.querySelector('.filters-section')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (target === 'department') {
+        document.getElementById('sector-chips-container')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (target === 'exam') {
+        searchInput?.focus();
+        document.querySelector('.search-bar-wrap')?.scrollIntoView({ behavior: 'smooth' });
       }
     });
   });
@@ -662,7 +738,7 @@ function setupEventListeners() {
 
   // 9. Card / Row Click -> Open Detail Modal (Event Delegation)
   document.addEventListener('click', (e) => {
-    const card = e.target.closest('.trending-card, .matrix-item, .secondary-card, .radar-table-row, .btn-radar-details');
+    const card = e.target.closest('.trending-card, .matrix-item, .secondary-card, .radar-table-row, .btn-radar-details, .showcase-job-card');
     if (card && !e.target.closest('a')) {
       const id = card.getAttribute('data-id');
       if (id) {
