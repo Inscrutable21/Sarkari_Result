@@ -31,56 +31,56 @@
   --border-focus: #ea580c;
   --border-glow: rgba(234, 88, 12, 0.25);
 
-  /* Reference Design Surfaces & Matrix Header Gradients */
+  /* Unified Warm Theme Surfaces & Matrix Header Gradients */
   --hero-bg-gradient: linear-gradient(180deg, #fffaf5 0%, #ffffff 100%);
   --hero-border: #f1e4d8;
-  --gradient-results: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
-  --gradient-admitcards: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-  --gradient-jobs: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  --gradient-results: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  --gradient-admitcards: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  --gradient-jobs: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
 
   /* High-Contrast Light Mode Typography Tokens */
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --text-tertiary: #64748b;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --text-tertiary: #9ca3af;
   --text-inverse: #ffffff;
 
-  /* Sector Badge Themes (Readable Colors on Light Surfaces) */
-  --sector-teaching: #7e22ce;
-  --sector-teaching-bg: rgba(192, 132, 252, 0.12);
-  --sector-banking: #0369a1;
-  --sector-banking-bg: rgba(56, 189, 248, 0.12);
+  /* Harmonized Theme Badge Tokens (Single Warm Peach/Orange Theme Across All Sectors) */
+  --sector-teaching: #c2410c;
+  --sector-teaching-bg: #fff7ed;
+  --sector-banking: #c2410c;
+  --sector-banking-bg: #fff7ed;
   --sector-ssc: #c2410c;
-  --sector-ssc-bg: rgba(251, 146, 60, 0.12);
-  --sector-police: #0f766e;
-  --sector-police-bg: rgba(45, 212, 191, 0.12);
-  --sector-railway: #b91c1c;
-  --sector-railway-bg: rgba(248, 113, 113, 0.12);
-  --sector-defense: #15803d;
-  --sector-defense-bg: rgba(74, 222, 128, 0.12);
-  --sector-civil: #4338ca;
-  --sector-civil-bg: rgba(129, 140, 248, 0.12);
-  --sector-medical: #be185d;
-  --sector-medical-bg: rgba(244, 114, 182, 0.12);
-  --sector-engineering: #0e7490;
-  --sector-engineering-bg: rgba(34, 211, 238, 0.12);
-  --sector-state: #92400e;
-  --sector-state-bg: rgba(251, 191, 36, 0.12);
-  --sector-general: #64748b;
-  --sector-general-bg: rgba(148, 163, 184, 0.12);
+  --sector-ssc-bg: #fff7ed;
+  --sector-police: #c2410c;
+  --sector-police-bg: #fff7ed;
+  --sector-railway: #c2410c;
+  --sector-railway-bg: #fff7ed;
+  --sector-defense: #c2410c;
+  --sector-defense-bg: #fff7ed;
+  --sector-civil: #c2410c;
+  --sector-civil-bg: #fff7ed;
+  --sector-medical: #c2410c;
+  --sector-medical-bg: #fff7ed;
+  --sector-engineering: #c2410c;
+  --sector-engineering-bg: #fff7ed;
+  --sector-state: #c2410c;
+  --sector-state-bg: #fff7ed;
+  --sector-general: #c2410c;
+  --sector-general-bg: #fff7ed;
 
-  /* Status Colors */
-  --status-success: #047857;
-  --status-success-bg: rgba(16, 185, 129, 0.15);
-  --status-warning: #92400e;
-  --status-warning-bg: rgba(245, 158, 11, 0.15);
-  --status-info: #1d4ed8;
-  --status-info-bg: rgba(59, 130, 246, 0.15);
+  /* Status Colors (Harmonized Warm Palette) */
+  --status-success: #9a3412;
+  --status-success-bg: #ffedd5;
+  --status-warning: #9a3412;
+  --status-warning-bg: #ffedd5;
+  --status-info: #c2410c;
+  --status-info-bg: #fff7ed;
 
-  /* Modern Geometric Typography Stack */
+  /* Unified Single Font Family Stack Across Entire Application */
   --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   /* Subtle Surface Shadows */
   --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.08);

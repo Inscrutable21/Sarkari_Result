@@ -147,11 +147,11 @@ export function getSectorIcon(sector = '', title = '') {
 }
 
 const TRENDING_THEMES = [
-  { numBg: '#ff4b72', watermark: '' },
-  { numBg: '#8b5cf6', watermark: '' },
-  { numBg: '#f97316', watermark: '' },
-  { numBg: '#3b82f6', watermark: '' },
-  { numBg: '#10b981', watermark: '' }
+  { numBg: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)', watermark: '' },
+  { numBg: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)', watermark: '' },
+  { numBg: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)', watermark: '' },
+  { numBg: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)', watermark: '' },
+  { numBg: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)', watermark: '' }
 ];
 
 /**
@@ -176,12 +176,12 @@ export function renderTrendingGrid(container, items) {
     const watermarkIcon = theme.watermark;
 
     return `
-      <article class="trending-card" style="--card-accent: ${item.sectorColor || 'var(--primary-red)'}" data-id="${escapeHtml(item.id)}">
+      <article class="trending-card" data-id="${escapeHtml(item.id)}">
         <div class="trending-card-top-row">
-          <div class="trending-num-badge" style="background-color: ${theme.numBg};">
+          <div class="trending-num-badge" style="background: ${theme.numBg};">
             ${itemNum}
           </div>
-          <span class="badge badge-sector" style="--badge-color: ${item.sectorColor}; --badge-bg: ${item.sectorColor}15">
+          <span class="badge badge-sector">
             ${escapeHtml(item.sector || 'General')}
           </span>
           <div class="trending-watermark-icon" aria-hidden="true">${watermarkIcon}</div>
@@ -244,7 +244,7 @@ function createMatrixItemHtml(item) {
 
   return `
     <div class="matrix-item ${isExpired ? 'is-expired-item' : ''}" data-id="${escapeHtml(item.id)}">
-      <div class="matrix-item-avatar" style="--avatar-color: ${item.sectorColor || '#c01b22'};" aria-hidden="true">
+      <div class="matrix-item-avatar" aria-hidden="true">
         <span>${sectorIcon}</span>
       </div>
 
@@ -255,7 +255,7 @@ function createMatrixItemHtml(item) {
         </div>
 
         <div class="matrix-item-badges">
-          <span class="badge badge-sector" style="--badge-color: ${item.sectorColor}; --badge-bg: ${item.sectorColor}15">
+          <span class="badge badge-sector">
             ${escapeHtml(item.sector || 'Notice')}
           </span>
           <span class="badge badge-status ${escapeHtml(item.statusType || 'neutral')}">
@@ -1226,7 +1226,7 @@ export function renderRadarTable(container, portalData, activeTab = 'all', searc
           <div class="radar-org-name">${escapeHtml(orgName)}</div>
         </td>
         <td class="td-sector">
-          <span class="badge badge-sector" style="--badge-color: ${sectorColor}; --badge-bg: ${sectorColor}15;">
+          <span class="badge badge-sector">
             ${escapeHtml(sectorName)}
           </span>
         </td>
