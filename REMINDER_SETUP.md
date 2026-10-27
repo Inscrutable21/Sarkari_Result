@@ -1,38 +1,50 @@
-# Daily reminders at 7 PM IST
+# Automated Cron Jobs Guide (Vercel & Local)
 
-The Vercel cron in `vercel.json` uses `30 13 * * *` (13:30 UTC / 7 PM IST).
-The local server's interval scheduler runs only while `node backend/server.js`
-is running; it does not run automatically inside Vercel functions.
+## 1. Configured Cron Jobs in `vercel.json`
 
-In the Vercel project's **Production** environment, configure:
+The project has two automated cron jobs configured in [`vercel.json`](file:///e:/Sarkari_Result/vercel.json):
 
-- `MONGODB_URI` and `MONGODB_DB_NAME` for the database holding candidate records.
-- `EMAIL_USER` and `EMAIL_APP_PASSWORD`, or `SMTP_USER`, `SMTP_PASS`, and `SMTP_HOST`.
-- `CRON_SECRET`: a random secret of at least 16 characters. Vercel automatically
-  adds `Authorization: Bearer <CRON_SECRET>` to its scheduled request.
-- `PORTAL_URL`: `https://sarkari-result-wheat.vercel.app`.
+| Cron Job Path | Schedule (UTC) | Local Time (IST) | Purpose |
+|---|---|---|---|
+| `/api/cron/scrape` | `0 1 * * *` | **6:30 AM IST** | Automated daily multi-platform crawl (Sarkari Result, Sarkari Radar, Context.dev) into MongoDB Atlas. |
+| `/api/cron/reminders` | `30 13 * * *` | **7:00 PM IST** | Automated daily deadline countdown reminders & subscriber job alert digests. |
 
-Redeploy after changing environment variables or backend code. Check **Settings
-→ Cron Jobs** to confirm the job is enabled, and inspect its invocation logs for
-`/api/cron/reminders`. A 401 means the cron secret is missing or mismatched. A 500
-means the batch failed; inspect the SMTP/database error. Failed recipients stay
-pending, and the batch makes up to three attempts without resending recipients
-already recorded as sent that day. SMTP acceptance does not prove inbox delivery;
-check the sender's bounce messages and the recipient's spam folder as well.
+---
 
-Vercel Hobby cron has timing jitter within the scheduled hour and does not
-guarantee 7:00 PM delivery. For minute-level scheduling, use a Vercel plan with
-minute precision or an external scheduler calling the protected cron endpoint
-at 13:30 UTC, with the same bearer secret and retry policy. Do not make the
-endpoint public or use a browser timer for production reminders.
+## 2. Why a Cron Job May Seem "Not Working" & Diagnosis
 
-Read the affected record without sending email:
+### Issue A: "Reminders cron ran, but dispatched 0 emails"
+- **Cause**: If no candidates have subscribed to alerts or tracked any active application deadlines, the batch runs cleanly and returns `{"dispatched": 0}`.
+- **Verification**: Run diagnostic to verify recipient records:
+  ```powershell
+  node backend/src/services/notifications/diagnoseReminder.js https://sarkari-result-wheat.vercel.app/ candidate@example.com
+  ```
 
-```powershell
-node backend/src/services/notifications/diagnoseReminder.js https://sarkari-result-wheat.vercel.app/ anandsingh212004@gmail.com
-```
+### Issue B: "HTTP 401 Unauthorized"
+- **Cause**: Vercel Cron endpoints are protected. Direct browser visits without headers will return `401 Unauthorized`.
+- **Fix**: When Vercel triggers the cron, it automatically passes `Authorization: Bearer <CRON_SECRET>`. Ensure `CRON_SECRET` is added to your Vercel Project Settings → Environment Variables.
+- **Manual Test via Terminal**:
+  ```powershell
+  # Test Reminders Cron
+  curl -H "Authorization: Bearer sarkari_cron_7a9f82d4e1b635c0882e34fa" https://sarkari-result-wheat.vercel.app/api/cron/reminders
 
-The diagnostic reads `ADMIN_API_KEY` from the local environment and prints only
-the selected recipient's reminder status. It does not change records.
+  # Test Scraper Cron
+  curl -H "Authorization: Bearer sarkari_cron_7a9f82d4e1b635c0882e34fa" https://sarkari-result-wheat.vercel.app/api/cron/scrape
+  ```
 
-References: [Vercel cron authentication, retries and timing](https://vercel.com/docs/cron-jobs/manage-cron-jobs).
+### Issue C: "Local development scheduler didn't trigger"
+- Vercel Cron only runs on the deployed Vercel cloud URL (`https://sarkari-result-wheat.vercel.app`).
+- When running locally (`npm run dev`), the server uses an in-memory scheduler that checks every 30 seconds after 7:00 PM IST. If today's date has already executed, it skips duplicate runs. Use the Admin Dashboard button **"⚡ Run 7:00 PM Batch Now"** or **"⚡ Run Centralized Scraper"** to test immediately.
+
+---
+
+## 3. Required Vercel Environment Variables
+
+In your Vercel Project Dashboard (**Settings → Environment Variables**), ensure:
+- `MONGODB_URI`
+- `EMAIL_USER` & `EMAIL_APP_PASSWORD`
+- `CRON_SECRET`: Must match your secret (e.g. `sarkari_cron_7a9f82d4e1b635c0882e34fa`)
+- `CONTEXT_DEV_API_KEY`: Context.dev API token
+- `ADMIN_API_KEY`: Master administrator secret
+
+References: [Vercel Cron Jobs Management](https://vercel.com/docs/cron-jobs/manage-cron-jobs).

@@ -858,6 +858,38 @@ const server = createServer(async (request, response) => {
     return;
   }
 
+  // 11b-2. Vercel Cron Scheduled Daily Scrape Trigger (Automatically scrapes Sarkari Result, Sarkari Radar & Context.dev)
+  if (url.pathname === "/api/cron/scrape" && (request.method === "GET" || request.method === "POST")) {
+    const cronSecret = process.env.CRON_SECRET;
+    const authHeader = request.headers["authorization"];
+    const isCronSecretValid = secretEquals(authHeader, cronSecret ? `Bearer ${cronSecret}` : undefined);
+    if (!isCronSecretValid && !(await isAdminAuthorized(request, url, "scrape:run"))) {
+      response.writeHead(401, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: cronSecret ? "Unauthorized cron or admin trigger" : "CRON_SECRET is not configured in Vercel environment variables" }));
+      return;
+    }
+
+    try {
+      console.log("[Vercel Cron] Automated multi-platform scraping job running via Vercel Cron...");
+      const { runScraperPipeline } = require("./src/services/scraper/runScraper");
+      const summary = await runScraperPipeline({
+        platforms: ['sarkariResult', 'sarkariRadar', 'contextDev'],
+        contextDevMode: 'quick'
+      });
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({
+        success: true,
+        message: "Centralized multi-platform scraper completed successfully via Vercel Cron",
+        summary
+      }));
+    } catch (err) {
+      console.error("[Vercel Cron] Automated scraper execution failed:", err.message);
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
   // 11c. Unified Subscriber & 7:00 PM Reminder Dispatch Status (Admin Protected with RBAC)
   if ((url.pathname === "/api/anandapkaproject/subscribers-status" || url.pathname === "/api/admin/subscribers-status") && request.method === "GET") {
     if (!(await enforceAdminPermission(request, response, url, "notifications:view_logs"))) {
