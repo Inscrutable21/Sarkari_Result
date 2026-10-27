@@ -1,0 +1,97 @@
+<!-- Component: Dedicated Context.dev Institutional & PSU Opportunities Section -->
+<section id="context-dev-section" class="context-dev-section" aria-labelledby="context-dev-heading">
+  <div class="context-dev-card-wrapper">
+    <!-- Section Header -->
+    <div class="context-dev-header">
+      <div class="context-dev-header-main">
+        <div class="context-dev-badge-row">
+          <span class="context-dev-live-beacon"></span>
+          <span class="context-dev-badge-title">CONTEXT.DEV DIRECTORY</span>
+          <span class="context-dev-badge-tag">Premier Indian Institutions &amp; PSUs</span>
+        </div>
+        <h2 id="context-dev-heading" class="context-dev-title">
+          Research Programs, Fellowships &amp; PSU Careers
+        </h2>
+        <p class="context-dev-subtitle">
+          Verified research fellowships (JRF / SRF / PhD), scientist recruitments, and Maharatna/Navratna PSU vacancies extracted in real-time for Students &amp; Professionals from IITs, IISc, CSIR labs, DRDO, ISRO, ONGC, BHEL, and NTPC.
+        </p>
+      </div>
+
+      <!-- Quick Metrics Counter Card -->
+      <div class="context-dev-metrics-card">
+        <div class="ctx-metric-box">
+          <span class="ctx-metric-val" id="ctx-stat-total">0</span>
+          <span class="ctx-metric-label">Verified Openings</span>
+        </div>
+        <div class="ctx-metric-divider"></div>
+        <div class="ctx-metric-box">
+          <span class="ctx-metric-val text-green" id="ctx-stat-students">0</span>
+          <span class="ctx-metric-label">Students &amp; Scholars</span>
+        </div>
+        <div class="ctx-metric-divider"></div>
+        <div class="ctx-metric-box">
+          <span class="ctx-metric-val text-purple" id="ctx-stat-professionals">0</span>
+          <span class="ctx-metric-label">Professionals</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls Bar: Filter Tabs & Search -->
+    <div class="context-dev-toolbar">
+      <div class="context-dev-tabs" role="tablist" aria-label="Context.dev Openings Filters">
+        <button type="button" class="ctx-tab-btn is-active" data-ctx-tab="all">
+          <span>All Openings</span>
+          <span class="ctx-tab-badge" id="ctx-cnt-all">0</span>
+        </button>
+        <button type="button" class="ctx-tab-btn" data-ctx-tab="student">
+          <span>🎓 Students &amp; Fellowships</span>
+          <span class="ctx-tab-badge" id="ctx-cnt-student">0</span>
+        </button>
+        <button type="button" class="ctx-tab-btn" data-ctx-tab="professional">
+          <span>💼 Professionals &amp; Lateral</span>
+          <span class="ctx-tab-badge" id="ctx-cnt-professional">0</span>
+        </button>
+        <button type="button" class="ctx-tab-btn" data-ctx-tab="research">
+          <span>🔬 Research Councils</span>
+          <span class="ctx-tab-badge" id="ctx-cnt-research">0</span>
+        </button>
+        <button type="button" class="ctx-tab-btn" data-ctx-tab="psu">
+          <span>🏭 Central PSUs</span>
+          <span class="ctx-tab-badge" id="ctx-cnt-psu">0</span>
+        </button>
+      </div>
+
+      <div class="context-dev-search-wrapper">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="ctx-search-icon">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="ctx-search-input" class="ctx-search-input" placeholder="Search Institute, JRF, PSU, Stipend, or Post..." aria-label="Search Context.dev openings">
+        <button type="button" id="ctx-search-clear" class="ctx-search-clear" aria-label="Clear search" style="display: none;">&times;</button>
+      </div>
+    </div>
+
+    <!-- Dynamic Card Grid -->
+    <div id="context-dev-grid" class="context-dev-grid" aria-live="polite">
+      <!-- Cards rendered dynamically via contextDevSection.js -->
+    </div>
+
+    <!-- Section Footer -->
+    <div class="context-dev-footer">
+      <div class="context-dev-footer-left">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>Data extracted and verified via official government institution domains and national public sector portals.</span>
+      </div>
+      <div class="context-dev-footer-right">
+        <span class="ctx-live-indicator">
+          <span class="ctx-live-ring"></span>
+          Live Verified 2026
+        </span>
+      </div>
+    </div>
+  </div>
+</section>

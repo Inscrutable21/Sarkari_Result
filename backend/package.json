@@ -7,6 +7,8 @@
     "start": "node server.js",
     "dev": "node --watch --watch-path=server.js --watch-path=src/services server.js",
     "scrape": "node src/services/scraper/runScraper.js",
+    "scrape:context": "node src/services/scraper/contextDevScraper.js",
+    "test": "node --test test/*.test.js",
     "notify": "node src/services/sendNotifications.js",
     "sync:mongo": "node src/services/pushAllDataToMongo.js"
   },

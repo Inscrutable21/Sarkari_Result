@@ -344,6 +344,31 @@ const server = createServer(async (request, response) => {
     return;
   }
 
+  // Trigger Context.dev scraping specifically for Research Institutions & PSUs (Admin Protected)
+  if (url.pathname === "/api/scrape/context") {
+    if (!(await enforceAdminPermission(request, response, url, "scrape:run"))) {
+      return;
+    }
+
+    try {
+      const { scrapeContextDevOpenings } = require("./src/services/scraper/contextDevScraper");
+      const filterAudience = url.searchParams.get("audience") || "all";
+      const maxItems = parseInt(url.searchParams.get("limit") || "40", 10);
+      const openings = await scrapeContextDevOpenings({ maxItems, filterAudience });
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({
+        success: true,
+        count: openings.length,
+        filterAudience,
+        data: openings
+      }));
+    } catch (err) {
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
   // --- Single Admin Tokenization & Rotation Endpoints ---
 
   // 1. Authenticate Single Admin Key & Issue Signed Cryptographic Token

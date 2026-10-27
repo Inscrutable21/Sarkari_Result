@@ -115,3 +115,39 @@ test('getApiKey retrieves key from Contextdev environment variable', () => {
     process.env.Contextdev = originalEnv;
   }
 });
+
+test('detectAudience correctly differentiates student vs professional opportunities', () => {
+  const { detectAudience } = require('../src/services/scraper/contextDevScraper');
+  
+  // Student & research scholar targets
+  assert.equal(detectAudience(null, 'Junior Research Fellow (JRF) in Materials Science', 'IIT Bombay'), 'student');
+  assert.equal(detectAudience(null, 'Graduate Apprentice Trainee (Mechanical)', 'BHEL Haridwar'), 'student');
+  assert.equal(detectAudience(null, 'Summer Research Fellowship 2026', 'IISc Bengaluru'), 'student');
+  assert.equal(detectAudience(null, 'Management Trainee through GATE 2026', 'ONGC'), 'student');
+
+  // Professional & experienced targets
+  assert.equal(detectAudience(null, 'Assistant Professor in Computer Science', 'IIT Kanpur'), 'professional');
+  assert.equal(detectAudience(null, 'Scientist B Non-Medical', 'AIIMS New Delhi'), 'professional');
+  assert.equal(detectAudience(null, 'Lateral Engineer (Contracts & Materials) - 5 yrs exp', 'NTPC'), 'professional');
+  assert.equal(detectAudience(null, 'Deputy General Manager (Finance)', 'IOCL'), 'professional');
+});
+
+test('normalizeContextItem parses DD-MM-YYYY dates and extracts stipend/salary', () => {
+  const itemWithIndianDate = {
+    title: 'Junior Research Fellow – DRDO SAG',
+    organization: 'DRDO',
+    category: 'research',
+    lastDate: '15-11-2026',
+    stipendOrSalary: 'Rs 37,000 + HRA',
+    link: 'https://drdo.gov.in/advt.pdf'
+  };
+
+  const normalized = normalizeContextItem(itemWithIndianDate);
+  assert.ok(normalized);
+  assert.equal(normalized.lastDate, '2026-11-15');
+  assert.equal(normalized.lastDateFormatted, '15 Nov 2026');
+  assert.equal(normalized.stipendOrSalary, 'Rs 37,000 + HRA');
+  assert.equal(normalized.targetAudience, 'student');
+  assert.equal(normalized.audienceLabel, 'Student / Fresher / Scholar');
+});
+

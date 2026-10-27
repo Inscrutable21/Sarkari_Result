@@ -6,6 +6,8 @@
     "dev": "node backend/server.js",
     "start": "node backend/server.js",
     "scrape": "node backend/src/services/scraper/runScraper.js",
+    "scrape:context": "node backend/src/services/scraper/contextDevScraper.js",
+    "test": "node --test backend/test/*.test.js",
     "notify": "node backend/src/services/sendNotifications.js",
     "sync:mongo": "node backend/src/services/pushAllDataToMongo.js"
   },

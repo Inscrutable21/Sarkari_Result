@@ -11,5 +11,7 @@ export * from './trending.js';
 export * from './matrix.js';
 export * from './radarTable.js';
 export * from './secondaryGrid.js';
+export * from './contextDevSection.js';
 export * from './modals.js';
 export * from './loader.js';
+

@@ -31,9 +31,26 @@ export function renderRadarTable(container, portalData, activeTab = 'all', searc
     e.radarCategory === 'exam'
   );
 
+  // Helper: check if opening is tailored for students / scholars
+  function isStudentOpportunity(j) {
+    if (j.targetAudience === 'student' || j.targetAudience === 'both') return true;
+    if (j.radarCategory === 'research' || j.radarCategory === 'intern') return true;
+    const corpus = `${j.title || ''} ${j.what || ''} ${j.qualification || ''}`.toLowerCase();
+    return /\b(jrf|srf|phd|fellow|intern|apprentice|trainee|gate|graduate)\b/.test(corpus);
+  }
+
+  // Helper: check if opening is tailored for experienced professionals
+  function isProfessionalOpportunity(j) {
+    if (j.targetAudience === 'professional' || j.targetAudience === 'both') return true;
+    const corpus = `${j.title || ''} ${j.what || ''} ${j.qualification || ''}`.toLowerCase();
+    return /\b(scientist|faculty|professor|lateral|experienced|manager|officer|specialist|postdoc)\b/.test(corpus);
+  }
+
   // Compute sub-tab counts
   const counts = {
     all: radarJobs.length,
+    student: 0,
+    professional: 0,
     research: 0,
     psu: 0,
     govt: 0,
@@ -50,6 +67,9 @@ export function renderRadarTable(container, portalData, activeTab = 'all', searc
     else if (k === 'intern') counts.intern++;
     else if (k === 'state') counts.state++;
 
+    if (isStudentOpportunity(j)) counts.student++;
+    if (isProfessionalOpportunity(j)) counts.professional++;
+
     // Local / district / state check
     if (j.level === 'state' || j.level === 'district' || j.level === 'block' || (j.state && j.state !== 'Central / All India' && j.state !== 'All India')) {
       if (k !== 'state') counts.state++;
@@ -57,7 +77,7 @@ export function renderRadarTable(container, portalData, activeTab = 'all', searc
   });
 
   // Update tab counter DOM badges
-  ['all', 'research', 'psu', 'govt', 'state', 'intern', 'exams'].forEach(tab => {
+  ['all', 'student', 'professional', 'research', 'psu', 'govt', 'state', 'intern', 'exams'].forEach(tab => {
     const el = document.getElementById(`radar-cnt-${tab}`);
     if (el) el.textContent = counts[tab] || 0;
   });
@@ -71,6 +91,10 @@ export function renderRadarTable(container, portalData, activeTab = 'all', searc
   let itemsToDisplay = [];
   if (activeTab === 'exams') {
     itemsToDisplay = radarExams;
+  } else if (activeTab === 'student') {
+    itemsToDisplay = radarJobs.filter(isStudentOpportunity);
+  } else if (activeTab === 'professional') {
+    itemsToDisplay = radarJobs.filter(isProfessionalOpportunity);
   } else {
     itemsToDisplay = radarJobs.filter(j => {
       if (activeTab === 'all') return true;
@@ -85,7 +109,7 @@ export function renderRadarTable(container, portalData, activeTab = 'all', searc
   const q = String(searchQuery || '').trim().toLowerCase();
   if (q) {
     itemsToDisplay = itemsToDisplay.filter(item => {
-      const corpus = `${item.title || ''} ${item.what || ''} ${item.org || ''} ${item.state || ''} ${item.sector || ''} ${item.radarType || ''}`.toLowerCase();
+      const corpus = `${item.title || ''} ${item.what || ''} ${item.org || ''} ${item.state || ''} ${item.sector || ''} ${item.radarType || ''} ${item.targetAudience || ''} ${item.stipendOrSalary || ''} ${item.qualification || ''}`.toLowerCase();
       return corpus.includes(q);
     });
   }
@@ -160,13 +184,25 @@ export function renderRadarTable(container, portalData, activeTab = 'all', searc
     const officialUrl = safeLink(item.applyUrl || item.officialSite || item.link);
     const hasOfficial = officialUrl && officialUrl !== '#';
 
+    let audienceBadge = '';
+    if (item.targetAudience === 'student') {
+      audienceBadge = `<span class="radar-audience-pill pill-student">🎓 Student / Scholar</span>`;
+    } else if (item.targetAudience === 'professional') {
+      audienceBadge = `<span class="radar-audience-pill pill-professional">💼 Professional</span>`;
+    }
+
+    const stipendOrSalary = item.stipendOrSalary || item.details?.stipendOrSalary;
+    const salaryBadge = stipendOrSalary ? `<span class="radar-salary-pill">💵 ${escapeHtml(stipendOrSalary)}</span>` : '';
+
     return `
       <tr class="radar-table-row" data-id="${escapeHtml(item.id)}">
         <td class="td-post">
           <div class="radar-post-title-group">
             <span class="radar-post-title">${escapeHtml(displayTitle)}</span>
             <div class="radar-post-meta-row">
+              ${audienceBadge}
               ${typeBadge}
+              ${salaryBadge}
               ${item.details?.totalVacancies && item.details.totalVacancies !== 'See Notification' ? `<span class="radar-vac-count">${escapeHtml(item.details.totalVacancies)}</span>` : ''}
               ${item.qualification ? `<span class="radar-qual-tag">${escapeHtml(item.qualification)}</span>` : ''}
             </div>

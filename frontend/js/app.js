@@ -44,12 +44,17 @@ import {
   showToast,
   updateDegreeScopePills,
   renderRadarTable,
+  renderContextDevSection,
   loadComponents
 } from './components/index.js';
 
 // Sarkari Radar table state
 let radarActiveTab = 'all';
 let radarSearchQuery = '';
+
+// Context.dev section state
+let contextActiveTab = 'all';
+let contextSearchQuery = '';
 
 // DOM Element References (initialized after components mount)
 let tickerContainer;
@@ -173,6 +178,12 @@ function renderAll() {
   const radarTableBody = document.getElementById('radar-table-body');
   if (radarTableBody) {
     renderRadarTable(radarTableBody, state.data, radarActiveTab, radarSearchQuery);
+  }
+
+  // Render dedicated Context.dev section
+  const contextDevGrid = document.getElementById('context-dev-grid');
+  if (contextDevGrid) {
+    renderContextDevSection(contextDevGrid, state.data, contextActiveTab, contextSearchQuery);
   }
 }
 
@@ -706,9 +717,48 @@ function setupEventListeners() {
     });
   }
 
+  // 8c. Context.dev Section Tabs & Search Interactions
+  const contextTabsNav = document.querySelector('.context-dev-tabs');
+  if (contextTabsNav) {
+    contextTabsNav.addEventListener('click', (e) => {
+      const btn = e.target.closest('.ctx-tab-btn');
+      if (!btn) return;
+      contextTabsNav.querySelectorAll('.ctx-tab-btn').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      contextActiveTab = btn.getAttribute('data-ctx-tab') || 'all';
+      const grid = document.getElementById('context-dev-grid');
+      renderContextDevSection(grid, state.data, contextActiveTab, contextSearchQuery);
+    });
+  }
+
+  const ctxSearchInput = document.getElementById('ctx-search-input');
+  const ctxSearchClear = document.getElementById('ctx-search-clear');
+  if (ctxSearchInput) {
+    ctxSearchInput.addEventListener('input', (e) => {
+      contextSearchQuery = e.target.value;
+      if (ctxSearchClear) {
+        ctxSearchClear.style.display = contextSearchQuery ? 'inline-flex' : 'none';
+      }
+      const grid = document.getElementById('context-dev-grid');
+      renderContextDevSection(grid, state.data, contextActiveTab, contextSearchQuery);
+    });
+  }
+  if (ctxSearchClear) {
+    ctxSearchClear.addEventListener('click', () => {
+      if (ctxSearchInput) {
+        ctxSearchInput.value = '';
+        ctxSearchInput.focus();
+      }
+      contextSearchQuery = '';
+      ctxSearchClear.style.display = 'none';
+      const grid = document.getElementById('context-dev-grid');
+      renderContextDevSection(grid, state.data, contextActiveTab, contextSearchQuery);
+    });
+  }
+
   // 9. Card / Row Click -> Open Detail Modal (Event Delegation)
   document.addEventListener('click', (e) => {
-    const card = e.target.closest('.trending-card, .matrix-item, .secondary-card, .radar-table-row, .btn-radar-details');
+    const card = e.target.closest('.trending-card, .matrix-item, .secondary-card, .radar-table-row, .btn-radar-details, .ctx-opening-card, .btn-ctx-details');
     if (card && !e.target.closest('a')) {
       const id = card.getAttribute('data-id');
       if (id) {
