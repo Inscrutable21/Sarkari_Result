@@ -39,6 +39,8 @@ function loadEnvFile() {
 }
 loadEnvFile();
 
+const { getQueryTasks } = require('./contextDevQueries');
+
 const CONTEXT_API_URL = 'https://api.context.dev/v1/web/answers';
 
 /**
@@ -66,7 +68,12 @@ const SHORT_GOVT_ACRONYMS = [
 const LONG_GOVT_KEYWORDS = [
   'university', 'institute', 'national', 'central', 'powergrid', 'npcil', 'hpcl', 'bpcl',
   'coal india', 'pgcil', 'rvnl', 'irctc', 'government', 'ministry', 'department',
-  'council', 'academy', 'board', 'fssai', 'defence', 'defense', 'research laboratory'
+  'council', 'academy', 'board', 'fssai', 'defence', 'defense', 'research laboratory',
+  'bank of', 'state bank', 'reserve bank', 'nabard', 'sidbi', 'life insurance', 'railway',
+  'indian oil', 'oil india', 'oil and natural gas', 'nmdc', 'nalco', 'moil', 'mecon', 'rites',
+  'concor', 'ircon', 'bsnl', 'mtnl', 'airports authority', 'esic', 'epfo', 'nhai', 'mazagon',
+  'cochin shipyard', 'bharat ', 'hindustan', 'electricity board', 'transmission corporation',
+  'pgimer', 'jipmer', 'public sector', 'psu'
 ];
 
 /**
@@ -366,7 +373,7 @@ async function fetchWithRetry(url, options, maxRetries = 2) {
  * @param {string} [options.filterAudience='all'] - 'all' | 'student' | 'professional'
  * @returns {Promise<Array>} List of normalized portal items
  */
-async function scrapeContextDevOpenings({ maxItems = 40, filterAudience = 'all' } = {}) {
+async function scrapeContextDevOpenings({ maxItems = 200, filterAudience = 'all' } = {}) {
   const apiKey = getApiKey();
   if (!apiKey) {
     console.warn('[ContextDev Scraper] No Context.dev API key found in environment (.env). Skipping Context.dev scrape.');
@@ -375,24 +382,8 @@ async function scrapeContextDevOpenings({ maxItems = 40, filterAudience = 'all' 
 
   console.log('[ContextDev Scraper] Starting institutional government & PSU scrape via Context.dev...');
 
-  // Targeted query tasks tailored for Students (Research / Fellowships / PSU Trainees)
-  // and Professionals (Lateral PSUs / Scientists / Faculty)
-  const queryTasks = [
-    {
-      name: 'Students & Scholars: Research Fellowships & PSU Trainees',
-      task: 'Find 10 active official government research fellowships (Junior Research Fellow JRF, Senior Research Fellow SRF, PhD admissions with fellowship, Project Associate) and PSU trainee/apprentice openings (Executive Trainee, Management Trainee, Graduate Apprentice) in Indian institutions (CSIR, DRDO, ICMR, ISRO, BARC, IITs, IISc, ONGC, NTPC, BHEL, IOCL) closing in 2026. Provide official title, organization, qualification, stipend/salary, lastDate (YYYY-MM-DD), and official link.',
-      category: 'research',
-      audience: 'student',
-      opportunityType: 'Research Fellowship & Trainee'
-    },
-    {
-      name: 'Professionals & Experienced: Lateral PSU Recruits, Scientists & Faculty',
-      task: 'Find 10 active official recruitment notifications for experienced professionals, lateral engineers, managers, specialists, Project Scientists (Scientist B/C/D), and faculty in Indian Central PSUs and premier institutions (ONGC, NTPC, BHEL, IOCL, SAIL, IITs, NITs, AIIMS, IISc, CDAC, POWERGRID) closing in 2026. Provide official title, organization, qualification, stipend/salary, lastDate (YYYY-MM-DD), and official link.',
-      category: 'psu',
-      audience: 'professional',
-      opportunityType: 'Professional PSU & Institutional'
-    }
-  ];
+  // Query catalogue lives in contextDevQueries.js (research bodies, institutes, PSUs, banks, state PSUs...)
+  const queryTasks = getQueryTasks();
 
   const results = [];
   const seenIds = new Set();
@@ -481,7 +472,7 @@ async function scrapeContextDevOpenings({ maxItems = 40, filterAudience = 'all' 
 
 // Standalone CLI runner when executed directly (e.g. node contextDevScraper.js)
 if (require.main === module) {
-  scrapeContextDevOpenings({ maxItems: 40 })
+  scrapeContextDevOpenings({ maxItems: 200 })
     .then(items => {
       console.log(`\n Extracted ${items.length} openings via Context.dev:`);
       items.forEach((item, idx) => {

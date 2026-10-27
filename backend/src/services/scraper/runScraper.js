@@ -110,7 +110,7 @@ async function run() {
         console.warn('[Scraper] Sarkari Radar fetch notice:', err.message);
         return { jobs: [], trending: [], exams: [] };
       }),
-      scrapeContextDevOpenings({ maxItems: 40 }).catch(err => {
+      scrapeContextDevOpenings({ maxItems: 200 }).catch(err => {
         console.warn('[Scraper] Context.dev fetch notice:', err.message);
         return [];
       })
