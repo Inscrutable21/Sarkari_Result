@@ -185,35 +185,120 @@
             <div class="admin-card-header">
               <h3 class="admin-card-title">
                 <span>⚡</span>
-                <span>Live Web Scraper & Cloud Pipeline</span>
+                <span>Centralized Multi-Platform Scraper Engine</span>
               </h3>
               <div id="scraper-status-badge" class="admin-brand-badge" style="background: rgba(16, 185, 129, 0.15); color: #047857; border-color: rgba(16, 185, 129, 0.3);">
                 READY
               </div>
             </div>
 
-            <!-- Hero Action Box -->
+            <!-- Centralized Hero Action Box -->
             <div class="admin-scraper-hero">
               <div class="admin-scraper-hero-text">
-                <h3>SarkariResult Multi-Page Crawl & Classifier</h3>
+                <h3>One-Click Multi-Platform Web Crawl & Cloud Sync</h3>
                 <p>
-                  Crawls the live homepage & dedicated archives (Latest Jobs, Results, Admit Cards, UPSC), categorizes all vacancies by sector & degree, removes expired postings, and persists everything directly into <strong>MongoDB Atlas</strong>.
+                  Trigger a unified automated scrape across all 3 platforms: <strong>Sarkari Result</strong> (Homepage + Archives), <strong>Sarkari Radar</strong> (Vacancies & Exam Calendar), and <strong>Context.dev</strong> (Government Research Fellowships & Central PSUs).
                 </p>
               </div>
 
               <button type="button" id="btn-trigger-scrape" class="admin-btn admin-btn-primary admin-scraper-hero-btn">
-                <span>🚀 Run Full Scraper Pipeline</span>
+                <span>⚡ Run Centralized Scraper (All Platforms)</span>
               </button>
+            </div>
+
+            <!-- Platform Options & Depth Config -->
+            <div class="scraper-config-panel">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.04em;">
+                  Target Platforms (Included in Centralized Trigger):
+                </span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <label for="scraper-depth-mode" style="font-size: 0.76rem; color: #64748b; font-weight: 600;">Depth Mode:</label>
+                  <select id="scraper-depth-mode" class="scraper-mode-select">
+                    <option value="quick" selected>⚡ Fast Balanced Mode (~25s)</option>
+                    <option value="full">📚 Deep Comprehensive Crawl (~2m)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="scraper-platforms-select">
+                <label class="scraper-platform-toggle" title="Homepage, Latest Jobs, Results, Admit Cards, UPSC Archives">
+                  <input type="checkbox" id="check-platform-sr" checked>
+                  <span>🏛️ Sarkari Result</span>
+                </label>
+                <label class="scraper-platform-toggle" title="Vacancies, Examination Calendar, PSU & Research Highlights">
+                  <input type="checkbox" id="check-platform-radar" checked>
+                  <span>📡 Sarkari Radar</span>
+                </label>
+                <label class="scraper-platform-toggle" title="CSIR/DRDO/ISRO Research, IITs/NITs, AIIMS, Central PSUs">
+                  <input type="checkbox" id="check-platform-context" checked>
+                  <span>🧠 Context.dev AI</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Platform Telemetry Status Cards (3 Grid) -->
+            <div class="platform-status-grid">
+              <!-- Platform 1: Sarkari Result -->
+              <div class="platform-card" id="card-platform-sr">
+                <div class="platform-card-header">
+                  <div class="platform-card-title">
+                    <span>🏛️</span>
+                    <span>Sarkari Result</span>
+                  </div>
+                  <span id="pill-platform-sr" class="platform-pill is-ready">Ready</span>
+                </div>
+                <div class="platform-card-metric">
+                  <span id="count-platform-sr" class="platform-card-count">--</span>
+                  <span class="platform-card-label">Records</span>
+                </div>
+                <p class="platform-card-desc">Homepage, Latest Jobs, Results, Admit Cards, UPSC Archives.</p>
+              </div>
+
+              <!-- Platform 2: Sarkari Radar -->
+              <div class="platform-card" id="card-platform-radar">
+                <div class="platform-card-header">
+                  <div class="platform-card-title">
+                    <span>📡</span>
+                    <span>Sarkari Radar</span>
+                  </div>
+                  <span id="pill-platform-radar" class="platform-pill is-ready">Ready</span>
+                </div>
+                <div class="platform-card-metric">
+                  <span id="count-platform-radar" class="platform-card-count">--</span>
+                  <span class="platform-card-label">Records</span>
+                </div>
+                <p class="platform-card-desc">Direct Vacancies, Examination Calendar & Institutional Listings.</p>
+              </div>
+
+              <!-- Platform 3: Context.dev AI -->
+              <div class="platform-card" id="card-platform-context">
+                <div class="platform-card-header">
+                  <div class="platform-card-title">
+                    <span>🧠</span>
+                    <span>Context.dev</span>
+                  </div>
+                  <span id="pill-platform-context" class="platform-pill is-ready">Ready</span>
+                </div>
+                <div class="platform-card-metric">
+                  <span id="count-platform-context" class="platform-card-count">--</span>
+                  <span class="platform-card-label">Records</span>
+                </div>
+                <p class="platform-card-desc">CSIR, DRDO, ISRO, IITs, AIIMS, PSUs Research Fellowships.</p>
+              </div>
             </div>
 
             <!-- Scraper Progress Bar (Active while scraping) -->
             <div id="scraper-progress-container" style="display: none; margin-bottom: 1.25rem;">
-              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #64748b; margin-bottom: 6px;">
-                <span id="scraper-progress-text">Scraping in progress...</span>
-                <span id="scraper-timer">00:00</span>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #475569; margin-bottom: 6px;">
+                <span id="scraper-progress-text" style="font-weight: 600;">Initiating centralized scraper pipeline...</span>
+                <div style="display: flex; gap: 8px;">
+                  <strong id="scraper-progress-percent" style="color: #c01b22;">0%</strong>
+                  <span id="scraper-timer">00:00</span>
+                </div>
               </div>
-              <div style="width: 100%; height: 6px; background: rgba(15, 23, 42, 0.08); border-radius: 99px; overflow: hidden;">
-                <div class="scraper-progress-bar" style="width: 45%;"></div>
+              <div style="width: 100%; height: 8px; background: rgba(15, 23, 42, 0.08); border-radius: 99px; overflow: hidden;">
+                <div id="scraper-progress-bar-el" class="scraper-progress-bar" style="width: 0%; height: 100%;"></div>
               </div>
             </div>
 
@@ -225,7 +310,7 @@
                   <span class="admin-terminal-dot" style="background: #f59e0b;"></span>
                   <span class="admin-terminal-dot" style="background: #10b981;"></span>
                 </div>
-                <span class="admin-terminal-title">Execution Log Console</span>
+                <span class="admin-terminal-title">Centralized Scraper Execution Console</span>
                 <button type="button" id="btn-clear-logs" style="background: none; border: none; color: #64748b; font-size: 0.72rem; cursor: pointer;">
                   Clear
                 </button>
@@ -234,18 +319,18 @@
               <div id="admin-terminal-logs" class="admin-terminal-body">
                 <div class="log-entry">
                   <span class="log-time">[System]</span>
-                  <span class="log-msg-info">Admin Control Center initialized. Ready to trigger scraper pipeline.</span>
+                  <span class="log-msg-info">Centralized Scraper Engine initialized. Ready to scrape Sarkari Result, Sarkari Radar, and Context.dev.</span>
                 </div>
               </div>
             </div>
 
             <!-- Last Run Stats Summary -->
-            <div id="admin-last-run-box" style="display: none; margin-top: 1.25rem; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 10px; padding: 1rem;">
-              <h4 style="margin: 0 0 0.5rem; color: #047857; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+            <div id="admin-last-run-box" style="display: none; margin-top: 1.25rem; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 10px; padding: 1.15rem;">
+              <h4 style="margin: 0 0 0.6rem; color: #047857; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
                 <span>✓</span>
-                <span>Last Scrape Run Successful</span>
+                <span>Centralized Multi-Platform Scrape Successful</span>
               </h4>
-              <div id="admin-last-run-details" style="font-size: 0.82rem; color: #475569; line-height: 1.6;"></div>
+              <div id="admin-last-run-details" style="font-size: 0.82rem; color: #334155; line-height: 1.7;"></div>
             </div>
           </div>
         </div>

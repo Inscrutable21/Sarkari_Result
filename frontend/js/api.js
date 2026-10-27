@@ -39,11 +39,13 @@ async function fetchWithFallback(endpoint, options = {}) {
 
   // Probe candidates sequentially
   let lastError = null;
+  const timeoutMs = options.timeout || (endpoint.includes('/scrape') ? 120000 : 5000);
+
   for (const candidate of API_BASE_CANDIDATES) {
     try {
       const url = `${candidate}${endpoint}`;
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 4000);
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
       const res = await fetch(url, { ...finalOptions, signal: controller.signal });
       clearTimeout(timer);
       resolvedApiBase = candidate;
@@ -236,19 +238,39 @@ export async function fetchMongoStatus() {
   }
 }
 
-export async function triggerLiveScrape(adminKey = '') {
+export async function triggerLiveScrape(options = {}) {
+  const token = typeof options === 'string' ? options : (options.adminKey || options.token || '');
+  const platforms = options.platforms || ['sarkariResult', 'sarkariRadar', 'contextDev'];
+  const contextDevMode = options.contextDevMode || 'quick';
+  const isAsync = options.async !== false;
+
   const headers = { 'Content-Type': 'application/json' };
-  if (adminKey) {
-    headers['x-admin-key'] = adminKey;
+  if (token) {
+    headers['x-admin-key'] = token;
   }
-  const query = adminKey ? `?adminKey=${encodeURIComponent(adminKey)}` : '';
+  const query = token ? `?adminKey=${encodeURIComponent(token)}` : '';
   const response = await fetchWithFallback(`/scrape${query}`, {
     method: 'POST',
-    headers
+    headers,
+    body: JSON.stringify({
+      platforms,
+      contextDevMode,
+      async: isAsync
+    }),
+    timeout: 180000
   });
   const result = await response.json();
-  if (!response.ok) {
+  if (!response.ok && response.status !== 202) {
     throw new Error(result.error || result.message || 'Scraping failed');
+  }
+  return result;
+}
+
+export async function fetchScraperStatus() {
+  const response = await fetchWithFallback('/scrape/status');
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Failed to fetch scraper status');
   }
   return result;
 }

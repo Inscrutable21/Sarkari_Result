@@ -5,6 +5,7 @@
 
 import {
   triggerLiveScrape,
+  fetchScraperStatus,
   fetchMongoStatus,
   verifyAdminKey,
   fetchPostingDetails,
@@ -331,32 +332,145 @@ async function loadTelemetry() {
       if (dbHealthStatus) dbHealthStatus.textContent = 'Connecting...';
       if (dbStatusText) dbStatusText.textContent = 'MongoDB Atlas Ready';
     }
+
+    // Sync scraper platform cards with latest database state
+    try {
+      const scraperStatus = await fetchScraperStatus();
+      if (scraperStatus && scraperStatus.platforms) {
+        for (const [pKey, pInfo] of Object.entries(scraperStatus.platforms)) {
+          updatePlatformCard(pKey, pInfo);
+        }
+      }
+      if (scraperStatus && scraperStatus.lastRunSummary && scraperStatus.lastRunSummary.success) {
+        const lastRunBox = document.getElementById('admin-last-run-box');
+        const lastRunDetails = document.getElementById('admin-last-run-details');
+        const summary = scraperStatus.lastRunSummary;
+        const cat = summary.categorySummary || {};
+        const counts = summary.counts || {};
+        const platforms = summary.platforms || {};
+        const timeFormatted = new Date(summary.scrapedAt || Date.now()).toLocaleTimeString();
+
+        if (lastRunBox && lastRunDetails) {
+          lastRunDetails.innerHTML = `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 10px; background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px;">
+              <div>🏛️ <strong>Sarkari Result:</strong> ${platforms.sarkariResult?.counts?.total || (counts.latestJobs + counts.results + counts.admitCards) || 0} items</div>
+              <div>📡 <strong>Sarkari Radar:</strong> ${platforms.sarkariRadar?.counts?.total || (platforms.sarkariRadar?.counts?.jobs || 0)} items</div>
+              <div>🧠 <strong>Context.dev AI:</strong> ${platforms.contextDev?.counts?.total || (platforms.contextDev?.counts?.openings || 0)} openings</div>
+            </div>
+            <div>• <strong>Total Unified Cloud Records:</strong> <strong style="color: #047857;">${summary.totalItems || 'All'}</strong></div>
+            <div>• <strong>Active Vacancies Cleaned:</strong> ${summary.cleanedExpiredCount || 0} expired forms removed</div>
+            <div>• <strong>Multi-Tier Classifications:</strong> ${(cat.sectors || []).length} sectors, ${(cat.disciplines || []).length} degree streams mapped</div>
+            <div>• <strong>Total Pipeline Execution:</strong> ${(summary.durationMs ? summary.durationMs / 1000 : 0).toFixed(1)}s (Completed at ${timeFormatted})</div>
+          `;
+          lastRunBox.style.display = 'block';
+        }
+      }
+    } catch {}
   } catch (err) {
     console.warn('[Admin Telemetry]:', err);
     logTerminal(`Failed to update telemetry: ${err.message}`, 'warn');
   }
 }
 
-// Live Scraper Runner
+// Platform Card UI Helper
+function updatePlatformCard(key, info = {}) {
+  const pillMap = {
+    sarkariResult: document.getElementById('pill-platform-sr'),
+    sarkariRadar: document.getElementById('pill-platform-radar'),
+    contextDev: document.getElementById('pill-platform-context')
+  };
+  const countMap = {
+    sarkariResult: document.getElementById('count-platform-sr'),
+    sarkariRadar: document.getElementById('count-platform-radar'),
+    contextDev: document.getElementById('count-platform-context')
+  };
+
+  const pill = pillMap[key];
+  const countEl = countMap[key];
+
+  if (pill) {
+    pill.className = 'platform-pill';
+    const status = (info.status || 'ready').toLowerCase();
+    if (status === 'running') {
+      pill.classList.add('is-running');
+      pill.textContent = 'Scraping...';
+    } else if (status === 'success') {
+      pill.classList.add('is-success');
+      pill.textContent = '✓ Completed';
+    } else if (status === 'error') {
+      pill.classList.add('is-error');
+      pill.textContent = 'Notice/Error';
+    } else if (status === 'idle') {
+      pill.classList.add('is-idle');
+      pill.textContent = info.error ? 'Skipped' : 'Ready';
+    } else {
+      pill.classList.add('is-ready');
+      pill.textContent = 'Ready';
+    }
+  }
+
+  if (countEl) {
+    const counts = info.counts || {};
+    const total = counts.total || counts.openings || counts.jobs || 0;
+    countEl.textContent = total > 0 ? total : '--';
+  }
+}
+
+let scraperPollingInterval = null;
+let lastRenderedLogCount = 0;
+
+// Centralized Multi-Platform Scraper Runner
 async function runScraper() {
   const btnTriggerScrape = document.getElementById('btn-trigger-scrape');
   const scraperStatusBadge = document.getElementById('scraper-status-badge');
   const scraperProgressContainer = document.getElementById('scraper-progress-container');
   const scraperProgressText = document.getElementById('scraper-progress-text');
+  const scraperProgressPercent = document.getElementById('scraper-progress-percent');
+  const scraperProgressBarEl = document.getElementById('scraper-progress-bar-el');
   const scraperTimer = document.getElementById('scraper-timer');
   const lastRunBox = document.getElementById('admin-last-run-box');
   const lastRunDetails = document.getElementById('admin-last-run-details');
 
+  // Determine selected platforms
+  const checkSr = document.getElementById('check-platform-sr');
+  const checkRadar = document.getElementById('check-platform-radar');
+  const checkContext = document.getElementById('check-platform-context');
+  const depthModeSelect = document.getElementById('scraper-depth-mode');
+
+  const selectedPlatforms = [];
+  if (checkSr?.checked) selectedPlatforms.push('sarkariResult');
+  if (checkRadar?.checked) selectedPlatforms.push('sarkariRadar');
+  if (checkContext?.checked) selectedPlatforms.push('contextDev');
+
+  if (selectedPlatforms.length === 0) {
+    showToast('Please select at least one platform to scrape.', 'warn');
+    return;
+  }
+
+  const contextDevMode = depthModeSelect?.value || 'quick';
+
   btnTriggerScrape.setAttribute('disabled', 'true');
-  btnTriggerScrape.innerHTML = '<span>⏳ Scraper Pipeline Running...</span>';
+  btnTriggerScrape.innerHTML = '<span>⏳ Centralized Scraper Running...</span>';
   if (scraperStatusBadge) {
-    scraperStatusBadge.textContent = 'RUNNING';
+    scraperStatusBadge.textContent = 'SCRAPING';
     scraperStatusBadge.style.background = 'rgba(245, 158, 11, 0.15)';
     scraperStatusBadge.style.color = '#fbbf24';
     scraperStatusBadge.style.borderColor = 'rgba(245, 158, 11, 0.3)';
   }
 
   if (scraperProgressContainer) scraperProgressContainer.style.display = 'block';
+  if (scraperProgressPercent) scraperProgressPercent.textContent = '0%';
+  if (scraperProgressBarEl) scraperProgressBarEl.style.width = '0%';
+  if (scraperProgressText) scraperProgressText.textContent = `Initiating centralized crawl across ${selectedPlatforms.length} platforms...`;
+
+  // Update initial platform pills
+  ['sarkariResult', 'sarkariRadar', 'contextDev'].forEach(pKey => {
+    if (selectedPlatforms.includes(pKey)) {
+      updatePlatformCard(pKey, { status: 'running' });
+    } else {
+      updatePlatformCard(pKey, { status: 'idle', error: 'Skipped' });
+    }
+  });
 
   let seconds = 0;
   if (scraperTimer) scraperTimer.textContent = '00:00';
@@ -368,62 +482,113 @@ async function runScraper() {
     if (scraperTimer) scraperTimer.textContent = `${m}:${s}`;
   }, 1000);
 
-  const simulationSteps = [
-    'Initiating SarkariResult crawler (homepage, latest jobs, results, admit cards, UPSC)...',
-    'Extracting posting links and deduplicating recruitment listings...',
-    'Fetching deep specs for featured institutions & state commissions...',
-    'Categorizing by Sector (Banking, SSC, Railway, Police, Defense, Teaching)...',
-    'Categorizing by State & Degree Disciplines (CS/IT, Civil, Mech, Law, Medical)...',
-    'Filtering unfillable & expired application forms...',
-    'Persisting all datasets directly into MongoDB Atlas cloud database...',
-    'Evaluating candidate subscriber profiles and dispatching matching job alerts...'
-  ];
-
-  let stepIdx = 0;
-  logTerminal(simulationSteps[0], 'info');
-  if (scraperProgressText) scraperProgressText.textContent = simulationSteps[0];
-
-  const logInterval = setInterval(() => {
-    stepIdx = (stepIdx + 1) % simulationSteps.length;
-    logTerminal(simulationSteps[stepIdx], 'info');
-    if (scraperProgressText) scraperProgressText.textContent = simulationSteps[stepIdx];
-  }, 2600);
+  logTerminal(`Starting Centralized Scraper Trigger for: ${selectedPlatforms.join(', ')} (Depth: ${contextDevMode})...`, 'info');
 
   try {
-    const result = await triggerLiveScrape(activeToken || activeAdminKey);
-    clearInterval(logInterval);
-    clearInterval(scrapeTimerInterval);
+    const triggerResult = await triggerLiveScrape({
+      platforms: selectedPlatforms,
+      contextDevMode,
+      async: true,
+      adminKey: activeToken || activeAdminKey
+    });
 
-    if (scraperProgressContainer) scraperProgressContainer.style.display = 'none';
-    if (scraperStatusBadge) {
-      scraperStatusBadge.textContent = 'SUCCESS';
-      scraperStatusBadge.style.background = 'rgba(16, 185, 129, 0.15)';
-      scraperStatusBadge.style.color = '#34d399';
-      scraperStatusBadge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-    }
+    logTerminal(triggerResult.message || 'Scraper pipeline dispatched to server engine.', 'info');
 
-    const summary = result.summary || {};
-    const cat = summary.categorySummary || {};
-    const timeFormatted = new Date(summary.scrapedAt || Date.now()).toLocaleTimeString();
+    // Poll live status from server
+    lastRenderedLogCount = 0;
+    clearInterval(scraperPollingInterval);
 
-    logTerminal(`Pipeline completed successfully! Crawled & classified ${summary.totalItems || 'all'} records into MongoDB Atlas.`, 'success');
+    scraperPollingInterval = setInterval(async () => {
+      try {
+        const statusRes = await fetchScraperStatus();
+        if (!statusRes || !statusRes.success) return;
 
-    if (lastRunBox && lastRunDetails) {
-      lastRunDetails.innerHTML = `
-        <div>• <strong>Total Records Crawled:</strong> ${summary.totalItems || 'All'}</div>
-        <div>• <strong>Available Sectors:</strong> ${(cat.sectors || []).length} mapped</div>
-        <div>• <strong>Degree Disciplines:</strong> ${(cat.disciplines || []).length} categories classified</div>
-        <div>• <strong>Execution Duration:</strong> ${seconds} seconds</div>
-        <div>• <strong>Completed At:</strong> ${timeFormatted}</div>
-      `;
-      lastRunBox.style.display = 'block';
-    }
+        // Update progress percentage and stage
+        const progressVal = statusRes.progress || 0;
+        if (scraperProgressPercent) scraperProgressPercent.textContent = `${progressVal}%`;
+        if (scraperProgressBarEl) scraperProgressBarEl.style.width = `${progressVal}%`;
+        if (scraperProgressText && statusRes.stage) scraperProgressText.textContent = statusRes.stage;
 
-    showToast('Scraper completed successfully! MongoDB Atlas updated.', 'success');
-    loadTelemetry();
+        // Update Platform Status Cards
+        if (statusRes.platforms) {
+          for (const [pKey, pInfo] of Object.entries(statusRes.platforms)) {
+            updatePlatformCard(pKey, pInfo);
+          }
+        }
+
+        // Render live server execution logs into terminal
+        if (Array.isArray(statusRes.logs)) {
+          const newLogs = statusRes.logs.slice(lastRenderedLogCount);
+          for (const l of newLogs) {
+            logTerminal(l.message, l.type || 'info');
+          }
+          lastRenderedLogCount = statusRes.logs.length;
+        }
+
+        // Check if finished
+        if (statusRes.isScrapingInProgress === false) {
+          clearInterval(scraperPollingInterval);
+          clearInterval(scrapeTimerInterval);
+
+          if (scraperProgressContainer) scraperProgressContainer.style.display = 'none';
+
+          const summary = statusRes.lastRunSummary || {};
+          if (summary.success !== false) {
+            if (scraperStatusBadge) {
+              scraperStatusBadge.textContent = 'SUCCESS';
+              scraperStatusBadge.style.background = 'rgba(16, 185, 129, 0.15)';
+              scraperStatusBadge.style.color = '#34d399';
+              scraperStatusBadge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+            }
+
+            const cat = summary.categorySummary || {};
+            const timeFormatted = new Date(summary.scrapedAt || Date.now()).toLocaleTimeString();
+            const counts = summary.counts || {};
+            const platforms = summary.platforms || {};
+
+            logTerminal(`Centralized Scraper finished successfully in ${(summary.durationMs ? summary.durationMs / 1000 : seconds).toFixed(1)}s! Synchronized ${summary.totalItems || 'all'} records to MongoDB Atlas cloud.`, 'success');
+
+            if (lastRunBox && lastRunDetails) {
+              lastRunDetails.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 10px; background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px;">
+                  <div>🏛️ <strong>Sarkari Result:</strong> ${platforms.sarkariResult?.counts?.total || (counts.latestJobs + counts.results + counts.admitCards) || 0} items</div>
+                  <div>📡 <strong>Sarkari Radar:</strong> ${platforms.sarkariRadar?.counts?.total || (platforms.sarkariRadar?.counts?.jobs || 0)} items</div>
+                  <div>🧠 <strong>Context.dev AI:</strong> ${platforms.contextDev?.counts?.total || (platforms.contextDev?.counts?.openings || 0)} openings</div>
+                </div>
+                <div>• <strong>Total Unified Cloud Records:</strong> <strong style="color: #047857;">${summary.totalItems || 'All'}</strong></div>
+                <div>• <strong>Active Vacancies Cleaned:</strong> ${summary.cleanedExpiredCount || 0} expired forms removed</div>
+                <div>• <strong>Multi-Tier Classifications:</strong> ${(cat.sectors || []).length} sectors, ${(cat.disciplines || []).length} degree streams mapped</div>
+                <div>• <strong>Candidate Alerts Dispatched:</strong> ${summary.notifications?.dispatched || 0} active subscribers</div>
+                <div>• <strong>Total Pipeline Execution:</strong> ${(summary.durationMs ? summary.durationMs / 1000 : seconds).toFixed(1)}s (Finished at ${timeFormatted})</div>
+              `;
+              lastRunBox.style.display = 'block';
+            }
+
+            showToast('Centralized scraping complete! All platforms updated in MongoDB Atlas.', 'success');
+            loadTelemetry();
+          } else {
+            // Failed run
+            if (scraperStatusBadge) {
+              scraperStatusBadge.textContent = 'FAILED';
+              scraperStatusBadge.style.background = 'rgba(239, 68, 68, 0.15)';
+              scraperStatusBadge.style.color = '#f87171';
+              scraperStatusBadge.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+            }
+            logTerminal(`Centralized scraper failure: ${summary.error || 'Unknown error'}`, 'error');
+            showToast(`Scraper error: ${summary.error || 'Failed'}`, 'error');
+          }
+
+          btnTriggerScrape.removeAttribute('disabled');
+          btnTriggerScrape.innerHTML = '<span>⚡ Run Centralized Scraper (All Platforms)</span>';
+        }
+      } catch (pollErr) {
+        console.warn('[Scraper Polling Error]:', pollErr);
+      }
+    }, 1200);
+
   } catch (err) {
-    clearInterval(logInterval);
     clearInterval(scrapeTimerInterval);
+    clearInterval(scraperPollingInterval);
 
     if (scraperProgressContainer) scraperProgressContainer.style.display = 'none';
     if (scraperStatusBadge) {
@@ -433,11 +598,11 @@ async function runScraper() {
       scraperStatusBadge.style.borderColor = 'rgba(239, 68, 68, 0.3)';
     }
 
-    logTerminal(`Scraper pipeline error: ${err.message}`, 'error');
+    logTerminal(`Scraper dispatch error: ${err.message}`, 'error');
     showToast(`Scraper error: ${err.message}`, 'error');
-  } finally {
+
     btnTriggerScrape.removeAttribute('disabled');
-    btnTriggerScrape.innerHTML = '<span>🚀 Run Full Scraper Pipeline</span>';
+    btnTriggerScrape.innerHTML = '<span>⚡ Run Centralized Scraper (All Platforms)</span>';
   }
 }
 

@@ -1,11 +1,4 @@
-/**
- * Context.dev query catalogue.
- * Each entry is one Answers API task. Add organisations here to widen coverage;
- * the scraper runs them sequentially (account allows 1 in-flight request).
- *
- * category must be 'research' or 'psu' (the two tabs the frontend renders).
- * audience: 'student' | 'professional' | undefined (auto-detected per item).
- */
+
 
 const FIELDS = 'Provide official title, organization, qualification, stipend/salary, lastDate (YYYY-MM-DD), total vacancies, state, and the official notification or apply link.';
 
@@ -13,28 +6,31 @@ function buildTask(count, what, orgs, year) {
   return `Find ${count} active official ${what} from ${orgs} with application deadlines after today, in ${year} or later. Only include real notifications published on the organisation's official website. ${FIELDS}`;
 }
 
-function getQueryTasks(year = new Date().getFullYear()) {
+function getQueryTasks(year = new Date().getFullYear(), mode = 'quick') {
   const t = (count, what, orgs) => buildTask(count, what, orgs, year);
 
-  return [
+  const allTasks = [
     // ── Research & academic institutions ─────────────────────────────
     {
       name: 'Research councils: CSIR / ICMR / ICAR / DBT / DST labs',
       category: 'research',
       opportunityType: 'Research Fellowship',
-      task: t(15, 'recruitment notifications (JRF, SRF, Project Associate, Project Scientist, Research Associate, Technical Assistant)', 'CSIR labs, ICMR institutes, ICAR institutes, DBT and DST institutes')
+      task: t(15, 'recruitment notifications (JRF, SRF, Project Associate, Project Scientist, Research Associate, Technical Assistant)', 'CSIR labs, ICMR institutes, ICAR institutes, DBT and DST institutes'),
+      priority: true
     },
     {
       name: 'Space, atomic & defence research: ISRO / DRDO / BARC / DAE',
       category: 'research',
       opportunityType: 'Research Fellowship',
-      task: t(15, 'recruitment notifications (Scientist/Engineer, JRF, Apprentice, Technician, Project staff)', 'ISRO centres, DRDO labs, BARC, DAE units, NPCIL')
+      task: t(15, 'recruitment notifications (Scientist/Engineer, JRF, Apprentice, Technician, Project staff)', 'ISRO centres, DRDO labs, BARC, DAE units, NPCIL'),
+      priority: true
     },
     {
       name: 'Technical institutes: IITs / NITs / IIITs / IISc / IISER',
       category: 'research',
       opportunityType: 'Institute Opening',
-      task: t(15, 'recruitment notifications (faculty, non-teaching staff, project staff, JRF, PhD admissions with fellowship)', 'IITs, NITs, IIITs, IISc and IISERs')
+      task: t(15, 'recruitment notifications (faculty, non-teaching staff, project staff, JRF, PhD admissions with fellowship)', 'IITs, NITs, IIITs, IISc and IISERs'),
+      priority: true
     },
     {
       name: 'Medical institutes: AIIMS / PGIMER / JIPMER / ESIC',
@@ -53,7 +49,8 @@ function getQueryTasks(year = new Date().getFullYear()) {
       category: 'research',
       opportunityType: 'Internship / Apprenticeship',
       audience: 'student',
-      task: t(15, 'internship, apprenticeship and fellowship programmes (including NATS/NAPS apprentices and summer research fellowships)', 'central government ministries, departments, research bodies and PSUs')
+      task: t(15, 'internship, apprenticeship and fellowship programmes (including NATS/NAPS apprentices and summer research fellowships)', 'central government ministries, departments, research bodies and PSUs'),
+      priority: true
     },
 
     // ── PSUs ─────────────────────────────────────────────────────────
@@ -61,13 +58,15 @@ function getQueryTasks(year = new Date().getFullYear()) {
       name: 'Oil, gas & energy PSUs',
       category: 'psu',
       opportunityType: 'PSU Recruitment',
-      task: t(15, 'recruitment notifications (Executive Trainee, Engineer, Officer, Apprentice, Non-executive)', 'ONGC, IOCL, BPCL, HPCL, GAIL, Oil India, NTPC, NHPC, POWERGRID, SJVN, Coal India and its subsidiaries')
+      task: t(15, 'recruitment notifications (Executive Trainee, Engineer, Officer, Apprentice, Non-executive)', 'ONGC, IOCL, BPCL, HPCL, GAIL, Oil India, NTPC, NHPC, POWERGRID, SJVN, Coal India and its subsidiaries'),
+      priority: true
     },
     {
       name: 'Steel, mining & heavy industry PSUs',
       category: 'psu',
       opportunityType: 'PSU Recruitment',
-      task: t(15, 'recruitment notifications (Management Trainee, Engineer, Operator, Apprentice)', 'SAIL, NMDC, NALCO, MOIL, BHEL, HAL, BEL, BEML, Mazagon Dock, Cochin Shipyard, GRSE and Bharat Dynamics')
+      task: t(15, 'recruitment notifications (Management Trainee, Engineer, Operator, Apprentice)', 'SAIL, NMDC, NALCO, MOIL, BHEL, HAL, BEL, BEML, Mazagon Dock, Cochin Shipyard, GRSE and Bharat Dynamics'),
+      priority: true
     },
     {
       name: 'Railway PSUs & transport bodies',
@@ -94,6 +93,11 @@ function getQueryTasks(year = new Date().getFullYear()) {
       task: t(15, 'recruitment notifications (Engineer, Junior Engineer, Officer, Technician, Assistant)', 'state electricity boards and transmission corporations, state road transport corporations, state PSUs and state development corporations')
     }
   ];
+
+  if (mode === 'quick') {
+    return allTasks.filter(t => t.priority);
+  }
+  return allTasks;
 }
 
 module.exports = { getQueryTasks };

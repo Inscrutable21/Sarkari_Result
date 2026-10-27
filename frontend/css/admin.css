@@ -918,3 +918,182 @@
     min-width: unset;
   }
 }
+
+/* ========================================================
+   Centralized Multi-Platform Scraper Styles
+   ======================================================== */
+.scraper-config-panel {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scraper-platforms-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.scraper-platform-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.04);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.scraper-platform-toggle:hover {
+  background: rgba(15, 23, 42, 0.08);
+}
+
+.scraper-platform-toggle input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: #c01b22;
+}
+
+.scraper-mode-select {
+  font-size: 0.8rem;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+  background: #ffffff;
+  color: #1e293b;
+  cursor: pointer;
+}
+
+.platform-status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 800px) {
+  .platform-status-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.platform-card {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.platform-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(15, 23, 42, 0.18);
+}
+
+.platform-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.platform-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.platform-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.platform-pill.is-idle,
+.platform-pill.is-ready {
+  background: rgba(100, 116, 139, 0.12);
+  color: #475569;
+  border: 1px solid rgba(100, 116, 139, 0.25);
+}
+
+.platform-pill.is-running {
+  background: rgba(245, 158, 11, 0.15);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  animation: pulseDot 1.5s infinite;
+}
+
+.platform-pill.is-success {
+  background: rgba(16, 185, 129, 0.15);
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.platform-pill.is-warn {
+  background: rgba(245, 158, 11, 0.15);
+  color: #b45309;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.platform-pill.is-error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #b91c1c;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.platform-card-metric {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.platform-card-count {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.platform-card-label {
+  font-size: 0.72rem;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.platform-card-desc {
+  font-size: 0.76rem;
+  color: #64748b;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.scraper-progress-bar {
+  background: linear-gradient(90deg, #c01b22, #ea580c, #f59e0b);
+  background-size: 200% 100%;
+  animation: progressPulse 2s linear infinite;
+  transition: width 0.4s ease;
+}
+
+@keyframes progressPulse {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+

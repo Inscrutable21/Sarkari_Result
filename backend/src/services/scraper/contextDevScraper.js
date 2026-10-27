@@ -373,26 +373,38 @@ async function fetchWithRetry(url, options, maxRetries = 2) {
  * @param {string} [options.filterAudience='all'] - 'all' | 'student' | 'professional'
  * @returns {Promise<Array>} List of normalized portal items
  */
-async function scrapeContextDevOpenings({ maxItems = 200, filterAudience = 'all' } = {}) {
+async function scrapeContextDevOpenings({ maxItems = 200, filterAudience = 'all', mode = 'quick', onProgress = null } = {}) {
   const apiKey = getApiKey();
   if (!apiKey) {
     console.warn('[ContextDev Scraper] No Context.dev API key found in environment (.env). Skipping Context.dev scrape.');
+    if (onProgress) onProgress({ status: 'skipped', reason: 'No API key' });
     return [];
   }
 
-  console.log('[ContextDev Scraper] Starting institutional government & PSU scrape via Context.dev...');
+  console.log(`[ContextDev Scraper] Starting institutional government & PSU scrape via Context.dev (${mode} mode)...`);
+  if (onProgress) onProgress({ status: 'running', message: `Initializing Context.dev queries (${mode} mode)...` });
 
   // Query catalogue lives in contextDevQueries.js (research bodies, institutes, PSUs, banks, state PSUs...)
-  const queryTasks = getQueryTasks();
+  const queryTasks = getQueryTasks(new Date().getFullYear(), mode);
 
   const results = [];
   const seenIds = new Set();
   const seenLinks = new Set();
 
+  let completedTasks = 0;
   // Execute sequentially to respect Context.dev account concurrency limit (1 in-flight request at a time)
   for (const { name, task, category, audience, opportunityType } of queryTasks) {
     try {
       console.log(`[ContextDev Scraper] Querying: ${name}...`);
+      if (onProgress) {
+        onProgress({
+          status: 'running',
+          taskName: name,
+          completed: completedTasks,
+          total: queryTasks.length,
+          count: results.length
+        });
+      }
       const response = await fetchWithRetry(CONTEXT_API_URL, {
         method: 'POST',
         headers: {
@@ -461,7 +473,9 @@ async function scrapeContextDevOpenings({ maxItems = 200, filterAudience = 'all'
 
       // Small pause between sequential queries to let connection clear
       await new Promise(r => setTimeout(r, 1200));
+      completedTasks++;
     } catch (err) {
+      completedTasks++;
       console.warn(`[ContextDev Scraper] [${name}] Error:`, err.message);
     }
   }

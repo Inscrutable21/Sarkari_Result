@@ -313,28 +313,84 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // Trigger live scraping of all data on demand (Admin Protected with RBAC)
-  if (url.pathname === "/api/scrape") {
+  // Centralized Scraper Status & Real-Time Telemetry Endpoint
+  if ((url.pathname === "/api/scrape/status" || url.pathname === "/api/admin/scrape/status") && request.method === "GET") {
+    if (!(await enforceAdminPermission(request, response, url, "database:status"))) {
+      return;
+    }
+    try {
+      const { getScraperStatus } = require("./src/services/scraper/runScraper");
+      const status = getScraperStatus ? getScraperStatus() : { isScrapingInProgress };
+      response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: true, ...status }));
+    } catch (err) {
+      response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+      response.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // Trigger Centralized Scraping of all platforms on demand (Admin Protected with RBAC)
+  if ((url.pathname === "/api/scrape" || url.pathname === "/api/admin/scrape") && request.method === "POST") {
     if (!(await enforceAdminPermission(request, response, url, "scrape:run"))) {
       return;
     }
 
-    if (isScrapingInProgress) {
+    const { getScraperStatus, runScraperPipeline } = require("./src/services/scraper/runScraper");
+    const currentStatus = getScraperStatus ? getScraperStatus() : {};
+
+    if (currentStatus.isScrapingInProgress || isScrapingInProgress) {
       response.writeHead(409, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: false, message: "A scraping job is already running in background. Please wait." }));
+      response.end(JSON.stringify({
+        success: false,
+        message: "A centralized scraping job is already running in background. Please wait for completion.",
+        status: currentStatus
+      }));
       return;
     }
 
-    isScrapingInProgress = true;
     try {
-      const scraperModule = require("./src/services/scraper/runScraper");
-      const runScraperPipeline = scraperModule.runScraperPipeline || scraperModule.run || (typeof scraperModule === "function" ? scraperModule : scraperModule.default);
-      if (typeof runScraperPipeline !== "function") {
-        throw new Error("Scraper pipeline function could not be loaded from module");
+      const body = await parseBody(request).catch(() => ({}));
+      const platforms = Array.isArray(body.platforms) && body.platforms.length > 0
+        ? body.platforms
+        : ['sarkariResult', 'sarkariRadar', 'contextDev'];
+      const contextDevMode = body.contextDevMode === 'full' ? 'full' : 'quick';
+      const isAsync = body.async !== false && url.searchParams.get("sync") !== "true";
+
+      const scrapeOptions = {
+        platforms,
+        contextDevMode,
+        maxItems: body.maxItems || 200,
+        enrichPriority: body.enrichPriority !== false
+      };
+
+      if (isAsync) {
+        // Run in background and return immediate 202 Accepted response
+        isScrapingInProgress = true;
+        runScraperPipeline(scrapeOptions)
+          .catch(bgErr => console.error('[Centralized Scraper Background Error]:', bgErr.message))
+          .finally(() => { isScrapingInProgress = false; });
+
+        response.writeHead(202, { "Content-Type": "application/json; charset=utf-8" });
+        response.end(JSON.stringify({
+          success: true,
+          message: `Centralized multi-platform scraper initiated (${platforms.join(', ')}).`,
+          mode: contextDevMode,
+          platforms,
+          statusEndpoint: "/api/scrape/status"
+        }));
+        return;
       }
-      const summary = await runScraperPipeline();
+
+      // Synchronous execution mode
+      isScrapingInProgress = true;
+      const summary = await runScraperPipeline(scrapeOptions);
       response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ success: true, message: "Successfully scraped and categorized all data", summary }));
+      response.end(JSON.stringify({
+        success: true,
+        message: "Successfully scraped, unified and categorized data across all platforms",
+        summary
+      }));
     } catch (err) {
       response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ success: false, error: err.message }));
