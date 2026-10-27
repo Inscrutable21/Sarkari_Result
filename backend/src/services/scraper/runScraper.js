@@ -1,5 +1,10 @@
+try {
+  require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.env') });
+} catch {}
+
 const { scrapeHomepage, scrapeCategoryArchive, scrapePostingDetails } = require('./sarkariScraper');
 const { scrapeRadarAll } = require('./sarkariRadarScraper');
+const { scrapeContextDevOpenings } = require('./contextDevScraper');
 const { categorizeCollection, DEGREE_DISCIPLINES, isFillableJob } = require('./classifier');
 const { dispatchAllNotifications } = require('../notificationService');
 const { saveAllPortalDataToMongo, saveCategorySummaryToMongo } = require('../mongoService');
@@ -93,21 +98,26 @@ function mergeListings(primary, secondary) {
 
 async function run() {
   console.log('====================================================');
-  console.log('Starting Unified Portal Scraper (SarkariResult & Sarkari Radar)...');
+  console.log('Starting Unified Portal Scraper (SarkariResult, Sarkari Radar & Context.dev)...');
   console.log('====================================================');
 
   try {
-    // Step 1: Concurrently Scrape SarkariResult Homepage & Sarkari Radar listings/exams
-    console.log('[Scraper] Fetching listings from SarkariResult.com & Sarkari Radar (sarkaritech.netlify.app)...');
-    const [data, radarData] = await Promise.all([
+    // Step 1: Concurrently Scrape SarkariResult Homepage, Sarkari Radar & Context.dev Government Openings
+    console.log('[Scraper] Fetching listings from SarkariResult, Sarkari Radar & Context.dev...');
+    const [data, radarData, contextOpenings] = await Promise.all([
       scrapeHomepage(),
       scrapeRadarAll().catch(err => {
         console.warn('[Scraper] Sarkari Radar fetch notice:', err.message);
         return { jobs: [], trending: [], exams: [] };
+      }),
+      scrapeContextDevOpenings({ maxItems: 30 }).catch(err => {
+        console.warn('[Scraper] Context.dev fetch notice:', err.message);
+        return [];
       })
     ]);
 
     console.log(`   Sarkari Radar -> Fetched ${radarData.jobs.length} vacancies, ${radarData.trending.length} trending highlights, ${radarData.exams.length} exams.`);
+    console.log(`   Context.dev -> Fetched ${contextOpenings.length} verified government research/institutional openings.`);
 
     // Step 2: Fetch Dedicated Archive Pages for Comprehensive Datasets
     console.log('[Scraper] Fetching dedicated archive listings for Latest Jobs, Results, Admit Cards, and UPSC...');
@@ -133,7 +143,7 @@ async function run() {
       }
     }
 
-    data.latestJobs = mergeListings(data.latestJobs, [...archiveJobs, ...upscJobs, ...radarData.jobs]);
+    data.latestJobs = mergeListings(data.latestJobs, [...archiveJobs, ...upscJobs, ...radarData.jobs, ...contextOpenings]);
     data.results = mergeListings(data.results, [...archiveResults, ...upscResults]);
     data.admitCards = mergeListings(data.admitCards, [...archiveAdmit, ...upscAdmit]);
     data.trending = mergeListings(data.trending || [], radarData.trending || []);
