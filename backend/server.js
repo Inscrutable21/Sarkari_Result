@@ -228,6 +228,7 @@ const server = createServer(async (request, response) => {
   response.setHeader("X-Frame-Options", "SAMEORIGIN");
   response.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   response.setHeader("Permissions-Policy", "geolocation=(), camera=(), microphone=()");
+  response.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:;");
 
   // Frontend and API are same-origin; do not expose administrative APIs via wildcard CORS.
 
@@ -238,7 +239,7 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  if (request.method !== "GET" && request.method !== "POST") {
+  if (request.method !== "GET" && request.method !== "POST" && request.method !== "HEAD") {
     response.writeHead(405, { "Content-Type": "text/plain; charset=utf-8" });
     response.end("Method not allowed");
     return;
@@ -246,6 +247,10 @@ const server = createServer(async (request, response) => {
 
   if (url.pathname === "/api/health") {
     response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+    if (request.method === "HEAD") {
+      response.end();
+      return;
+    }
     response.end(JSON.stringify({ status: "ok", message: "Node.js is running", isScraping: isScrapingInProgress }));
     return;
   }
@@ -1185,7 +1190,18 @@ const server = createServer(async (request, response) => {
   let requestedPath = url.pathname === "/" ? "/index.html" : url.pathname;
   if (requestedPath === "/anandapkaproject" || requestedPath === "/anandapkaproject/" || requestedPath === "/admin" || requestedPath === "/admin/") {
     requestedPath = "/admin.html";
+  } else if (requestedPath === "/about" || requestedPath === "/about/") {
+    requestedPath = "/about.html";
+  } else if (requestedPath === "/privacy-policy" || requestedPath === "/privacy-policy/") {
+    requestedPath = "/privacy-policy.html";
+  } else if (requestedPath === "/contact" || requestedPath === "/contact/") {
+    requestedPath = "/contact.html";
+  } else if (requestedPath === "/disclaimer" || requestedPath === "/disclaimer/") {
+    requestedPath = "/disclaimer.html";
+  } else if (["/jobs", "/results", "/admit-cards", "/answer-keys", "/syllabus"].includes(requestedPath.replace(/\/$/, ""))) {
+    requestedPath = "/index.html";
   }
+
   const filePath = resolve(frontendRoot, `.${requestedPath}`);
   if (filePath !== frontendRoot && !filePath.startsWith(`${frontendRoot}${sep}`)) {
     response.writeHead(403, { "Content-Type": "text/plain; charset=utf-8" });
@@ -1198,7 +1214,13 @@ const server = createServer(async (request, response) => {
     if (!fileInfo.isFile()) throw new Error("Not a file");
     response.writeHead(200, {
       "Content-Type": contentTypes[extname(filePath)] || "application/octet-stream",
+      "Content-Length": fileInfo.size,
+      "Cache-Control": extname(filePath) === ".html" ? "no-cache" : "public, max-age=86400"
     });
+    if (request.method === "HEAD") {
+      response.end();
+      return;
+    }
     createReadStream(filePath).pipe(response);
   } catch {
     response.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });

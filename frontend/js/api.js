@@ -3,16 +3,13 @@
  * Communicates with the Node.js backend endpoints with automatic cross-origin and offline fallback
  */
 
-const candidates = [
-  ...(typeof window !== 'undefined' && window.location.port === '3000' ? ['/api'] : []),
-  `http://${typeof window !== 'undefined' && window.location.hostname ? window.location.hostname : 'localhost'}:3000/api`,
-  'http://localhost:3000/api',
-  'http://127.0.0.1:3000/api',
-  '/api'
-];
+const isLocal = typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-// Deduplicate candidates
-const API_BASE_CANDIDATES = Array.from(new Set(candidates));
+// Always use same-origin /api first. Only fallback to explicit ports if in local development.
+const API_BASE_CANDIDATES = isLocal
+  ? ['/api', 'http://localhost:3000/api', 'http://127.0.0.1:3000/api']
+  : ['/api'];
 let resolvedApiBase = null;
 
 async function fetchWithFallback(endpoint, options = {}) {

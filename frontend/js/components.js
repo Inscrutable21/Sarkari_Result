@@ -38,7 +38,7 @@ export function renderTicker(container, items) {
   }
 
   const tickerHtml = items.slice(0, 10).map(item => `
-    <a href="${safeLink(item.link)}" target="_blank" rel="noopener" class="ticker-item">
+    <a href="${safeLink(item.link)}" target="_blank" rel="nofollow noopener" class="ticker-item">
       <strong>[${escapeHtml(item.sector || 'Alert')}]</strong>&nbsp;${escapeHtml(item.title)}
       <span class="ticker-item-separator">|</span>
     </a>
@@ -372,7 +372,7 @@ export function renderSecondaryGrid(container, items) {
           <span class="badge badge-state">${escapeHtml(item.state || 'India')}</span>
         </div>
       </div>
-      <a href="${safeLink(item.link)}" target="_blank" rel="noopener" class="btn-secondary-action" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="event.stopPropagation();">
+      <a href="${safeLink(item.link)}" target="_blank" rel="nofollow noopener" class="btn-secondary-action" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="event.stopPropagation();">
         Open &nearr;
       </a>
     </div>
@@ -722,7 +722,7 @@ function renderModalContent(item) {
   // 5. Action Links
   if (actionLinksEl) {
     let linksHtml = `
-      <a href="${safeLink(item.link)}" target="_blank" rel="noopener" class="btn-primary-action">
+      <a href="${safeLink(item.link)}" target="_blank" rel="nofollow noopener" class="btn-primary-action">
         Source Notification &nearr;
       </a>
       <button class="btn-secondary-action" id="btn-copy-link" data-url="${safeLink(item.link)}">
@@ -736,7 +736,7 @@ function renderModalContent(item) {
         const isApply = extra.label.toLowerCase().includes('apply online');
         const btnClass = isApply ? 'btn-primary-action' : 'btn-secondary-action';
         linksHtml += `
-          <a href="${safeLink(extra.url)}" target="_blank" rel="noopener" class="${btnClass}">
+          <a href="${safeLink(extra.url)}" target="_blank" rel="nofollow noopener" class="${btnClass}">
             ${escapeHtml(extra.label)} &nearr;
           </a>
         `;
@@ -1245,7 +1245,7 @@ export function renderRadarTable(container, portalData, activeTab = 'all', searc
               Details
             </button>
             ${hasOfficial ? `
-              <a href="${officialUrl}" target="_blank" rel="noopener" class="btn-radar-official" onclick="event.stopPropagation();" title="Open official site">
+              <a href="${officialUrl}" target="_blank" rel="nofollow noopener" class="btn-radar-official" onclick="event.stopPropagation();" title="Open official site">
                 Apply
               </a>
             ` : ''}

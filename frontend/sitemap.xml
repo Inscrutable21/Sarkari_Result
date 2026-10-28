@@ -2,66 +2,74 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Homepage & Core Gateway: Top Government Jobs & Sarkari Results -->
   <url>
-    <loc>https://sarkarihith.com/</loc>
-    <lastmod>2026-10-04</lastmod>
-    <changefreq>hourly</changefreq>
+    <loc>https://sarkari-result-wheat.vercel.app/</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Clean Canonical Query Entrypoints for Search Engines -->
+  <!-- Core Category Hubs -->
   <url>
-    <loc>https://sarkarihith.com/?category=latest-jobs</loc>
-    <lastmod>2026-10-04</lastmod>
-    <changefreq>hourly</changefreq>
+    <loc>https://sarkari-result-wheat.vercel.app/jobs</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://sarkarihith.com/?category=sarkari-results</loc>
-    <lastmod>2026-10-04</lastmod>
-    <changefreq>hourly</changefreq>
+    <loc>https://sarkari-result-wheat.vercel.app/results</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://sarkarihith.com/?category=admit-cards</loc>
-    <lastmod>2026-10-04</lastmod>
-    <changefreq>hourly</changefreq>
+    <loc>https://sarkari-result-wheat.vercel.app/admit-cards</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://sarkarihith.com/?service=answer-keys</loc>
-    <lastmod>2026-10-04</lastmod>
+    <loc>https://sarkari-result-wheat.vercel.app/answer-keys</loc>
+    <lastmod>2026-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://sarkarihith.com/?service=syllabus</loc>
-    <lastmod>2026-10-04</lastmod>
+    <loc>https://sarkari-result-wheat.vercel.app/syllabus</loc>
+    <lastmod>2026-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
+  <!-- Authoritative Trust & Governance Pages -->
   <url>
-    <loc>https://sarkarihith.com/?filter=10th-pass</loc>
-    <lastmod>2026-10-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <loc>https://sarkari-result-wheat.vercel.app/about</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://sarkarihith.com/?filter=12th-pass</loc>
-    <lastmod>2026-10-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <loc>https://sarkari-result-wheat.vercel.app/privacy-policy</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://sarkarihith.com/?filter=graduate</loc>
-    <lastmod>2026-10-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <loc>https://sarkari-result-wheat.vercel.app/contact</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://sarkari-result-wheat.vercel.app/disclaimer</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

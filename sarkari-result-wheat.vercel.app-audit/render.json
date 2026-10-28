@@ -1,0 +1,106 @@
+{
+  "url": "https://sarkari-result-wheat.vercel.app/",
+  "status_code": 200,
+  "content": null,
+  "raw_content": "<!doctype html>\n<html lang=\"en\">\n\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <meta name=\"theme-color\" content=\"#f8fafc\">\n\n  <!-- Primary SEO Title & Meta Tags -->\n  <title>Top Government Jobs 2026 | Sarkari Result, Govt Job Vacancy &amp; Sarkari Naukri</title>\n  <meta name=\"title\" content=\"Top Government Jobs 2026 | Sarkari Result, Govt Job Vacancy &amp; Sarkari Naukri\">\n  <meta name=\"description\"\n    content=\"Find Top Government Jobs 2026, latest government job vacancy notifications, Sarkari Results, online forms, admit cards &amp; answer keys. Apply for 10th/12th pass, SSC, Railway, UPSC, Banking, Police &amp; State govt jobs across India.\">\n  <meta name=\"keywords\"\n    content=\"top government job, government job, sarkari results, government job vacency, government job vacancy, sarkari result 2026, sarkari naukri, top government jobs in india, latest govt vacancy, free job alert, 10th pass govt job, 12th pass vacancy, up police vacancy, ssc cgl, railway rrb group d, upsc ias, bank po, admit card download, answer key, merit list, sarkari result\">\n  <meta name=\"news_keywords\" content=\"top government job, sarkari results, government job vacancy, sarkari naukri 2026, ssc, upsc, railway, bank po\">\n  <meta name=\"author\" content=\"Sarkari Hith\">\n  <meta name=\"robots\" content=\"index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\">\n  <meta name=\"googlebot\" content=\"index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\">\n  <meta name=\"bingbot\" content=\"index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\">\n  <meta name=\"geo.region\" content=\"IN\">\n  <meta name=\"geo.placename\" content=\"India\">\n  <meta name=\"rating\" content=\"General\">\n  <meta name=\"distribution\" content=\"Global\">\n  <meta name=\"revisit-after\" content=\"1 days\">\n  <link rel=\"canonical\" href=\"https://sarkarihith.com/\">\n\n  <!-- Open Graph / Facebook / WhatsApp Preview -->\n  <meta property=\"og:type\" content=\"website\">\n  <meta property=\"og:url\" content=\"https://sarkarihith.com/\">\n  <meta property=\"og:site_name\" content=\"Sarkari Hith\">\n  <meta property=\"og:title\" content=\"Top Government Jobs 2026 | Sarkari Result, Govt Job Vacancy &amp; Sarkari Naukri\">\n  <meta property=\"og:description\"\n    content=\"Instant official updates for Top Government Jobs, latest government job vacancy online forms, Sarkari Results 2026, admit cards, answer keys &amp; syllabus across India.\">\n  <meta property=\"og:image\" content=\"https://sarkarihith.com/assets/images/sarkari_hith_logo.webp\">\n  <meta property=\"og:image:width\" content=\"1200\">\n  <meta property=\"og:image:height\" content=\"630\">\n  <meta property=\"og:locale\" content=\"en_IN\">\n  <meta property=\"og:locale:alternate\" content=\"hi_IN\">\n\n  <!-- Twitter Cards -->\n  <meta name=\"twitter:card\" content=\"summary_large_image\">\n  <meta name=\"twitter:url\" content=\"https://sarkarihith.com/\">\n  <meta name=\"twitter:title\" content=\"Top Government Jobs 2026 | Sarkari Result, Govt Job Vacancy &amp; Sarkari Naukri\">\n  <meta name=\"twitter:description\"\n    content=\"Find Top Government Jobs, latest government job vacancy notifications, Sarkari Results 2026, admit cards &amp; scorecards on Sarkari Hith.\">\n  <meta name=\"twitter:image\" content=\"https://sarkarihith.com/assets/images/sarkari_hith_logo.webp\">\n\n  <!-- Favicon & Branding -->\n  <link rel=\"icon\" type=\"image/webp\" href=\"/assets/images/sarkari_hith_logo.webp\">\n  <link rel=\"apple-touch-icon\" href=\"/assets/images/sarkari_hith_logo.webp\">\n\n  <!-- Structured Data (JSON-LD): WebSite with SearchAction -->\n  <script type=\"application/ld+json\">\n    {\n      \"@context\": \"https://schema.org\",\n      \"@type\": \"WebSite\",\n      \"name\": \"Sarkari Hith\",\n      \"alternateName\": [\n        \"Sarkari Result\",\n        \"Top Government Jobs\",\n        \"Government Job Vacancy\",\n        \"Sarkari Results 2026\",\n        \"Sarkari Naukri Portal\",\n        \"Sarkari Result 2026\",\n        \"sarkari hith\"\n      ],\n      \"url\": \"https://sarkarihith.com/\",\n      \"potentialAction\": {\n        \"@type\": \"SearchAction\",\n        \"target\": \"https://sarkarihith.com/?q={search_term_string}\",\n        \"query-input\": \"required name=search_term_string\"\n      }\n    }\n  </script>\n\n  <!-- Structured Data (JSON-LD): Organization -->\n  <script type=\"application/ld+json\">\n    {\n      \"@context\": \"https://schema.org\",\n      \"@type\": \"Organization\",\n      \"name\": \"Sarkari Hith\",\n      \"url\": \"https://sarkarihith.com/\",\n      \"logo\": \"https://sarkarihith.com/assets/images/sarkari_hith_logo.webp\",\n      \"description\": \"India's authoritative recruitment and examination portal providing real-time updates for Top Government Jobs, latest government job vacancies, Sarkari Results 2026, Admit Cards, and Answer Keys.\"\n    }\n  </script>\n\n  <!-- Structured Data (JSON-LD): BreadcrumbList -->\n  <script type=\"application/ld+json\">\n    {\n      \"@context\": \"https://schema.org\",\n      \"@type\": \"BreadcrumbList\",\n      \"itemListElement\": [\n        {\n          \"@type\": \"ListItem\",\n          \"position\": 1,\n          \"name\": \"Home\",\n          \"item\": \"https://sarkarihith.com/\"\n        },\n        {\n          \"@type\": \"ListItem\",\n          \"position\": 2,\n          \"name\": \"Top Government Jobs\",\n          \"item\": \"https://sarkarihith.com/#matrix-col-latestjobs\"\n        },\n        {\n          \"@type\": \"ListItem\",\n          \"position\": 3,\n          \"name\": \"Sarkari Results\",\n          \"item\": \"https://sarkarihith.com/#matrix-col-results\"\n        },\n        {\n          \"@type\": \"ListItem\",\n          \"position\": 4,\n          \"name\": \"Government Job Vacancy\",\n          \"item\": \"https://sarkarihith.com/#trending-section\"\n        }\n      ]\n    }\n  </script>\n\n  <!-- Structured Data (JSON-LD): FAQPage (Rich Google SERP Snippets) -->\n  <script type=\"application/ld+json\">\n    {\n      \"@context\": \"https://schema.org\",\n      \"@type\": \"FAQPage\",\n      \"mainEntity\": [\n        {\n          \"@type\": \"Question\",\n          \"name\": \"What are the top government jobs to apply for in India in 2026?\",\n          \"acceptedAnswer\": {\n            \"@type\": \"Answer\",\n            \"text\": \"The top government jobs in India in 2026 include UPSC Civil Services (IAS, IPS, IFS), Staff Selection Commission (SSC CGL, CHSL, GD Constable, MTS), Railway Recruitment Boards (RRB NTPC, ALP, Group D), Banking (IBPS PO, Clerk, SBI PO, RBI Grade B), Defence (NDA, CDS, Agniveer, AFCAT), and State Police & Civil Services (UPPSC, BPSC, MPPSC, Rajasthan RPSC).\"\n          }\n        },\n        {\n          \"@type\": \"Question\",\n          \"name\": \"Where can I check the latest Sarkari Results and scorecards?\",\n          \"acceptedAnswer\": {\n            \"@type\": \"Answer\",\n            \"text\": \"You can check verified Sarkari Results 2026 instantly on Sarkari Hith (sarkarihith.com). Our results section is updated in real-time with direct server links for CBT scorecards, category-wise cutoff marks, merit lists, and final selection lists.\"\n          }\n        },\n        {\n          \"@type\": \"Question\",\n          \"name\": \"How to find and apply for the latest government job vacancy online?\",\n          \"acceptedAnswer\": {\n            \"@type\": \"Answer\",\n            \"text\": \"To apply for an active government job vacancy, browse the Latest Jobs section on Sarkari Hith, review the qualification requirements (10th/12th/Graduate), age limits, and closing date, then click the official registration link to submit your application form directly on the official commission portal.\"\n          }\n        },\n        {\n          \"@type\": \"Question\",\n          \"name\": \"Which government jobs have vacancies for 10th pass and 12th pass candidates?\",\n          \"acceptedAnswer\": {\n            \"@type\": \"Answer\",\n            \"text\": \"Major government job vacancies for 10th and 12th pass applicants include SSC GD Constable, SSC MTS, Railway RRB Group D, Assistant Loco Pilot (with ITI), Indian Army Agniveer, Indian Navy Sailor, State Police Constables (UP Police, Bihar Police), and India Post GDS (Gramin Dak Sevak).\"\n          }\n        },\n        {\n          \"@type\": \"Question\",\n          \"name\": \"How can I get free alerts for government job vacancies?\",\n          \"acceptedAnswer\": {\n            \"@type\": \"Answer\",\n            \"text\": \"You can subscribe for 100% free verified job alerts on Sarkari Hith by clicking 'Email Alerts' on the top bar, selecting your degree stream and preferred state or department, and entering your email address.\"\n          }\n        }\n      ]\n    }\n  </script>\n\n  <!-- Structured Data (JSON-LD): SiteNavigationElement -->\n  <script type=\"application/ld+json\">\n    {\n      \"@context\": \"https://schema.org\",\n      \"@type\": \"ItemList\",\n      \"itemListElement\": [\n        {\n          \"@type\": \"SiteNavigationElement\",\n          \"position\": 1,\n          \"name\": \"Top Government Jobs\",\n          \"url\": \"https://sarkarihith.com/#matrix-col-latestjobs\"\n        },\n        {\n          \"@type\": \"SiteNavigationElement\",\n          \"position\": 2,\n          \"name\": \"Sarkari Results 2026\",\n          \"url\": \"https://sarkarihith.com/#matrix-col-results\"\n        },\n        {\n          \"@type\": \"SiteNavigationElement\",\n          \"position\": 3,\n          \"name\": \"Sarkari Admit Cards\",\n          \"url\": \"https://sarkarihith.com/#matrix-col-admitcards\"\n        },\n        {\n          \"@type\": \"SiteNavigationElement\",\n          \"position\": 4,\n          \"name\": \"Answer Keys & Objections\",\n          \"url\": \"https://sarkarihith.com/#secondary-services\"\n        },\n        {\n          \"@type\": \"SiteNavigationElement\",\n          \"position\": 5,\n          \"name\": \"Syllabus & Exam Pattern\",\n          \"url\": \"https://sarkarihith.com/#secondary-services\"\n        }\n      ]\n    }\n  </script>\n\n  <!-- Google Fonts: Plus Jakarta Sans (Headings), Inter (Body & UI), JetBrains Mono (Badges & Code) -->\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link\n    href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap\"\n    rel=\"stylesheet\">\n\n  <!-- Stylesheets -->\n  <link rel=\"stylesheet\" href=\"/css/variables.css\">\n  <link rel=\"stylesheet\" href=\"/css/base.css\">\n  <link rel=\"stylesheet\" href=\"/css/components.css\">\n  <link rel=\"stylesheet\" href=\"/css/responsive.css\">\n  <link rel=\"stylesheet\" href=\"/css/mockup-theme.css\">\n\n  <!-- Vercel Web Analytics -->\n  <script>\n    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };\n  </script>\n  <script defer src=\"/_vercel/insights/script.js\"></script>\n\n  <!-- Application Script -->\n  <script type=\"module\" src=\"/js/app.js\" defer></script>\n</head>\n\n<body>\n  <!-- Top Announcement Bar Component -->\n  <div data-component=\"announcement-ticker\"></div>\n\n  <!-- Main Site Header & Navigation Component -->\n  <div data-component=\"site-header\"></div>\n\n  <main class=\"container\">\n    <!-- Hero Banner Component -->\n    <div data-component=\"hero-section\"></div>\n\n    <!-- Top Sections Quick Navigation Component -->\n    <div data-component=\"top-sections\"></div>\n\n    <!-- Multi-Dimensional Filter Controls Component -->\n    <div data-component=\"filter-controls\"></div>\n\n    <!-- Trending Highlights Component -->\n    <div data-component=\"trending-section\"></div>\n\n    <!-- Core 3-Column Sarkari Matrix Component (Results | Admit Cards | Latest Jobs) -->\n    <div data-component=\"matrix-section\"></div>\n\n    <!-- Dedicated Context.dev Institutional & PSU Intelligence Section -->\n    <div data-component=\"context-dev-section\"></div>\n\n    <!-- Dedicated Special Opportunities Table Component -->\n    <div data-component=\"opportunities-table\"></div>\n\n    <!-- Secondary Examination Services Component -->\n    <div data-component=\"secondary-services\"></div>\n\n    <!-- Candidate Knowledge Base & SEO Guide Component -->\n    <div data-component=\"seo-guide\"></div>\n\n    <!-- Pre-Footer Call to Action Banner Component -->\n    <div data-component=\"pre-footer-banner\"></div>\n  </main>\n\n  <!-- Site Footer Component -->\n  <div data-component=\"site-footer\"></div>\n\n  <!-- Interactive Modals & Dialogs Component -->\n  <div data-component=\"modals\"></div>\n\n  <!-- Mobile App Touch Bottom Navigation Component -->\n  <div data-component=\"mobile-nav\"></div>\n</body>\n\n</html>\n",
+  "is_spa": true,
+  "extracted_text": null,
+  "publication_date": null,
+  "accessibility_tree": null,
+  "accessibility_error": null,
+  "accessibility_partial": false,
+  "headers": {
+    "Age": "0",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Encoding": "gzip",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Wed, 28 Oct 2026 17:05:12 GMT",
+    "Permissions-Policy": "geolocation=(), camera=(), microphone=()",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "SAMEORIGIN",
+    "X-Vercel-Cache": "MISS",
+    "X-Vercel-Id": "bom1::iad1::xjxvz-1793207111619-306092104f3f",
+    "Transfer-Encoding": "chunked"
+  },
+  "redirect_chain": [],
+  "console_errors": [],
+  "render_diagnostics": [],
+  "render_engine": null,
+  "render_ms": 4407.000000006519,
+  "mode_used": "rendered",
+  "too_large": false,
+  "error": "playwright error: Page.goto: net::ERR_FAILED at https://sarkari-result-wheat.vercel.app/\nCall log:\n  - navigating to \"https://sarkari-result-wheat.vercel.app/\", waiting until \"domcontentloaded\"\n",
+  "raw_fallback_available": true,
+  "structured_data": {
+    "block_count": 5,
+    "processed_count": 5,
+    "total_bytes": 5599,
+    "truncated": false,
+    "blocks": [
+      {
+        "index": 1,
+        "size_bytes": 583,
+        "valid": true,
+        "types": [
+          "SearchAction",
+          "WebSite"
+        ],
+        "types_truncated": false
+      },
+      {
+        "index": 2,
+        "size_bytes": 445,
+        "valid": true,
+        "types": [
+          "Organization"
+        ],
+        "types_truncated": false
+      },
+      {
+        "index": 3,
+        "size_bytes": 808,
+        "valid": true,
+        "types": [
+          "BreadcrumbList",
+          "ListItem"
+        ],
+        "types_truncated": false
+      },
+      {
+        "index": 4,
+        "size_bytes": 2669,
+        "valid": true,
+        "types": [
+          "Answer",
+          "FAQPage",
+          "Question"
+        ],
+        "types_truncated": false
+      },
+      {
+        "index": 5,
+        "size_bytes": 1094,
+        "valid": true,
+        "types": [
+          "ItemList",
+          "SiteNavigationElement"
+        ],
+        "types_truncated": false
+      }
+    ]
+  },
+  "truncation": {
+    "limit": null,
+    "fields": {
+      "raw_content": {
+        "original_chars": 12359,
+        "returned_chars": 12359,
+        "truncated": false
+      }
+    }
+  },
+  "output_written": false
+}

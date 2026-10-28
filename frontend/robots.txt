@@ -9,7 +9,6 @@ Allow: /assets/
 Disallow: /api/
 Disallow: /admin
 Disallow: /admin.html
-Disallow: /anandapkaproject
 
 User-agent: Googlebot
 Allow: /
@@ -19,7 +18,6 @@ Allow: /assets/
 Disallow: /api/
 Disallow: /admin
 Disallow: /admin.html
-Disallow: /anandapkaproject
 
 User-agent: Bingbot
 Allow: /
@@ -29,7 +27,6 @@ Allow: /assets/
 Disallow: /api/
 Disallow: /admin
 Disallow: /admin.html
-Disallow: /anandapkaproject
 
 # XML Sitemap
-Sitemap: https://sarkarihith.com/sitemap.xml
+Sitemap: https://sarkari-result-wheat.vercel.app/sitemap.xml

@@ -306,7 +306,7 @@ export function renderContextDevSection(container, portalData, activeTab = 'all'
               Details
             </button>
             ${hasOfficial ? `
-              <a href="${officialUrl}" target="_blank" rel="noopener" class="btn-ctx-apply" onclick="event.stopPropagation();" title="Open official institution notice / application">
+              <a href="${officialUrl}" target="_blank" rel="nofollow noopener" class="btn-ctx-apply" onclick="event.stopPropagation();" title="Open official institution notice / application">
                 Apply Official &rarr;
               </a>
             ` : ''}

@@ -37,7 +37,7 @@ export function renderSecondaryGrid(container, items) {
           <span class="badge badge-state">${escapeHtml(item.state || 'India')}</span>
         </div>
       </div>
-      <a href="${safeLink(item.link)}" target="_blank" rel="noopener" class="btn-secondary-action" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="event.stopPropagation();">
+      <a href="${safeLink(item.link)}" target="_blank" rel="nofollow noopener" class="btn-secondary-action" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="event.stopPropagation();">
         Open &nearr;
       </a>
     </div>

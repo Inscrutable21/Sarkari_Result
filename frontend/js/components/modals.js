@@ -356,7 +356,7 @@ export function renderModalContent(item) {
   // 5. Action Links
   if (actionLinksEl) {
     let linksHtml = `
-      <a href="${safeLink(item.link)}" target="_blank" rel="noopener" class="btn-primary-action">
+      <a href="${safeLink(item.link)}" target="_blank" rel="nofollow noopener" class="btn-primary-action">
         Source Notification &nearr;
       </a>
       <button class="btn-secondary-action" id="btn-copy-link" data-url="${safeLink(item.link)}">
@@ -370,7 +370,7 @@ export function renderModalContent(item) {
         const isApply = extra.label.toLowerCase().includes('apply online');
         const btnClass = isApply ? 'btn-primary-action' : 'btn-secondary-action';
         linksHtml += `
-          <a href="${safeLink(extra.url)}" target="_blank" rel="noopener" class="${btnClass}">
+          <a href="${safeLink(extra.url)}" target="_blank" rel="nofollow noopener" class="${btnClass}">
             ${escapeHtml(extra.label)} &nearr;
           </a>
         `;
